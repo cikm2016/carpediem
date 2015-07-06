@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<div class="col-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+	<div class="">
+		<div class="panel panel-default mypannel">
+			<div class="panel-heading">
+				<h3 class="panel-title text_align"> {{ article.title }} </h3>
+			</div>
+			<div class="panel-body">
+				<div class="article_body">
+					<div class="row">
+						<div class="col-sm-12"> {{ article.content|safe|nl2br }} </div>
+					</div>
+				</div>
+				<!-- comments -->
+				<div class="comments">
+					{% if comments %}
+					{% for comment in comments %}
+					<div class="row each_comment" id="{{ comment.id }}">
+						<div class="col-sm-2">{{ comment.nick}}</div>
+						<div class="col-sm-7">{{ comment.content }}</div>
+						<small>
+							<div class="col-sm-2 date">{{ comment.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+							<div class="col-sm-1"><a data-target="#comment_del_{{comment.id}}" data-toggle="modal" href="#"><span class="glyphicon glyphicon-trash"></span></a></div>
+						</small>
+					</div>
+					<div id="comment_del_{{comment.id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-sm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title" id="myModalLabel">삭제 확인 메세지</h4>
+								</div>
+								<div class="modal-body">
+									<h4>비밀번호를 입력하세요.</h4>
+									<input class="form-control" type="password" name="passwd">
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" name="id" value="{{ comment.id }}">
+									<button type="button" id="comment_del" class="btn btn-primary" data-dismiss="modal">네</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal">아니오</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+					{% endif %}
+					<div class="comment_add">
+						<div class="col-sm-4">
+							<div class="form-horizontal">	
+								<input type="hidden" name="aid" value="{{ article.id }}">
+								<div class="form-group"> <input maxlength="15" name="nick" type="text" class="form-control" placeholder="닉네임"> </div>
+								<div class="form-group margin_minus"> <input maxlength="20" id="passwd" type="password" class="form-control" placeholder="비밀번호"> </div>
+							</div>
+						</div>
+						<div class="col-sm-6"> <textarea name="comment" class="form-control" rows="3" width="100%" placeholder="댓글을 입력하세요."> </textarea> </div>
+						<div class="col-sm-2"> <button id="comment_add" href="#" class="btn btn-primary">댓글 입력</button></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bottomButtons float-right">
+			<a href="{{ url_for('article_update', id=article.id) }}" class="btn btn-default">수정하기</a>
+			<a href="{{ url_for('article_delete', id=article.id) }}" class="btn btn-default">삭제하기</a>
+			<a href="{{ url_for('article_list') }}" class="btn btn-default">목록보기</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+

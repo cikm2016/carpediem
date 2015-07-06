@@ -1,0 +1,23 @@
+{% macro render_field(field, catch_kwargs=true) %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+		<div class="col-sm-offset-3 col-sm-6">
+		{% if field.id == 'account' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=15,minlength=4, **kwargs) }}
+		{% else %}
+			{{ field(placeholder=field.description.placeholder,maxlength=20,minlength=4, **kwargs) }}
+		{% endif %}
+		</div>
+		{% if field.errors %}
+		<div class="help-block col-sm-offset-4">
+			<ul>
+				{% for error in field.errors %}
+				<div class="row">
+				{{ error }}
+				</div>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+</div>
+{% endmacro %}
+

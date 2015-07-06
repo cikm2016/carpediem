@@ -1,0 +1,22 @@
+<nav class="navbar navbar-inverse navbar-static-top" id ="my_navbar" role="navigation">
+	<div class="col-sm-12 col-lg-offset-1 col-lg-10">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">기르타스</a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li {% if menu=='cross' %} class='active'{% endif%}><a href="{{url_for('betting_normal')}}">승무패 <span class="sr-only">(current)</span></a></li>
+					<li><a href="#">핸디캡(하이로우)</a></li>
+					<li><a href="#">스페셜 베팅</a></li>
+					<li {% if menu=='result' %} class='active'{% endif%}><a href="#">경기결과</a></li>
+					<li><a href="#">충전/환전</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">고객센터</a></li>
+					<li><a href="{{ url_for('signout') }}">로그아웃</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>

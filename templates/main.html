@@ -1,0 +1,33 @@
+{% extends "base3.html" %}
+{% block layout %}
+<div class="for_bottom">
+</div>
+<div class="main_layout">
+	<div class="col-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+			{% if g.id %}
+			
+			<div class="col-sm-offset-3 col-sm-6">
+				<a href="{{url_for('betting_normal')}}" class="btn btn-default float-right col-sm-12">입장하기</a>
+					<a href="{{ url_for('signout') }}" class="btn btn-default float-right col-sm-12">로그아웃</a>
+			</div>
+			{% else %}
+			<form class="form-horizontal" role="form" method="post">
+				{{ form.hidden_tag() }}
+				{% from "_form_field_login.html" import render_field %}
+				{% for field in form if field.widget.input_type != 'hidden' %}
+				{{ render_field(field, class="form-control") }}
+				{% endfor %}
+
+				<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-3">
+							<button type="submit" class="btn btn-primary float-right col-sm-12">로그인</button>
+						</div>
+						<div class="col-sm-3">
+							<a href='{{url_for('signup')}}'class="btn btn-default col-sm-12">회원가입</a>
+						</div>
+				</div>
+			</form>
+			{% endif %}
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block contents %}
+<div class="col-sm-12">
+	<h3 class="title">경기 관리 </h3>
+</div>
+<div class="col-sm-8 game_input">
+	<div class="row">
+		<div class="form-group col-sm-4"><input class="form-control" name="date" type="datetime-local" placeholder="경기 날짜"></div>
+		<div class="form-group col-sm-4">
+			<select id="sport" class="form-control" name="sport">
+				<option value=>종목 선택</option>
+				<option value=0>축구</option>
+				<option value=1>야구</option>
+				<option value=2>농구</option>
+			</select>
+		</div>
+		<div class="form-group col-sm-4">
+			<select id="league" class="form-control" name="league">
+				<option value=0>리그</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="form-group col-sm-6"><input class="form-control" name="home" type="text" placeholder="홈팀"></div>
+		<div class="form-group col-sm-6"><input class="form-control" name="away" type="text" placeholder="원정팀"></div>
+	</div>
+</div>
+<div class="col-sm-4">
+		<button id="addgame" href="#" class="col-sm-12 btn btn-primary">경기 추가</button>
+</div>
+<div class="">
+	<table class="table table_area">
+		<thead>
+		<tr>
+			<td width="10%">경기날짜</th>
+			<td width="5%">종목</th>
+			<td width="7%">리그</th>
+			<td width="30%">승(홈팀)</th>
+			<td width="5%">무</th>
+			<td width="30%">패(원정팀)</th>
+			<td width="7%">스코어</th>
+			<td width="5%">결과</th>
+		</tr>
+		</thead>
+		<tbody id="gamelist">
+			{% if gamelist %}
+			{% for game in gamelist %}
+			<tr class="" id="{{ game.id }}">
+				<td></td>
+				<td><strong>{{ game.sport }}</strong></a></td>
+				<td></td>
+				<td>{{ game.home }}</td>
+				<td>{{ game.draw_rate }}</td>
+				<td>{{ game.away }}</td>
+				<td><small>{{ game.score }}</small></td>
+				<td><small>{{ game.result }}</small></td>
+			</tr>
+			{% endfor %}
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>HYG web</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block favicon %}
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/ass_ico/pencil_icon.png') }}"/>
+    {% endblock %}
+</head>
+<body>
+{% block layout %}{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+{% endblock %}
+</body>
+</html>
+

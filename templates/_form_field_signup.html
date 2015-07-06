@@ -1,0 +1,44 @@
+{% macro render_field(field, catch_kwargs=true) %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+	<div class="row">
+		<label for="{{ field.id }}" class="col-sm-4 control-label">{{ field.label }}</label>
+		<div class="col-sm-6">
+		{% if field.id == 'intro'%}
+			{{ field(rows=10,placeholder=field.description.placeholder, **kwargs) }}
+		{% elif field.id == 'account' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=15,minlength=4, **kwargs) }}
+		{% elif field.id == 'password' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=20,minlength=4, **kwargs) }}
+		{% elif field.id == 'name' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=4,minlength=3, **kwargs) }}
+		{% elif field.id == 'nikname' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=15,minlength=2, **kwargs) }}
+		{% elif field.id == 'phone' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=13,minlength=12, **kwargs) }}
+		{% elif field.id == 'birth' %}
+			{{ field(placeholder=field.description.placeholder,maxlength=6,minlength=6, **kwargs) }}
+		{% else %}
+			{{ field(placeholder=field.description.placeholder, **kwargs) }}
+		{% endif %}
+		</div>
+		{% if field.id == 'account' %}
+		<div class="col-sm-2">
+			<a class="btn btn-default" id="jungbok">중복확인</a>
+		</div>
+		{% endif %}
+	</div>
+	<div class="row">
+		{% if field.errors %}
+		<div class="help-block col-sm-offset-4">
+			<ul>
+				{% for error in field.errors %}
+				<div class="row">
+				{{ error }}
+				</div>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endmacro %}

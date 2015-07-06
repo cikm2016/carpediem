@@ -1,0 +1,108 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+*{
+	max-width: 100%;
+}
+html,body{
+	height: 100%;
+	width: 100%;
+}
+@media screen and (max-width: 768px) { 
+	body{
+		background: url('/static/images/black.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 11px;
+	}
+	.main_content{
+		padding-top: 160px;
+	}
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+	body{
+		background: url('/static/images/black.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+	.main_content{
+		padding-top: 500px;
+	}
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+	body{
+		background: url('/static/images/black.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+	.main_content{
+		padding-top: 160px;
+	}
+}
+@media screen and (min-width: 1200px) and (max-width: 1440px) { 
+	body{
+		background: url('/static/images/black.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+	.main_content{
+		padding-top: 160px;
+	}
+}
+@media screen and (min-width: 1441px) { 
+	body{
+		background: url('/static/images/black.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+	.main_content{
+		padding-top: 260px;
+	}
+}
+#sidebar{
+	border: 3px solid white;
+}
+#contents{
+	color: rgb(200,200,200);
+}
+#footer{
+	color: #fff;
+}
+.for_bottom{
+	min-height: 70%;
+}
+.for_mid{
+	min-height: 50%;
+}

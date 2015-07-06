@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block contents %}
+<div class="title">
+	<h3>경기 일정</h3>
+</div>
+<div class="table_area">
+	<table class="table">
+		<tbody>
+		<tr>
+			<td width="10%">경기날짜</th>
+			<td width="5%">종목</th>
+			<td width="7%">리그</th>
+			<td width="30%">승(홈팀)</th>
+			<td width="5%">무</th>
+			<td width="30%">패(원정팀)</th>
+			<td width="7%">스코어</th>
+			<td width="5%">결과</th>
+		</tr>
+		<tr id="">
+			<td>05-14 18:00</td>
+			<td>축구</td>
+			<td>EPL</td>
+			<td class="ivorybox hometeam warning"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">맨체스터 유나이티드</span><span>3.75</span></div></td>
+			<td>1.5</td>
+			<td class="ivorybox awayteam"><div style="position:relative;"><span style="position:absolute; top:0; right:0px;">레알 마드리드</span><span>3.75</span></div></td>
+			<td>4:2</td>
+			<td>적중</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,140 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+*{
+	max-width: 100%;
+}
+html,body{
+	height: 100%;
+	width: 100%;
+}
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+/* Medium devices (desktops, 992px and up) */
+/* Large devices (large desktops, 1200px and up) */
+@media screen and (max-width: 768px) { 
+	body{
+		background: url('/static/images/oldtrafford.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 11px;
+	}
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+	body{
+		background: url('/static/images/oldtrafford.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+	body{
+		background: url('/static/images/oldtrafford.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+}
+@media screen and (min-width: 1200px) { 
+	body{
+		background: url('/static/images/oldtrafford.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		overflow-x: hidden;
+		font-family:'Nanum Gothic', serif;
+		word-break: keep-all;
+		line-height: 150%;	
+		font-size: 12px;
+	}
+}
+#contents{
+	min-height: 100%;
+	padding-top: 180px;
+	padding-bottom: 130px;
+	margin-top: -180px;
+	margin-bottom: -100px;
+}
+#footer{
+	padding-top: 30px;
+	padding-bottom: 30px;
+	height: 100px;
+	width: 100%;
+	color: rgb(255,255,255);
+}
+#footer .container{
+	border-top: 1px solid #C4C4C4;
+	padding-top: 10px;
+}
+#sidebar{
+	background-color: rgba(255,255,255,0.7);
+	border: 1px solid white;
+	border-radius: 5px;
+	position: fixed;
+	right: 80px;
+	top: 127px;
+	min-height: 100px;
+	padding-bottom: 5px;
+}
+.table_area{
+	background-color: rgba(255,255,255,0.7);
+	text-align: center;
+	color: rgb(0,0,0);
+}
+.title{
+	color: rgb(255,255,255);
+}
+.text-center{
+	text-align: center;
+}
+.text-left{
+	text-align: left;
+}
+.text-right{
+	text-align: right;
+}
+.hometeam{
+	text-align: right;
+	padding-right: 10px;
+}
+.awayteam{
+	text-align: left;
+	padding-left: 10px;
+}
+.blackbox{
+	position: relative;
+	color: rgb(220,220,220);
+	background-color: rgba(0,0,0,0.7);
+	border: 0px solid white;
+	border-radius: 2px;
+	padding: 5px;
+	margin-bottom: 5px;
+	text-align: right;
+	}
+.ivorybox{
+	border: 1px solid white;
+	border-radius: 3px;
+}
+.game_add{
+}
