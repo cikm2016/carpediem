@@ -13,7 +13,7 @@
 			<div class="container">
 				<div class="joinForm member">
 					<h1><img src="{{ url_for('static', filename='images/login_join/tit_join.png') }}"  alt="" /></h1>
-					<form method="post" role="form">
+					<form method="post" role="form" onsubmit="return validateSignup()">
 						<fieldset>
 							<legend></legend>
 							<input type="text" name="account" placeholder="아이디"/>

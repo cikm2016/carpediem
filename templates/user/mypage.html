@@ -13,10 +13,13 @@
 	<tr>
 		<th>추천인</th>
 		<td>{{user.rec_person}}</td>
-		<th>접속일</th>
-		<td>{%if log %}{{log.date}}{%else%}접속기록없음{%endif%}</td>
-		<th>접속 IP</th>
-		<td>{%if log %}{{log.ip}}{%else%}접속기록없음{%endif%}</td>
+		<th>레벨</th>
+		<td>{{user.level}}</td>
+		<th>상태</th>
+		<td>
+			{% if user.state == 0%}사용중{%endif%}
+			{% if user.state == 1%}정지{%endif%}
+		</td>
 	</tr>
 	<tr>
 		<th>연락처</th>
@@ -33,23 +36,6 @@
 		<td><input type="text" class="form-control" id="bank_account" value=" {{ user.bank_account }}"></td>
 		<th>예금주</th>
 		<td> <input type="text" class="form-control" id="bank_name" value="{{ user.bank_name }}"></td>
-	</tr>
-	<tr>
-		<th>레벨</th>
-		<td>{{user.level}}</td>
-		<th>상태</th>
-		<td>
-			{% if user.state == 0%}사용중{%endif%}
-			{% if user.state == 1%}정지{%endif%}
-		</td>
-		<th>위험도</th>
-		<td>
-			{% if user.danger == 0%}보통{%endif%}
-			{% if user.danger == 1%}안전 {%endif%}
-			{% if user.danger == 2%}매우안전{%endif%}
-			{% if user.danger == -1%}위험{%endif%}
-			{% if user.danger == -2%}매우위험{%endif%}
-		</td>
 	</tr>
 </table>
 <div align="center">

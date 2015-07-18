@@ -141,7 +141,7 @@ class UserBetting(db.Model):
 
 	allow = db.Column(db.Integer, default=0)
 
-	date_created = db.Column(db.DateTime())
+	date = db.Column(db.DateTime())
 
 #Talk Room
 class Article(db.Model):

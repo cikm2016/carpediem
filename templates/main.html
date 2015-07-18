@@ -13,11 +13,11 @@
 			<div class="container">
 				<div class="mLogin member">
 					<h1><img src="{{ url_for('static', filename='images/login_join/tit_login.png') }}"  alt="" /></h1>
-					<form method="post" role="form">
+					<form method="post" role="form" onsubmit="return validateLogin()">
 						<fieldset>
 							<legend></legend>
-							<input type="text" name="account" />
-							<input type="password" name="password" />
+							<input type="text" name="account" maxlength="20"/>
+							<input type="password" name="password" maxlength="20" />
 						
 							<p class="formBtn"><input type="submit" />
 							<a href="{{ url_for('signup') }}"><img src="{{ url_for('static', filename='images/login_join/btn_join.gif') }}" alt="회원가입" /></a></p>

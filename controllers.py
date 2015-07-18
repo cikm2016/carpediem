@@ -6,7 +6,7 @@ from sqlalchemy import desc
 
 from app import app, db
 from app.forms import ArticleForm, CommentForm, JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBetting
 
 import re
 import json
