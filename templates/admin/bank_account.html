@@ -1,0 +1,35 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>입금계좌관리</h1>
+<button class="btn mBtn bank_modifyall">선택수정</button>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th>레벨</th>
+		<th>은행명</th>
+		<th>계좌번호 </th>
+		<th>예금주</th>
+		<th>수정</th>
+	</thead>
+	<tbody>
+	{% if banklist %}
+	{% for bank in banklist %}
+	<tr class="select" id="{{ bank.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td>{{ bank.level }}레벨</td>
+		<td><input type="text" class="form-control" name="bank_{{bank.id}}" value="{{ bank.bank }}"></td>
+		<td><input type="text" class="form-control" name="bank_account_{{bank.id}}"  value="{{ bank.bank_account }}"></td>
+		<td><input type="text" class="form-control" name="bank_name_{{bank.id}}"  value="{{ bank.bank_name }}"></td>
+		<td>
+			<button class="btn mBtn bank_modify">수정</button>
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+</div>
+
+{% endblock %}
+

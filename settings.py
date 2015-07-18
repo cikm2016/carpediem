@@ -4,12 +4,15 @@ settings.py
 Configuration for Flask app
 
 """
+import os
+from datetime import timedelta
 
 
 class Config(object):
 	# Set secret key to use session
-	SECRET_KEY = "secret_keyasdlkfjakfj12314lkj12341"
+	SECRET_KEY = os.urandom(24)
 	debug = False
+	PERMANENT_SESSION_LIFETIME = timedelta(days=10)
 
 
 class Production(Config):

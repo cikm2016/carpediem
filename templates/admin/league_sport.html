@@ -1,0 +1,41 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>종목 추가</h1>
+<table class="dataTable tableStyle01">
+	<form method="post" role="form">
+		<tr>
+			<th>종목 추가</th>
+			<td><input type="text" name="sport" class="form-control"></td>
+			<th>등록</th>
+			<td><button type="submit" class="btn mBtn">등록</button></td>
+		</tr>
+	</form>	
+</table>
+<table class="dataTable">
+	<thead>
+		<th>종목명</th>
+		<th>수정</th>
+		<th>삭제</th>
+	</thead>
+	<tbody>
+	{% if sportlist %}
+	{% for sport in sportlist %}
+	<tr class="" id="{{ sport.id }}">
+		<td><input type="text" name="{{sport.id}}" class="form-control" value="{{ sport.name }}"></td>
+		<td><button class="btn mBtn sport_modify">수정</button></td>
+		<td><button class="btn mBtn sport_delete">삭제</button></td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	회원이 없습니다.
+	{% endif %}
+	</tbody>
+</table>
+
+{% endblock %}
+
+
+
+
+
+

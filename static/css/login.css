@@ -1,0 +1,26 @@
+body { background:#000;  }
+.memberWrap { width:100%; padding-top:75px;  }
+.memberWrap  .member { width:100%;  }
+.memberWrap  .mLogin {height:750px;    background:url(../images/login_join/box_bg_login.gif) no-repeat left top;} 
+.memberWrap  .joinForm {height:1080px;    background:url(../images/login_join/box_bg_join.gif) no-repeat left top;} 
+.memberWrap  .member h1 { text-align:center;  padding-top:80px; padding-bottom:10px; }
+.memberWrap  .member form {width:500px; margin:0 auto; }
+.memberWrap  .member * {  vertical-align:top; 	line-height:2;  }
+.memberWrap  .member form input[type="text"] { width:464px; display:block;margin:0 auto;  height:40px; border:3px solid #e6a415; margin-bottom:10px; background:#000; color:#fff; font-size:20px; padding:5px 15px 0px;  }
+.memberWrap  .member form input[type="password"] { width:464px; display:block;margin:0 auto;  height:40px; border:3px solid #e6a415; margin-bottom:10px; background:#000; color:#fff; font-size:20px; padding:5px 15px 0px;  }
+.memberWrap  .member form .formBtn {width:500px; padding-top:10px;   }
+.memberWrap  .member form select { width:500px;  display:block;margin:0 auto;  height:50px; border:3px solid #e6a415; margin-bottom:10px; background:#000; color:#fff; font-size:20px;  padding:10px 10px 5px; }
+.memberWrap  .member form input[type="submit"]  {border:0px; }
+.memberWrap  .mLogin form input[type="submit"] {display:inline-block; float:left;  background: url(../images/login_join/btn_login.gif) no-repeat left top; 	text-indent: -9999px; 	margin-right:20px; 	width: 240px; 	height: 100px; 	line-height:1;   }
+.memberWrap  .joinForm form input[type="submit"] {display:inline-block; float:left;  background: url(../images/login_join/btn_joinok.gif) no-repeat left top; 	text-indent: -9999px; 	margin-right:20px; 	width: 240px; 	height: 100px; 	  }
+.memberWrap  .member form .formBtn a { float:left;  }
+
+
+.memberWrap  .aLogin form input[type="text"] {  border:3px solid #767676;  color:#ffe670; }
+.memberWrap  .aLogin form input[type="password"] {  border:3px solid #767676;  color:#ffe670; }
+.memberWrap  .aLogin {height:750px;    background:url(../images/admin/box_bg_admin.gif) no-repeat left top;} 
+.memberWrap  .aLogin form input[type="submit"] {margin-left:120px;  text-align:center;   background: url(../images/admin/btn_login.gif) no-repeat left top; 	text-indent: -9999px; 	 	width: 240px; 	height: 100px; 	line-height:1;   }
+
+
+
+

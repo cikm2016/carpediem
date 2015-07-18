@@ -1,0 +1,99 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>경기 등록</h1>
+<form method="post" role="form" name="">
+	<table class="dataTable tableStyle01">
+		<tr>
+			<th width="10%">경기일자</th>
+			<th width="10%">경기시간</th>
+			<th width="60%">리그명</th>
+			<th>경기수</th>
+		</tr>
+		<tr>
+			<td><input type="text" name="date_first" class="form-control" placeholder="07-15"></td>
+			<td><input type="text" name="date_second" class="form-control" placeholder="15:30"></td>
+			<td>
+				<select class="form-control"  name="league">
+					{% if leaguelist %}
+					{% for league in leaguelist %}
+					<option value="{{league.id}}">{{league.name}}</option>
+					{% endfor %}
+					{% endif %}
+				</select>
+			</td>
+			<td>
+				<select class="form-control"  name="game">
+					<option value="0">경기수</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th width="15%">경기날짜</th>
+			<th width="10%">경기시간</th>
+			<th width="40%">리그명</th>
+			<th>홈팀</th>
+			<th>원정팀</th>
+		</thead>
+		<tbody class="addlist">
+		</tbody>
+	</table>
+	<button style="display:none;" type="submit" id="addgamebtn" class="btn sBtn">저장</button>
+</form>
+<h1>경기 목록</h1>
+<button class="btn sBtn game_all_apply">선택적용</button>
+<button class="btn sBtn game_deleteall">선택삭제</button>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th width="5%">종목</th>
+		<th width="20%">리그명</th>
+		<th width="7%">경기일자</th>
+		<th width="6%">경기시간</th>
+		<th width="15%">승(홈팀)</th>
+		<th width="7%">승</th>
+		<th width="7%">무</th>
+		<th width="7%">패</th>
+		<th width="15%">패(원정팀)</th>
+		<th>수정/삭제</th>
+	</thead>
+	<tbody>
+	{% if gamelist %}
+	{% for game in gamelist %}
+	<tr class="select" id="{{ game.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td> {{game.league_detail.league.sport}}</td>
+		<td> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
+		<td>{{ game.date_first }}</td>
+		<td>{{ game.date_second }}</td>
+		<td>{{ game.home }} {{game.league_detail.name}}</td>
+		<td><input type="text" name="home_rate_{{game.id}}" class="form-control" value="{{ game.home_rate }}" maxlength="5"></td>
+		<td><input type="text" name="draw_rate_{{game.id}}" class="form-control" value="{{ game.draw_rate }}" maxlength="5"></td>
+		<td><input type="text" name="away_rate_{{game.id}}" class="form-control" value="{{ game.away_rate }}" maxlength="5"></td>
+		<td>{{ game.away }} {{game.league_detail.name}}</td>
+		<td>
+			<button class="btn mBtn game_modify">수정</button>/<button class="btn mBtn game_delete">삭제</button>
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

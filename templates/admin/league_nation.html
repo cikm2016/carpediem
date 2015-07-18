@@ -1,0 +1,43 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>국가 추가</h1>
+<table class="dataTable tableStyle01">
+	<form method="post" role="form">
+	<tr>
+		<th>국가 추가</th>
+		<td><input type="text" name="nation" class="form-control"></td>
+		<th>등록</th>
+		<td><button type="submit" class="btn mBtn">등록</button></td>
+	</tr>
+	</form>	
+</table>
+<table class="dataTable">
+	<thead>
+		<th>국가명</th>
+		<th>수정</th>
+		<th>삭제</th>
+	</tr>
+	</thead>
+	<tbody>
+		{% if nationlist %}
+		{% for nation in nationlist %}
+		<tr class="" id="{{ nation.id }}">
+			<td><input type="text" name="{{nation.id}}" class="form-control" value="{{ nation.name }}"></td>
+			<td><button class="btn mBtn nation_modify">수정</button></td>
+			<td><button class="btn mBtn nation_delete">삭제</button></td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		회원이 없습니다.
+		{% endif %}
+	</tbody>
+</table>
+
+{% endblock %}
+
+
+
+
+
+
+

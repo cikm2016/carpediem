@@ -1,0 +1,32 @@
+{% extends "layout_popup.html" %}
+{% block contents %}
+{% if nouser %}<h3>잘못된 접근입니다.</h3>
+{% else %}
+
+<h1>{{account}} 의 접속 로그</h1>
+	<table class="dataTable">
+		<thead>
+			<th>접속 아이피</th>
+			<th>접속 날짜</th>
+		</tr>
+		</thead>
+		<tbody>
+			{% if logs %}
+			{% for log in logs %}
+			<tr class="" id="{{ log.id }}">
+				<td>{{ log.ip }}</a></td>
+				<td>{{ log.date }}</td>
+			</tr>
+			{% endfor %}
+			{% else %}
+			해당 접속 기록이 없습니다.
+			{% endif %}
+		</tbody>
+	</table>
+{% endif %} 
+{% endblock %}
+
+
+
+
+

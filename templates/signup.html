@@ -1,32 +1,42 @@
-{% extends "base3.html" %}
-{% block layout %}
-<div class="for_mid">
-</div>
-<div class="col-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
-	{% if g.id %}
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+  <title>회원가입</title>
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/common.css')}}" />
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/login.css')}}" />
 
-	<div class="col-sm-offset-3 col-sm-6">
-		<a href="{{url_for('betting_normal')}}" class="btn btn-default float-right col-sm-12">입장하기</a>
-		<a href="{{ url_for('signout') }}" class="btn btn-default float-right col-sm-12">로그아웃</a>
-	</div>
-	{% else %}
-	<form class="form-horizontal" accept-charset="utf-8" role="form" method="post">
-		{{ form.hidden_tag() }}
-		{% from "_form_field_login.html" import render_field %}
-		{% for field in form if field.widget.input_type != 'hidden' %}
-		{{ render_field(field, class="form-control") }}
-		{% endfor %}
+ </head>
 
-		<div class="form-group">
-			<div class="col-sm-offset-3 col-sm-3">
-				<button type="submit" class="btn btn-primary float-right col-sm-12">가입신청</button>
+ <body>
+ 		<div class="memberWrap">
+			<div class="container">
+				<div class="joinForm member">
+					<h1><img src="{{ url_for('static', filename='images/login_join/tit_join.png') }}"  alt="" /></h1>
+					<form method="post" role="form">
+						<fieldset>
+							<legend></legend>
+							<input type="text" name="account" placeholder="아이디"/>
+							<input type="password" name="password" placeholder="비밀번호"/>
+							<input type="password" name="password_confirm" placeholder="비밀번호확인"/>
+							<input type="text" name="nickname" placeholder="닉네임"/>
+							<input type="text" name="phone" placeholder="전화번호"/>
+							<input type="text" name="bank" placeholder="거래은행"/>
+							<input type="text" name="bank_account" placeholder="계좌번호"/>
+							<input type="text" name="bank_name" placeholder="예금주"/>
+							<input type="text" name="rec_person" placeholder="추천인"/>
+						
+							<p class="formBtn"><input type="submit" />
+							<a href="{{ url_for('main') }}"><img src="{{ url_for('static', filename='images/login_join/btn_back.gif') }}" alt="" /></a></p>
+
+						</fieldset>	
+					</form>
+				</div><!-- mLogin -->
 			</div>
-			<div class="col-sm-3">
-				<a href='{{url_for('main')}}'class="btn btn-default col-sm-12">뒤로가기</a>
-			</div>
-		</div>
-	</form>
-	{% endif %}
-</div>
-{% endblock %}
+		</div><!-- loginWrap -->
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/layout.js') }}"></script> 
+ </body>
+</html>
+
 

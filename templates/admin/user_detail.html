@@ -1,0 +1,127 @@
+{% extends "layout_popup.html" %}
+{% block contents %}
+<h1> 회원 상세 정보 <button class="btn mBtn message_open">쪽지보내기</button></h1>
+<table class="dataTable tableStyle01">
+	<tr>
+		<th>아이디</th>
+		<td>{{user.account}}</td>
+		<th>닉네임</th>
+		<td>{{user.nickname}}</td>
+		<th>지점</th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>추천인</th>
+		<td>{{user.rec_person}}</td>
+		<th>가입일</th>
+		<td>{{user.join_date}}</td>
+		<th>가입 IP</th>
+		<td>{{user.ip}}</td>
+	</tr>
+	<tr>
+		<th>연락처</th>
+		<td> {{ user.phone }}</td>
+		<th>접속일</th>
+		<td>{%if log %}{{log.date}}{%else%}접속기록없음{%endif%}</td>
+		<th>접속 IP</th>
+		<td>{%if log %}{{log.ip}}{%else%}접속기록없음{%endif%}</td>
+	</tr>
+	<tr>
+		<th>은행명</th>
+		<td> {{ user.bank }}</td>
+		<th>계좌번호</th>
+		<td> {{ user.bank_account }}</td>
+		<th>예금주</th>
+		<td> {{ user.bank_name }}</td>
+	</tr>
+	<tr>
+		<th>보유금액</th>
+		<td> {{ user.money_crt }}</td>
+		<th>총 충전금액</th>
+		<td> {{ user.money_charge }}</td>
+		<th>총 배팅횟수</th>
+		<td> {{ user.bet_cnt }}</td>
+	</tr>
+	<tr>
+		<th>레벨</th>
+		<td>
+			<select class="form-control" id="level" name="level">
+				<option value="1" {% if user.level == 1%}selected{%endif%}>1</option>
+				<option value="2" {% if user.level == 2%}selected{%endif%}>2</option>
+				<option value="3" {% if user.level == 3%}selected{%endif%}>3</option>
+				<option value="4" {% if user.level == 4%}selected{%endif%}>4</option>
+				<option value="5" {% if user.level == 5%}selected{%endif%}>5</option>
+			</select>
+		</td>
+		<th>상태</th>
+		<td>
+			<select class="form-control" id="state" name="state">
+				<option value="0" {% if user.state == 0%}selected{%endif%}>사용중</option>
+				<option value="1" {% if user.state == 1%}selected{%endif%}>정지</option>
+			</select>
+		</td>
+		<th>위험도</th>
+		<td>
+			<select class="form-control" id="danger" name="danger">
+				<option value="0" {% if user.danger == 0%}selected{%endif%}>보통</option>
+				<option value="1" {% if user.danger == 1%}selected{%endif%}>안전</option>
+				<option value="-1" {% if user.danger == -1%}selected{%endif%}>위험</option>
+				<option value="2" {% if user.danger == 2%}selected{%endif%}>매우안전</option>
+				<option value="-2" {% if user.danger == -2%}selected{%endif%}>매우위험</option>
+			</select>
+		</td>
+	</tr>
+</table>
+<h1>회원별 별도 입금계좌 설정<small>(미설정시 레벨별 입금계좌 적용)</small></h1>
+<table class="dataTable tableStyle01">
+	<tr>
+		<th>은행명</th>
+		<td>
+			<select class="form-control" name="ank">
+				<option value="0" {% if user.bank == 0%}selected{%endif%}>국민은행</option>
+				<option value="1" {% if user.bank == 1%}selected{%endif%}>신한은행</option>
+				<option value="2" {% if user.bank == 2%}selected{%endif%}>우리은행</option>
+				<option value="3" {% if user.bank == 3%}selected{%endif%}>농협</option>
+			</select>
+		</td>
+		<th>계좌번호</th>
+		<td><input class="form-control" type="text" value="{{user.bank_account}}"/></td>
+		<th>예금주</th>
+		<td><input class="form-control" type="text" value="{{user.bank_name}}"/></td>
+	</tr>
+</table>
+
+<h1>회원별 배팅금액 설정</h1>
+<table class="dataTable tableStyle01">
+	<tr>
+		<th>승무패 배팅최소 </th>
+		<td><input class="form-control" type="text" value=""></td>
+		<th>승무패 배팅최대</th>
+		<td><input class="form-control" type="text" value=""></td>
+		<th>승무패 당첨최대</th>
+		<td><input class="form-control" type="text" value=""></td>
+	</tr>
+	<tr>
+		<th>핸디캡 배팅최소 </th>
+		<td><input class="form-control" type="text" value=""></td>
+		<th>핸디캡 배팅최대</th>
+		<td><input class="form-control" type="text" value=""></td>
+		<th>핸디캡 당첨최대</th>
+		<td><input class="form-control" type="text" value=""></td>
+	</tr>
+	<tr>
+		<th>스페셜 배팅최소 </th>
+		<td><input class="form-control" type="text" value=""></td>
+		<th>스페셜 배팅최대</th>
+		<td><input class="form-control" type="text" value=""></td>
+		<th>스페셜 당첨최대</th>
+		<td><input class="form-control" type="text" value=""></td>
+	</tr>
+</table>
+<div align="center">
+	<button class="btn mBtn user_modify">수정</button>
+	<button class="btn mBtn popclose">닫기</button>
+</div>
+<input type="hidden" name="id" value="{{user.id}}"/>
+{% endblock %}
+

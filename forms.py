@@ -36,7 +36,7 @@ class JoinForm(Form):
 			)
 	password = PasswordField(
 			u'비밀번호',
-			[validators.data_required(u'비밀번호를 입력하시기 바랍니다.'),validators.Length(min=4, max=20, message=u'길이가 이상해'),
+			[validators.data_required(u'비밀번호를 입력하시기 바랍니다.'),validators.Length(min=6, max=20, message=u'6자리 이상 입력하세요.'),
 				validators.EqualTo('confirm_password', message=u'비밀번호가 일치하지 않습니다.')],
 			description={'placeholder': u'비밀번호'}
 			)
@@ -45,20 +45,29 @@ class JoinForm(Form):
 			[validators.data_required(u'비밀번호를 두번 입력해야 합니다.')],
 			description={'placeholder': u'비밀번호 확인'}
 			)
+	nickname = StringField(
+			u'닉네임',
+			[validators.data_required(u'닉네임을 입력'),validators.Length(min=3, max=20)],
+			description={'placeholder': u'닉네임'}
+			)
 	phone = StringField(
 			u'전화번호',
 			[validators.data_required(u'전화번호를 입력하시기 바랍니다.')],
 			description={'placeholder': u'전화번호 (01012341234)'}
 			)
-	bank = StringField(
-			u'은행명',
-			[validators.data_required(u'은행명을 입력하시기 바랍니다.')],
-			description={'placeholder': u'은행명 (신한)'}
+	bank = SelectField(
+			u'은행명', 
+			choices=[('0',u'국민은행'),('1',u'신한은행'),('2',u'우리은행'), ('3',u'농협')]
 			)
 	bank_account = StringField(
 			u'계좌번호',
 			[validators.data_required(u'계좌번호를 입력하시기 바랍니다.')],
-			description={'placeholder': u'계좌번호 (284728371929)'}
+			description={'placeholder': u'계좌번호'}
+			)
+	bank_name = StringField(
+			u'예금주',
+			[validators.data_required(u'예금주를 입력하시기 바랍니다.'),validators.Length(min=3, max=5, message=u'이름이 잘못되었습니다.')],
+			description={'placeholder': u'예금주'}
 			)
 	rec_person = StringField(
 			u'추천인',

@@ -1,0 +1,49 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>마감 경기 복원</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="5%">종목</th>
+		<th width="15%">리그명</th>
+		<th width="7%">경기일자</th>
+		<th width="6%">경기시간</th>
+		<th width="15%">승(홈팀)</th>
+		<th width="5%">승</th>
+		<th width="5%">무</th>
+		<th width="5%">패</th>
+		<th width="15%">패(원정팀)</th>
+		<th>홈</th>
+		<th>VS</th>
+		<th>원정</th>
+		<th>상태</th>
+		<th>마감</th>
+	</thead>
+	<tbody>
+	{% if gamelist %}
+	{% for game in gamelist %}
+	<tr class="" id="{{ game.id }}">
+		<td> {{game.league_detail.league.sport}}</td>
+		<td> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
+		<td>{{ game.date_first }}</td>
+		<td>{{ game.date_second }}</td>
+		<td>{{ game.home }} {{game.league_detail.name}}</td>
+		<td>{{ game.home_rate }}</td>
+		<td>{{ game.draw_rate }}</td>
+		<td>{{ game.away_rate }}</td>
+		<td>{{ game.away }} {{game.league_detail.name}}</td>
+		<td>{{game.home_score}}</td>
+		<td>VS</td>
+		<td>{{game.away_score}}</td>
+		<td>종료</td>
+	</td>
+	<td>
+		<button class="btn mBtn btn-xs cross_restore">복원 </button>
+	</td>
+</tr>
+{% endfor %}
+{% else %}
+{% endif %}
+</tbody>
+	</table>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>세부 리그 추가</h1>
+<table class="dataTable tableStyle01">
+	<form method="post" role="form" name="adddetail" onsubmit="return validateFormDetail()">
+		<tr>
+			<th>리그명</th>
+			<th>세부리그명</th>
+			<th>홈팀 세부 리그명</th>
+			<th>원정팀 세부리그명</th>
+			<th>메뉴</th>
+			<th>게임</th>
+			<th>등록</th>
+		</tr>
+		<tr>
+			<td>
+				<select class="form-control"  name="league">
+					{% if leaguelist %}
+					{% for league in leaguelist %}
+					<option value="{{league.id}}">{{league.name}} </option>
+					{% endfor %}
+					{% endif %}
+				</select>
+			</td>
+			<td><input type="text" name="name" class="form-control"></td>
+			<td><input type="text" name="home" class="form-control"></td>
+			<td><input type="text" name="away" class="form-control"></td>
+			<td>
+				<select class="form-control"  name="menu">
+					<option value="">메뉴 </option>
+				</select>
+			</td>
+			<td>
+				<select class="form-control"  name="game">
+					<option value="">게임 </option>
+				</select>
+			</td>
+			<td><button type="submit" class="btn mBtn">등록</button></td>
+		</tr>
+	</form>	
+</table>
+<table class="dataTable">
+	<thead>
+		<th>리그명</th>
+		<th>세부 리그명</th>
+		<th>홈팀 세부 리그명</th>
+		<th>원정팀 세부 리그명</th>
+		<th>메뉴</th>
+		<th>게임</th>
+		<th>수정/삭제</th>
+	</thead>
+	<tbody>
+	{% if detaillist %}
+	{% for detail in detaillist|sort(reverse=True,attribute='league.name') %}
+	<tr class="" id="{{ detail.id }}">
+		<td>{{detail.league.name}} {{detail.name}}</td>
+		{% if detail.name %}
+		<td><input type="text" name="name_{{detail.id}}" class="form-control" value="{{ detail.name }}"></td>
+		<td><input type="text" name="home_{{detail.id}}" class="form-control" value="{{ detail.home }}"></td>
+		<td><input type="text" name="away_{{detail.id}}" class="form-control" value="{{ detail.away }}"></td>
+		{% else %}
+		<td><input type="text" name="name_{{detail.id}}" class="form-control" value="{{ detail.name }}" disabled></td>
+		<td><input type="text" name="home_{{detail.id}}" class="form-control" value="{{ detail.home }}" disabled></td>
+		<td><input type="text" name="away_{{detail.id}}" class="form-control" value="{{ detail.away }}" disabled></td>
+		{% endif %}
+		<td>
+			<select class="form-control"  name="menu">
+				<option value="">메뉴 </option>
+			</select>
+		</td>
+		<td>
+			<select class="form-control"  name="game">
+				<option value="">게임 </option>
+			</select>
+		</td>
+		<td>
+			{% if detail.name %}
+			<button class="btn mBtn detail_modify">수정</button>/<button class="btn btn-default btn-xs detail_delete">삭제</button>
+			{% else %}
+			<button class="btn mBtn detail_modify" disabled="disabled">수정</button>/<button class="btn btn-default btn-xs detail_delete" disabled="disabled">삭제</button>
+			{% endif %}
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+
+{% endblock %}
+
+
+
+
+
+
+
+

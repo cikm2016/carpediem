@@ -1,33 +1,33 @@
-{% extends "base3.html" %}
-{% block layout %}
-<div class="for_bottom">
-</div>
-<div class="main_layout">
-	<div class="col-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
-			{% if g.id %}
-			
-			<div class="col-sm-offset-3 col-sm-6">
-				<a href="{{url_for('betting_normal')}}" class="btn btn-default float-right col-sm-12">입장하기</a>
-					<a href="{{ url_for('signout') }}" class="btn btn-default float-right col-sm-12">로그아웃</a>
-			</div>
-			{% else %}
-			<form class="form-horizontal" role="form" method="post">
-				{{ form.hidden_tag() }}
-				{% from "_form_field_login.html" import render_field %}
-				{% for field in form if field.widget.input_type != 'hidden' %}
-				{{ render_field(field, class="form-control") }}
-				{% endfor %}
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>회원 로그인</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/common.css')}}" />
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/login.css')}}" />
 
-				<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-3">
-							<button type="submit" class="btn btn-primary float-right col-sm-12">로그인</button>
-						</div>
-						<div class="col-sm-3">
-							<a href='{{url_for('signup')}}'class="btn btn-default col-sm-12">회원가입</a>
-						</div>
-				</div>
-			</form>
-			{% endif %}
-	</div>
-</div>
-{% endblock %}
+ </head>
+
+ <body>
+ 		<div class="memberWrap">
+			<div class="container">
+				<div class="mLogin member">
+					<h1><img src="{{ url_for('static', filename='images/login_join/tit_login.png') }}"  alt="" /></h1>
+					<form method="post" role="form">
+						<fieldset>
+							<legend></legend>
+							<input type="text" name="account" />
+							<input type="password" name="password" />
+						
+							<p class="formBtn"><input type="submit" />
+							<a href="{{ url_for('signup') }}"><img src="{{ url_for('static', filename='images/login_join/btn_join.gif') }}" alt="회원가입" /></a></p>
+
+						</fieldset>	
+					</form>
+				</div><!-- mLogin -->
+			</div>
+		</div><!-- loginWrap -->
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/layout.js') }}"></script> 
+ </body>
+</html>

@@ -1,0 +1,41 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>가입 승인 대기자 </h1>
+	<table class="dataTable tableStyle01">
+		<thead>
+		<tr>
+			<th width="15%">가입 신청일</th>
+			<th width="10%">아이디</th>
+			<th width="10%">닉네임</th>
+			<th width="10%">연락처</th>
+			<th width="20%">계좌 정보</th>
+			<th width="10%">등록 아이피</th>
+			<th width="10%">추천인</th>
+			<th width="15%">승인</th>
+		</tr>
+		</thead>
+		<tbody>
+			{% if userlist %}
+			{% for user in userlist %}
+			<tr class="" id="{{ user.id }}">
+				<td>{{ user.join_date.strftime('%Y-%m-%d %H:%m') }}</td>
+				<td><strong>{{ user.account }}</strong></td>
+				<td>{{ user.nickname }}</strong></td>
+				<td>{{ user.phone }}</a></td>
+				<td>{{ user.bank }}</td>
+				<td>{{ user.ip }}</td>
+				<td>{{ user.rec_person }}</td>
+				<td><button class="btn mBtn allow">승인</button>/<button class="btn mBtn deallow">거절</button></td>
+				<input type="hidden" name="{{user.id}}" value={{user.id}}>
+			</tr>
+			{% endfor %}
+			{% else %}
+			<h4>가입 승인 대기자가 없습니다.</h4>
+			{% endif %}
+		</tbody>
+	</table>
+
+{% endblock %}
+
+
+

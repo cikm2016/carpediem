@@ -1,0 +1,31 @@
+{% extends "layout_main.html" %}
+{% block contents %}
+<h1>충전내역</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th>신청일</th>
+		<th>충전금액</th>
+		<th>상태</th>
+	</thead>
+	<tbody>
+	{% if history %}
+	{% for h in history %}
+	<tr class="select" id="{{ h.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td>{{ h.date }}</td>
+		<td>{{ h.money }}</td>
+		<td>{% if h.charged == 0 %}처리중{% else %}처리완료{% endif %}</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+</div>
+
+{% endblock %}
+
+
+
+

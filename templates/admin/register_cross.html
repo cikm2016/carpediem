@@ -1,0 +1,54 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>승무패 관리</h1>
+<button class="btn mBtn cross_all_apply">선택적용</button>
+<button class="btn mBtn game_deleteall">선택삭제</button>
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th width="1%">선택</th>
+			<th width="5%">종목</th>
+			<th width="15%">리그명</th>
+			<th width="7%">경기일자</th>
+			<th width="6%">경기시간</th>
+			<th width="15%">승(홈팀)</th>
+			<th width="5%">승</th>
+			<th width="5%">무</th>
+			<th width="5%">패</th>
+			<th width="15%">패(원정팀)</th>
+			<th>상태</th>
+			<th>적용/삭제</th>
+		</thead>
+		<tbody>
+			{% if gamelist %}
+			{% for game in gamelist %}
+			<tr class="select" id="{{ game.id }}">
+				<td> <input type="checkbox" name="select"></td>
+				<td> {{game.league_detail.league.sport}}</td>
+				<td style="text-align:left;"> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
+				<td>{{ game.date_first }}</td>
+				<td>{{ game.date_second }}</td>
+				<td style="text-align:left;">{{ game.home }} {{game.league_detail.name}}</td>
+				<td>{{ game.home_rate }}</td>
+				<td>{{ game.draw_rate }}</td>
+				<td>{{ game.away_rate }}</td>
+				<td style="text-align:right;">{{game.league_detail.name}} {{ game.away }} </td>
+				<td>
+					<select class="form-control" name="state_{{game.id}}">
+						<option value="0" {% if game.state == 0%}selected{%endif%}>등록</option>
+						<option value="1" {% if game.state == 1%}selected{%endif%}>개시</option>
+						<option value="2" {% if game.state == 2%}selected{%endif%}>중지</option>
+						<option value="3" {% if game.state == 3%}selected{%endif%}>종료</option>
+					</select>
+				</td>
+				<td>
+					<button class="btn mBtn cross_apply">적용</button>/<button class="btn mBtn game_delete">삭제</button>
+				</td>
+			</tr>
+			{% endfor %}
+			{% else %}
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

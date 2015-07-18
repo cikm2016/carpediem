@@ -1,0 +1,33 @@
+{% extends "layout_main.html" %}
+
+{% block contents %}
+<table class="dataTable">
+	<thead>
+		<tr>
+			<th>글번호</th>
+			<th>제목</th>
+			<th>댓글수</th>
+			<th>작성일</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% if context.article_list %}
+	{% for article in context.article_list %}
+	<tr class="" id="article_{{ article.id }}">
+		<td>{{ article.id }}</td>
+		<td><a class="title" href="{{ url_for('article_detail', id=article.id) }}"><strong>{{ article.title }}</strong></a></td>
+		<td>{{ article.nofc }}</td>
+		<td><small>{{ article.date_created.strftime('%Y-%m-%d' ) }}</small></td>
+	</tr>
+	{% endfor %}
+	{% endif %}
+	</tbody>
+</table>
+
+<a href="{{ url_for('article_create') }}" class="btn">글쓰기</a>
+<form role="form" method="get" action="{{ url_for('article_search') }}">
+	<input type="text" class="form-control" placeholder="검색어 입력" name="search"></input>
+	<button type="submit" class="btn">검색</button>
+</form>
+{% endblock %}
+

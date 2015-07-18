@@ -1,43 +1,37 @@
 {% extends "base.html" %}
 
 {% block layout %}
+<div class="container">
 {% block navbar %}
 {% include "navbar.html" %}
 {% endblock %}
+</div>
 <div id="contents" class="container">
 	{% block message %}
 	{% include "messages.html" %}
 	{% endblock %}
-	<div  class="col-sm-10">
 		{% block contents %}{% endblock %}
-	</div>
-	<div id="sidebar" class="col-sm-2">
-	{% if g.id %}
+	<div id="sidebar" class="">
 		<h3>배팅 현황</h3>
-		<div class""></div>
-		<hr>
-		<div class="blackbox"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">보유금액</span><span>0</span></div></div>
-		<div class="blackbox"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">누적 배당</span><span>0</span></div></div>
-		<div class="blackbox"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">배팅 금액</span><span>0</span></div></div>
-		<div class="blackbox"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">예상 당첨금</span><span>0</span></div></div>
+		{% if user %}
+		<div class="blackbox">보유금액</div>
+		<div class=""><input id="money_crt" class="form-control input-sm" type="text" value="{{user.money_crt}}" disabled></div>
+		<div class="blackbox">누적배당</div>
+		<div class=""><input id="rate_cml" class="form-control input-sm" type="text" value="0" disabled></div>
+		<div class="blackbox">예상당첨금</div>
+		<div class=""><input id="money_cml" class="form-control input-sm" type="text" value="0" disabled></div>
+		<div class="blackbox">배팅금액</div>
+		<div class=""><input id="money_bet" class="form-control input-sm" type="text" value="5000"></div>
+		<button class="btn btn-default">배팅하기</button></div>
+		{% endif %}
+		<table class="bet_table">
+		</table>
 	</div>
-	{% else %}
-		<h3>관리자 모드</h3>
-		<div class""></div>
-		<hr>
-		<div class="blackbox"><div style="position:relative;"><a href="{{url_for('admin_control_user')}}"><span style="position:absolute; top:0; left:0px;">가입 대기자</span><span>{{user}}</span></a></div></div>
-		<div class="blackbox"><div style="position:relative;"><a href="{{url_for('admin_schedule')}}"><span style="position:absolute; top:0; left:0px;">경기 관리</span><span>0</span></a></div></div>
-		<div class="blackbox"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">기능 3</span><span>0</span></div></div>
-		<div class="blackbox"><div style="position:relative;"><span style="position:absolute; top:0; left:0px;">기능 4</span><span>0</span></div></div>
-	</div>
-	{% endif %}
 </div>
 <div id="footer">
 	<div class="container">
-		<div class="row">
-			<div class="col-sm-8 col-md-offset-1 col-md-6">사업자 등록 주소지 등등 문구들이 올 자리</div>
-			<div class="col-sm-3 col-md-offset-1 col-md-2 align-right">간단한 문구.<br><strong>© ?????? corp.</strong></div>
-		</div>
+		<div class="">사업자 등록 주소지 등등 문구들이 올 자리</div>
+		<div class="">간단한 문구.<br><strong>© ?????? corp.</strong></div>
 	</div>
 </div> 
 {% endblock %}

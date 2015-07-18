@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block contents %}
+<div class="title">
+	<h3>승무패</h3>
+</div>
+<div class="table_area">
+	<table class="table">
+		<thead>
+			<th width="8%">종목</th>
+			<th width="15%">경기시간</th>
+			<th width="30%">승(홈팀)</th>
+			<th width="10%">무</th>
+			<th width="30%">패(원정팀)</th>
+			<th>상태</th>
+		</thead>
+		<tbody>
+			{% if gamelist %}
+			{% for game in gamelist|sort(reverse=True,attribute='league_detail.league.name') %}
+			<tr class="" id="game_{{ game.id }}">
+				<td>{{game.league_detail.league.name}}</td>
+				<td>{{ game.date_first }} {{ game.date_second }}</td>
+					<td class="clickbox" style="text-align:left;"><span class="name">{{ game.home }}</span><span> {{game.league_detail.name}}</span><span class="rate">{{ game.home_rate }}</span></td>
+				{% if game.draw_rate == 0 %}
+				<td> VS</td>
+				{% else %}
+				<td class="clickbox"><span class="rate">{{ game.draw_rate }}</span></td>
+				{% endif %}	
+				<td  class="clickbox" style="text-align:right;"><span class="rate">{{ game.away_rate }}</span><span><span>{{game.league_detail.name}}</span><span class="name"> {{ game.away }}</span> </td>
+				<td>
+					{% if game.state == 0%}{%endif%}</option>
+					{% if game.state == 1%}배팅가능{%endif%}</option>
+					{% if game.state == 2%}배팅중지{%endif%}</option>
+					{% if game.state == 3%}배팅종료{%endif%}</option>
+				</td>
+			</tr>
+			{% endfor %}
+			{% else %}
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+

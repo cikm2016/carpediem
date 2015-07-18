@@ -1,0 +1,42 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>충전신청관리</h1>
+<button class="btn mBtn charge_all">선택충전</button>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th>아이디</th>
+		<th>닉네임</th>
+		<th>레벨</th>
+		<th>보유금액</th>
+		<th>입금자명</th>
+		<th>충전금액</th>
+		<th>신청시간</th>
+		<th>충전/취소</th>
+	</thead>
+	<tbody>
+	{% if chargelist %}
+	{% for charge in chargelist %}
+	<tr class="select" id="{{ charge.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td>{{ charge.user.account }}</td>
+		<td>{{ charge.user.nickname }}</td>
+		<td>{{ charge.user.level }}</td>
+		<td>{{ charge.user.money_crt }}</td>
+		<td>{{ charge.user.bank_name }}</td>
+		<td>{{ charge.money }}</td>
+		<td>{{ charge.date }}</td>
+		<td>
+			<button class="btn mBtn charge_one">충전</button>
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+</div>
+
+{% endblock %}
+
+

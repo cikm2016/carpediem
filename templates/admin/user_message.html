@@ -1,0 +1,17 @@
+{% extends "layout_popup.html" %}
+{% block contents %}
+<div class="title">
+	<h4> 쪽지보내기</h4>
+</div>
+<div style="padding-bottom:5px;">
+	<input type="text" value="To. {{nickname}}"/disabled>
+</div>
+<textarea id="message" rows="10" cols="50"></textarea>
+<div style="padding-bottom:5px;">
+	<button class="btn btn-primary btn-sm message_send">보내기</button>
+	<button class="btn btn-default btn-sm popclose">취소</button>
+</div>
+<input type="hidden" name="id" value="{{id}}"/>
+{% endblock %}
+
+
