@@ -56,6 +56,7 @@ def main():
 				pass
 			else:
 				if user.allow == 0:
+					#가입 대기중
 					return render_template('main.html')
 
 				loginlog = LoginLog(
@@ -1000,7 +1001,7 @@ def user_main():
 		return redirect(url_for('main'))
 
 
-## 승무패
+## 승무패 메인
 @app.route('/user/cross', methods=['GET'])
 def user_cross():
 	if 'id' in session:
@@ -1010,7 +1011,76 @@ def user_cross():
 	else:
 		return redirect(url_for('main'))
 
+## 승무패 - 유저 배팅
+@app.route('/user/cross/betting', methods=['POST'])
+def user_cross_betting():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		data = json.loads(request.form['data'])
+		money = int(request.form['money'])
 
+		for d in data:
+			game = Game.query.get(int(d['id']))
+			try:
+				bet = UserBetting(
+							game = game,
+							user = user,
+							betting = int(d['betting']),
+							date = datetime.now()+timedelta(hours=9),
+							group = user.bet_cnt+1,
+							money_bet = money
+						)
+			except Exception, e:
+				print e
+				jsonify(success=False)
+
+			db.session.add(bet)
+
+		user.bet_cnt += 1
+		user.money_crt -= money
+		
+		db.session.commit()
+		
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False)
+
+
+## 유저 배팅 내역 
+@app.route('/user/betting/history', methods=['GET', 'POST'])
+def user_betting_history():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		history = user.bettings.all()
+
+		betlist = {}
+
+		key = ''
+		for h in history:
+			if key != h.group:
+				key = h.group
+				betlist[key] = []
+				betlist[key].append(h)
+			else:
+				betlist[key].append(h)
+
+		sortedkey = sorted(betlist, reverse=True)
+		return render_template('user/betting_history.html', betlist=betlist, sortedkey=sortedkey)
+
+	else:
+		return redirect(url_for('main'))
+
+
+
+
+
+## 사다리
+@app.route('/user/named/ladder', methods=['GET'])
+def user_named_ladder():
+	if 'id' in session:
+		return render_template('user/named_ladder.html')
+	else:
+		return redirect(url_for('main'))
 
 
 

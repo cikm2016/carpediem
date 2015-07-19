@@ -795,10 +795,12 @@ $(document).ready(function(){
 	);
 	$(".clickbox").click(function(){
 		var id = $(this).closest('tr').attr('id');
+		var	home = $('#'+id).find('td.home').find('span.name').text();
+		var	away = $('#'+id).find('td.away').find('span.name').text();
 
 		var money_cml = $('#money_cml').val();
 		var rate_cml = $('#rate_cml').val();
-		var money_bet = $('#money_bet').val();
+		var money_bet = parseInt($('#money_bet').val());
 
 		var check = $(this).hasClass('clicked')
 		var rate = parseFloat($(this).find('span.rate').text());
@@ -817,6 +819,7 @@ $(document).ready(function(){
 				ret_rate = rate_cml/rate;
 			}
 			$('#bet_'+id).remove();
+			$('input[name="'+id+'"]').remove();
 			$(this).removeClass('clicked');
 		}
 		/* 새로운팀 클릭 */
@@ -831,9 +834,25 @@ $(document).ready(function(){
 					ret_rate = rate_cml*rate;
 				}
 				$(this).addClass('clicked');
-				var betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td>'+team+'</td></tr>';
-				$('.bet_table').append(betteam);
 				
+				var betteam;
+				var isHome = $(this).hasClass('home');
+				if (isHome){
+					$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="1">');
+					betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div class="selected">'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+				}
+				else{
+					var isAway = $(this).hasClass('away');
+					if(isAway){
+						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="-1">');
+						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div class="selected">'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+					}
+					else{
+						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="0">');
+						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+					}
+				}
+				$('.bet_table').prepend(betteam);
 			}
 			/* 클릭된 팀이 있을때 */
 			else{
@@ -847,12 +866,80 @@ $(document).ready(function(){
 				clicked.removeClass('clicked');
 				$(this).addClass('clicked');
 				$('#bet_'+id).remove();
-				var betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td>'+team+'</td></tr>';
-				$('.bet_table').append(betteam);
+
+				$('input[name="'+id+'"]').remove();
+
+
+				var betteam;
+				var isHome = $(this).hasClass('home');
+				// 승,무,패 어디 선택됐는지 판단
+				if (isHome){
+					$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="1">');
+					betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div class="selected">'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+				}
+				else{
+					var isAway = $(this).hasClass('away');
+					if(isAway){
+						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="-1">');
+						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div class="selected">'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+					}
+					else{
+						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="0">');
+						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+					}
+				}
+				$('.bet_table').prepend(betteam);
+
 			}
 		}
 		$('#rate_cml').val(ret_rate.toFixed(2));
 		$('#money_cml').val(Math.round(ret_rate*money_bet));
+	});
+	$('#bet_btn').click(function(){
+		var money_crt = parseInt($('#money_crt').val());
+		var money_bet = parseInt($('#money_bet').val());
+		if (money_bet > money_crt){
+			alert('캐쉬가 부족합니다.');
+		}
+		else{
+			if ($('.mybet').length){
+				var data = []
+
+				$('.mybet').each(function(){
+					var id =  $(this).attr('name');
+					var betting = $(this).val();
+					data.push({ id:id, betting:betting });
+				});
+
+				var check = confirm('배팅 하시겠습니까?');
+				if (check){
+					$.ajax({
+						url : '/user/cross/betting',
+						type: 'POST',
+						dataType: 'json',
+						data: { 
+							data: JSON.stringify(data),
+							money: money_bet
+						},
+						success : function(resp){
+							if(resp.success){
+								alert('성공적으로 배팅하였습니다.');
+								$('#money_crt').val(money_crt-money_bet);
+							}
+							else{
+								alert('잘못된 접근입니다.');
+							}
+						},
+						error : function(resp){
+							console.log('server error');
+						}	
+					});
+				}
+			}
+			else{
+				alert('배팅한 항목이 없습니다.');
+			}	
+		}
 	});
 
 

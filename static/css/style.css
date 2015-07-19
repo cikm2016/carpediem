@@ -51,20 +51,14 @@ body{
 	text-align: center;
 	color: rgb(0,0,0);
 }
+.table{
+	padding-bottom: 30px;
+}
+.table th{
+	background-color: blue;
+}
 th, td{
-	padding: 5px;
-	text-align: center;
-}
-.user th{
-	background-color: rgba(255,0,0,0.5);
-	text-align: center;
-}
-.league th{
-	background-color: rgba(0,0,255,0.5);
-	text-align: center;
-}
-.register th{
-	background-color: rgba(255,255,0,0.5);
+	padding: 10px;
 	text-align: center;
 }
 .popContents{
@@ -108,4 +102,7 @@ th, td{
 }
 .clicked{
 	background-color: yellow;	
+}
+.selected{
+	color: yellow;
 }

@@ -3,7 +3,6 @@
 <div class="title">
 	<h3>승무패</h3>
 </div>
-<div class="table_area">
 	<table class="table">
 		<thead>
 			<th width="8%">종목</th>
@@ -16,16 +15,16 @@
 		<tbody>
 			{% if gamelist %}
 			{% for game in gamelist|sort(reverse=True,attribute='league_detail.league.name') %}
-			<tr class="" id="game_{{ game.id }}">
+			<tr class="" id="{{ game.id }}">
 				<td>{{game.league_detail.league.name}}</td>
 				<td>{{ game.date_first }} {{ game.date_second }}</td>
-					<td class="clickbox" style="text-align:left;"><span class="name">{{ game.home }}</span><span> {{game.league_detail.name}}</span><span class="rate">{{ game.home_rate }}</span></td>
+					<td class="home clickbox" style="text-align:left;"><span class="name">{{ game.home }}</span><span> {{game.league_detail.name}}</span><span class="rate">{{ game.home_rate }}</span></td>
 				{% if game.draw_rate == 0 %}
 				<td> VS</td>
 				{% else %}
-				<td class="clickbox"><span class="rate">{{ game.draw_rate }}</span></td>
+				<td class="draw clickbox"><span class="rate">{{ game.draw_rate }}</span></td>
 				{% endif %}	
-				<td  class="clickbox" style="text-align:right;"><span class="rate">{{ game.away_rate }}</span><span><span>{{game.league_detail.name}}</span><span class="name"> {{ game.away }}</span> </td>
+				<td  class="away clickbox" style="text-align:right;"><span class="rate">{{ game.away_rate }}</span><span><span>{{game.league_detail.name}}</span><span class="name"> {{ game.away }}</span> </td>
 				<td>
 					{% if game.state == 0%}{%endif%}</option>
 					{% if game.state == 1%}배팅가능{%endif%}</option>
@@ -38,6 +37,5 @@
 			{% endif %}
 		</tbody>
 	</table>
-</div>
 {% endblock %}
 

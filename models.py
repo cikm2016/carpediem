@@ -135,12 +135,16 @@ class Game(db.Model):
 class UserBetting(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
-	game = db.relationship('Game', backref=db.backref('bettings', cascade='all, delete-orphan', lazy='dynamic'))
+	game = db.relationship('Game', backref=db.backref('betters', cascade='all, delete-orphan', lazy='dynamic'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('User', backref=db.backref('bettings', cascade='all, delete-orphan', lazy='dynamic'))
 
-	allow = db.Column(db.Integer, default=0)
+	#1: home, 0: draw, -1: away
+	betting = db.Column(db.Integer)
+	group = db.Column(db.Integer)
+	money_bet = db.Column(db.Integer)
 
+	state = db.Column(db.Integer, default=0)
 	date = db.Column(db.DateTime())
 
 #Talk Room

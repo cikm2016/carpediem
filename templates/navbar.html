@@ -3,10 +3,10 @@
 		<li><a href="{{url_for('user_cross')}}">승무패 </a></li>
 		<li><a href="#">핸디캡</a></li>
 		<li><a href="#">스페셜</a></li>
-		<li><a href="#">사다리</a></li>
+		<li><a href="{{ url_for('user_named_ladder') }}">사다리</a></li>
 		<li><a href="#">달팽이</a></li>
 		<li><a href="#">경기결과</a></li>
-		<li><a href="#">배팅내역</a></li>
+		<li><a href="{{ url_for('user_betting_history') }}">배팅내역</a></li>
 		<li><a href="{{ url_for('user_charge') }}">충전</a></li>
 		<li><a href="#">환전</a></li>
 		<li><a href="{{ url_for('user_charge_history') }}">충전/환전내역</a></li>
