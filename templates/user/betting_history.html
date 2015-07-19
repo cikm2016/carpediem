@@ -1,0 +1,47 @@
+{% extends "layout_main.html" %}
+{% block contents %}
+<h1>배팅내역</h1>
+{% if betlist and sortedkey%}
+{% for key in sortedkey %}
+<table class="table">
+	<thead>
+		<th width="8%">리그</th>
+		<th width="15%">경기시간</th>
+		<th width="30%">승(홈팀)</th>
+		<th width="10%">무</th>
+		<th width="30%">패(원정팀)</th>
+		<th>상태</th>
+	</thead>
+	{% for v in betlist[key] %}
+	<tbody>
+	<tr class="" id="{{ v.id }}">
+		<td>{{v.game.league_detail.league.name}}</td>
+		<td>{{ v.game.date_first }} {{ v.game.date_second }}</td>
+		<td class="home {%if v.betting == 1 %}clicked{% endif %}" style="text-align:left;"><span class="name">{{ v.game.home }}</span><span> {{v.game.league_detail.name}}</span><span class="rate">{{ v.game.home_rate }}</span></td>
+		{% if v.game.draw_rate == 0 %}
+		<td> VS</td>
+		{% else %}
+		<td class="draw {%if v.betting == 0 %}clicked{% endif %}"><span class="rate">{{ v.game.draw_rate }}</span></td>
+		{% endif %}	
+		<td  class="away {%if v.betting == -1 %}clicked{% endif %}" style="text-align:right;"><span class="rate">{{ v.game.away_rate }}</span><span><span>{{v.game.league_detail.name}}</span><span class="name"> {{ v.game.away }}</span> </td>
+			<td>{% if v.game.finish == 0%}경기중{% else %}경기종료{% endif %}</td>
+		</tr>
+		</tbody>
+		{% endfor %}
+		<tr>
+			<th>배팅시간</th><td>{{betlist[key][0].date}}</td>
+			<th>배당률</th><td></td>
+			<th>예상당첨금액</th><td></td>
+		</tr>
+		<tr>
+			<th>게임종류</th><td></td>
+			<th>배팅금액</th><td>{{betlist[key][0].money_bet}}원</td>
+			<th>당첨금액</th><td></td>
+		</tr>
+	</tr>
+</table>
+{% endfor %}
+{% else %}
+{% endif %}
+
+{% endblock %}
