@@ -1,8 +1,8 @@
 {% extends "layout_main.html" %}
 {% block contents %}
 <h1>배팅내역</h1>
-{% if betlist and sortedkey%}
-{% for key in sortedkey %}
+{% if betlist and moneylist and ratelist and datelist and lottolist %}
+{% for bet in betlist %}
 <table class="table">
 	<thead>
 		<th width="8%">리그</th>
@@ -12,7 +12,7 @@
 		<th width="30%">패(원정팀)</th>
 		<th>상태</th>
 	</thead>
-	{% for v in betlist[key] %}
+	{% for v in bet %}
 	<tbody>
 	<tr class="" id="{{ v.id }}">
 		<td>{{v.game.league_detail.league.name}}</td>
@@ -29,13 +29,13 @@
 		</tbody>
 		{% endfor %}
 		<tr>
-			<th>배팅시간</th><td>{{betlist[key][0].date}}</td>
-			<th>배당률</th><td></td>
-			<th>예상당첨금액</th><td></td>
+			<th>배팅시간</th><td>{{datelist[loop.index-1]}}</td>
+			<th>배당률</th><td>{{ratelist[loop.index-1]}}</td>
+			<th>예상당첨금액</th><td>{{lottolist[loop.index-1]}}원</td>
 		</tr>
 		<tr>
 			<th>게임종류</th><td></td>
-			<th>배팅금액</th><td>{{betlist[key][0].money_bet}}원</td>
+			<th>배팅금액</th><td>{{moneylist[loop.index-1]}}원</td>
 			<th>당첨금액</th><td></td>
 		</tr>
 	</tr>

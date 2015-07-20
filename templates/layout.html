@@ -6,30 +6,32 @@
 	{% include "navbar.html" %}
 	{% endblock %}
 </div>
-<div id="contents" class="container">
-	{% block message %}
-	{% include "messages.html" %}
-	{% endblock %}
-	{% block contents %}{% endblock %}
-	<div id="sidebar" class="">
-		<h3>배팅 현황</h3>
-		{% if user %}
-		<div class="blackbox">보유금액</div>
-		<div class=""><input id="money_crt" class="form-control input-sm" type="text" value="{{user.money_crt}}" disabled></div>
-		<div class="blackbox">누적배당</div>
-		<div class=""><input id="rate_cml" class="form-control input-sm" type="text" value="0" disabled></div>
-		<div class="blackbox">예상당첨금</div>
-		<div class=""><input id="money_cml" class="form-control input-sm" type="text" value="0" disabled></div>
-		<div class="blackbox">배팅금액</div>
-		<div class=""><input id="money_bet" class="form-control input-sm" type="text" value="5000"></div>
-		<button id="bet_btn" class="btn btn-default">배팅하기</button>
-		{% endif %}
-		<div class="blackbox">
-		<table class="bet_table">
-		</table>
-		</div>
-	</div<>
-</div>
+<div id="contentsWrap">
+	<div id="contents" class="container">
+		{% block message %}
+		{% include "messages.html" %}
+		{% endblock %}
+		{% block contents %}{% endblock %}
+		<div id="sidebar" class="">
+			<h3>배팅 현황</h3>
+			{% if user %}
+			<div class="blackbox">보유금액</div>
+			<div class=""><input id="money_crt" class="form-control input-sm" type="text" value="{{user.money_crt}}" disabled></div>
+			<div class="blackbox">누적배당</div>
+			<div class=""><input id="rate_cml" class="form-control input-sm" type="text" value="0" disabled></div>
+			<div class="blackbox">예상당첨금</div>
+			<div class=""><input id="money_cml" class="form-control input-sm" type="text" value="0" disabled></div>
+			<div class="blackbox">배팅금액</div>
+			<div class=""><input id="money_bet" class="form-control input-sm" type="text" value="5000"></div>
+			<button id="bet_btn" class="btn btn-default">배팅하기</button>
+			{% endif %}
+			<div class="blackbox">
+				<table class="bet_table">
+				</table>
+			</div>
+		</div<>
+	</div>
+</div><!-- contentsWrap -->
 <div id="footer">
 	<div class="container">
 		<div class="">사업자 등록 주소지 등등 문구들이 올 자리</div>

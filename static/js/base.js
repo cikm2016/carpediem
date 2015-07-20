@@ -453,7 +453,8 @@ $(document).ready(function(){
 						$('#'+id).empty();
 					}
 					else{
-						alert('잘못된 접근입니다.');
+						
+						alert(resp.msg);
 					}
 				},
 				error : function(resp){
@@ -520,7 +521,7 @@ $(document).ready(function(){
 						
 					}
 					else{
-						alert('잘못된 접근입니다.');
+						alert(resp.msg);
 					}
 				},
 				error : function(resp){
@@ -898,6 +899,7 @@ $(document).ready(function(){
 	$('#bet_btn').click(function(){
 		var money_crt = parseInt($('#money_crt').val());
 		var money_bet = parseInt($('#money_bet').val());
+		var rate = $('#rate_cml').val();
 		if (money_bet > money_crt){
 			alert('캐쉬가 부족합니다.');
 		}
@@ -919,7 +921,8 @@ $(document).ready(function(){
 						dataType: 'json',
 						data: { 
 							data: JSON.stringify(data),
-							money: money_bet
+							money: money_bet,
+							rate: rate
 						},
 						success : function(resp){
 							if(resp.success){

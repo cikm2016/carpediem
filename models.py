@@ -31,6 +31,9 @@ class User(db.Model):
 	join_date = db.Column(db.DateTime())
 
 
+#############################################
+####    로그인, 충전, 환전 로그데이터    ####
+#############################################
 
 ## user login log
 class LoginLog(db.Model):
@@ -81,7 +84,10 @@ class BankAccount(db.Model):
 	bank_name = db.Column(db.String(255))
 
 
-# 국가, 종목
+#############################################
+#### 국가, 종목, 리그, 세부리그 메타정보 ####
+#############################################
+
 class SportandNation(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	#0: sport, 1: nation
@@ -131,22 +137,38 @@ class Game(db.Model):
 	league_detail = db.relationship('LeagueDetail',
 			backref=db.backref('games', cascade='all, delete-orphan', lazy='dynamic'))
 
+#############################################
+####  유저 배팅 정보, 배팅한 게임 정보   ####
+#############################################
 
-class UserBetting(db.Model):
+class UserBet(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
-	game = db.relationship('Game', backref=db.backref('betters', cascade='all, delete-orphan', lazy='dynamic'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	user = db.relationship('User', backref=db.backref('bettings', cascade='all, delete-orphan', lazy='dynamic'))
+	user = db.relationship('User', backref=db.backref('mybets', cascade='all, delete-orphan', lazy='dynamic'))
 
-	#1: home, 0: draw, -1: away
-	betting = db.Column(db.Integer)
-	group = db.Column(db.Integer)
 	money_bet = db.Column(db.Integer)
+	rate = db.Column(db.Float)
 
 	state = db.Column(db.Integer, default=0)
 	date = db.Column(db.DateTime())
 
+class UserBetGame(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
+	game = db.relationship('Game', backref=db.backref('betgames', cascade='all, delete-orphan', lazy='dynamic'))
+
+	user_bet_id = db.Column(db.Integer, db.ForeignKey('user_bet.id'))
+	user_bet = db.relationship('UserBet', backref=db.backref('betgames', cascade='all, delete-orphan', lazy='dynamic'))
+
+	#1: home, 0: draw, -1: away
+	betting = db.Column(db.Integer)
+
+	isSuccess = db.Column(db.Integer, default=0)
+
+
+#############################################
+####               게시판                ####
+#############################################
 #Talk Room
 class Article(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

@@ -6,7 +6,7 @@ from sqlalchemy import desc
 
 from app import app, db
 from app.forms import ArticleForm, CommentForm, JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBetting
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame
 
 import re
 import json
@@ -69,6 +69,7 @@ def main():
 				
 				session.permanent = True
 				session['id'] = user.id
+				session['nickname'] = user.nickname
 				return redirect(url_for('user_main'))
 
 			return render_template('main.html')
@@ -142,9 +143,11 @@ def signout():
 	if 'id' in session:
 		session.clear()
 		return redirect(url_for('main'))
-	else:
+	elif 'admin' in session:
 		session.clear()
 		return redirect(url_for('main_admin'))
+	else:
+		return redirect(url_for('main'))
 
 ####################################
 ############   admin   #############
@@ -159,7 +162,7 @@ def admin_main():
 	if 'admin' in session:
 		return render_template('admin/adminmain.html')
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 ## 유저 관리 
 ## 가입 신청 회원 리스트
@@ -317,7 +320,7 @@ def admin_user_ip():
 			iplist = BlockIp.query.all()
 			return render_template('admin/user_blockip.html', iplist = iplist)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 
 # 아이피 차단하기
@@ -348,7 +351,7 @@ def admin_user_stop():
 		userlist = User.query.filter(User.state == 1).all()
 		return render_template('admin/user_stop.html', userlist=userlist)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #관리자 회원 관리
 @app.route('/admin/user/admin', methods=['GET'])
@@ -357,7 +360,7 @@ def admin_user_admin():
 		userlist = User.query.filter(User.allow == 2).all()
 		return render_template('admin/user_admin.html', userlist=userlist)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 
 
@@ -382,7 +385,7 @@ def admin_league_sport():
 			
 			return redirect(url_for('admin_league_sport'))
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #종목 수정 
 @app.route('/admin/league/sport/modify', methods=['POST'])
@@ -437,7 +440,7 @@ def admin_league_nation():
 			
 			return redirect(url_for('admin_league_nation'))
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #국가 수정 
 @app.route('/admin/league/nation/modify', methods=['POST'])
@@ -505,7 +508,7 @@ def admin_league_league():
 			
 			return redirect(url_for('admin_league_league'))
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #리그명, 상태 수정
 @app.route('/admin/league/league/modify', methods=['POST'])
@@ -573,7 +576,7 @@ def admin_league_detail():
 			
 			return redirect(url_for('admin_league_detail'))
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #세부 리그명, 상태 수정
 @app.route('/admin/league/detail/modify', methods=['POST'])
@@ -623,10 +626,7 @@ def admin_league_detail_delete():
 def admin_register_game():
 	if 'admin' in session:
 		if request.method == 'GET':
-			#nationlist = SportandNation.query.filter(SportandNation.type == 1)
-			#sportlist = SportandNation.query.filter(SportandNation.type == 0)
 			leaguelist = League.query.all()
-
 			gamelist = Game.query.filter(Game.state == 0, Game.finish == 0).all()
 
 			return render_template('admin/register_game.html', leaguelist=leaguelist, gamelist=gamelist)
@@ -636,6 +636,7 @@ def admin_register_game():
 			league = League.query.get(league_id)
 			details = league.details.all()
 
+			#이 부분 수정 필요
 			for i in range(int(game)):
 				for detail in details:
 					game = Game(
@@ -650,17 +651,13 @@ def admin_register_game():
 			
 			return redirect(url_for('admin_register_game'))
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #등록 경기 수정
 @app.route('/admin/register/game/modify', methods=['POST'])
 def admin_register_game_modify():
 	if 'admin' in session:
 		id = int(request.form['id'])
-		#date_first = request.form['date_first']
-		#date_second = request.form['date_second']
-		#home = request.form['home']
-		#away = request.form['away']
 		home_rate = request.form['home_rate']
 		away_rate = request.form['away_rate']
 		draw_rate = request.form['draw_rate']
@@ -669,10 +666,6 @@ def admin_register_game_modify():
 		if game is None:
 			return jsonify(success=False)
 
-		#game.date_first = date_first
-		#game.date_second = date_second
-		#game.home = home
-		#game.away = away 
 		game.home_rate = home_rate
 		game.away_rate = away_rate
 		game.draw_rate = draw_rate
@@ -713,6 +706,10 @@ def admin_register_game_delete():
 		id = int(request.form['id'])
 
 		game = Game.query.get(id)
+		betgames = game.betgames.count()
+		if betgames >= 1:
+			return jsonify(success=False, msg=u'이미 배팅된 경기입니다.')
+
 		if game is None:
 			return jsonify(success=False)
 
@@ -731,8 +728,12 @@ def admin_register_game_deleteall():
 		
 		for d in data:
 			id = int(d['id'])
-
 			game = Game.query.get(id)
+			betgames = game.betgames.count()
+
+			if betgames >= 1:
+				return jsonify(success=False, msg=u'배팅된 경기가 있습니다.')
+
 			db.session.delete(game)
 
 
@@ -754,7 +755,7 @@ def admin_register_cross():
 		else:
 			return redirect(url_for('admin_register_cross'))
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 
 #등록 경기 - 승무패 상태 변경
@@ -824,7 +825,7 @@ def admin_finish_cross():
 			db.session.commit()
 			return jsonify(success=True)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #마감 경기 복원 
 @app.route('/admin/finish/restore', methods=['GET', 'POST'])
@@ -843,7 +844,7 @@ def admin_finish_restore():
 			db.session.commit()
 			return jsonify(success=True)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 
 
@@ -857,7 +858,7 @@ def admin_bank_charge():
 		chargelist = ChargeLog.query.filter(ChargeLog.charged == 0).order_by(desc(ChargeLog.date)).all()
 		return render_template('admin/bank_charge.html', chargelist=chargelist)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 #충전신청 개별 수락
 @app.route('/admin/bank/charge/allow', methods=['POST'])
@@ -917,7 +918,7 @@ def admin_bank_charge_complete():
 		chargelist = ChargeLog.query.filter(ChargeLog.charged == 1).order_by(desc(ChargeLog.date_finished)).all()
 		return render_template('admin/bank_charge_complete.html', chargelist=chargelist)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 
 
@@ -931,7 +932,7 @@ def admin_bank_account():
 		banklist = BankAccount.query.all()
 		return render_template('admin/bank_account.html', banklist=banklist)
 	else:
-		return redirect(url_for('main'))
+		return redirect(url_for('main_admin'))
 
 
 #입금계좌 개별 수정
@@ -1007,7 +1008,7 @@ def user_cross():
 	if 'id' in session:
 		user = User.query.get(session['id'])
 		gamelist = Game.query.filter(Game.state == 1).order_by(desc(Game.league_detail_id)).all()
-		return render_template('user/cross.html',user=user, gamelist=gamelist)
+		return render_template('user/cross.html',user=user, gamelist=gamelist, menu='cross')
 	else:
 		return redirect(url_for('main'))
 
@@ -1018,23 +1019,29 @@ def user_cross_betting():
 		user = User.query.get(session['id'])
 		data = json.loads(request.form['data'])
 		money = int(request.form['money'])
+		rate = float(request.form['rate'])
 
+		user_bet = UserBet(
+						user = user,
+						money_bet = money,
+						rate = rate,
+						date = datetime.now()+timedelta(hours=9)
+					)
 		for d in data:
 			game = Game.query.get(int(d['id']))
 			try:
-				bet = UserBetting(
+				bet = UserBetGame(
 							game = game,
-							user = user,
-							betting = int(d['betting']),
-							date = datetime.now()+timedelta(hours=9),
-							group = user.bet_cnt+1,
-							money_bet = money
+							user_bet = user_bet,
+							betting = int(d['betting'])
 						)
 			except Exception, e:
 				print e
 				jsonify(success=False)
 
 			db.session.add(bet)
+
+		db.session.add(user_bet)
 
 		user.bet_cnt += 1
 		user.money_crt -= money
@@ -1051,21 +1058,21 @@ def user_cross_betting():
 def user_betting_history():
 	if 'id' in session:
 		user = User.query.get(session['id'])
-		history = user.bettings.all()
+		history = user.mybets.order_by(desc(UserBet.date)).all()
+		betlist = []
+		datelist = []
+		moneylist = []
+		ratelist = []
+		lottolist = []
 
-		betlist = {}
-
-		key = ''
 		for h in history:
-			if key != h.group:
-				key = h.group
-				betlist[key] = []
-				betlist[key].append(h)
-			else:
-				betlist[key].append(h)
+			betlist.append(h.betgames.all())
+			datelist.append(h.date)
+			moneylist.append(h.money_bet)
+			ratelist.append(h.rate)
+			lottolist.append(int((h.rate)*(h.money_bet)))
 
-		sortedkey = sorted(betlist, reverse=True)
-		return render_template('user/betting_history.html', betlist=betlist, sortedkey=sortedkey)
+		return render_template('user/betting_history.html', betlist=betlist, datelist=datelist, moneylist=moneylist, ratelist=ratelist, lottolist=lottolist, menu='bet_history')
 
 	else:
 		return redirect(url_for('main'))
@@ -1078,7 +1085,7 @@ def user_betting_history():
 @app.route('/user/named/ladder', methods=['GET'])
 def user_named_ladder():
 	if 'id' in session:
-		return render_template('user/named_ladder.html')
+		return render_template('user/named_ladder.html', menu='ladder')
 	else:
 		return redirect(url_for('main'))
 
@@ -1191,7 +1198,7 @@ def article_list():
 
 		# Article 데이터 전부를 받아와서 최신글 순서대로 정렬하여 'article_list' 라는 key값으로 context에 저장한다.
 		context['article_list'] = Article.query.order_by(desc(Article.date_created)).all()
-		return render_template('article/list.html', context=context)
+		return render_template('article/list.html', context=context, menu='article')
 	return redirect(url_for('main'))
 
 @app.route('/article/create/', methods=['GET', 'POST'])
@@ -1335,6 +1342,7 @@ def comment_delete():
 def before_request():
 	if 'id' in session:
 		g.id = session['id']
+		g.nick = session['nickname']
 	if 'admin' in session:
 		g.admin = session['admin']
 #

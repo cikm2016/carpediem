@@ -72,11 +72,11 @@
 		<td> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
 		<td>{{ game.date_first }}</td>
 		<td>{{ game.date_second }}</td>
-		<td>{{ game.home }} {{game.league_detail.name}}</td>
+		<td>{{ game.home }} {{game.league_detail.home}}</td>
 		<td><input type="text" name="home_rate_{{game.id}}" class="form-control" value="{{ game.home_rate }}" maxlength="5"></td>
 		<td><input type="text" name="draw_rate_{{game.id}}" class="form-control" value="{{ game.draw_rate }}" maxlength="5"></td>
 		<td><input type="text" name="away_rate_{{game.id}}" class="form-control" value="{{ game.away_rate }}" maxlength="5"></td>
-		<td>{{ game.away }} {{game.league_detail.name}}</td>
+		<td>{{ game.away }} {{game.league_detail.away}}</td>
 		<td>
 			<button class="btn mBtn game_modify">수정</button>/<button class="btn mBtn game_delete">삭제</button>
 		</td>
