@@ -15,7 +15,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('가입 승인하였습니다.');
-						$('#'+id).empty();	
+						$('#'+id).remove();	
 					}
 					else{
 						alert('잘못된 아이디값입니다.');
@@ -42,7 +42,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('가입 거절하였습니다.');
-						$('#'+id).empty();	
+						$('#'+id).remove();	
 					}
 					else{
 						alert('잘못된 아이디값입니다.');
@@ -83,6 +83,9 @@ $(document).ready(function(){
 				dataType: 'json',
 				data: { 
 					id : $('input[name="id"]').val(),
+					bank : $("#bank").val(),
+					bank_account : $('#bank_account').val(),
+					bank_name : $("#bank_name").val(),
 					level : $("#level").val(),
 					state : $('#state').val(),
 					danger : $("#danger").val()
@@ -202,7 +205,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('삭제 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -256,7 +259,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('삭제 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -313,7 +316,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('삭제 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -369,7 +372,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('삭제 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -450,7 +453,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('삭제 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						
@@ -516,7 +519,7 @@ $(document).ready(function(){
 						alert('삭제 되었습니다.');
 						$("input:checkbox[name=select]:checked").each(function(){
 							var id = $(this).closest('tr').attr('id');
-							$('#'+id).empty();
+							$('#'+id).remove();
 						});	
 						
 					}
@@ -669,7 +672,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('충전 완료 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -704,7 +707,7 @@ $(document).ready(function(){
 						alert('모두 충전하였습니다.');
 						$("input:checkbox[name=select]:checked").each(function(){
 							var tmp_id = $(this).closest('tr').attr('id');
-							$('#'+tmp_id).empty();
+							$('#'+tmp_id).remove();
 						});	
 					}
 					else{
@@ -746,7 +749,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('마감 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -773,7 +776,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('복원 되었습니다.');
-						$('#'+id).empty();
+						$('#'+id).remove();
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -799,9 +802,8 @@ $(document).ready(function(){
 		var	home = $('#'+id).find('td.home').find('span.name').text();
 		var	away = $('#'+id).find('td.away').find('span.name').text();
 
-		var money_cml = $('#money_cml').val();
-		var rate_cml = $('#rate_cml').val();
-		var money_bet = parseInt($('#money_bet').val());
+		var rate_cml = parseFloat($('#rate_cml').text());
+		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
 
 		var check = $(this).hasClass('clicked')
 		var rate = parseFloat($(this).find('span.rate').text());
@@ -893,13 +895,15 @@ $(document).ready(function(){
 
 			}
 		}
-		$('#rate_cml').val(ret_rate.toFixed(2));
-		$('#money_cml').val(Math.round(ret_rate*money_bet));
+		$('#rate_cml').text(numberWithCommas(ret_rate.toFixed(2)));
+		$('#money_cml').text(numberWithCommas(Math.round(ret_rate*money_bet)));
 	});
 	$('#bet_btn').click(function(){
-		var money_crt = parseInt($('#money_crt').val());
-		var money_bet = parseInt($('#money_bet').val());
-		var rate = $('#rate_cml').val();
+		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
+		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
+		var rate = $('#rate_cml').text();
+		alert(money_bet);
+		alert(rate);
 		if (money_bet > money_crt){
 			alert('캐쉬가 부족합니다.');
 		}
@@ -927,7 +931,7 @@ $(document).ready(function(){
 						success : function(resp){
 							if(resp.success){
 								alert('성공적으로 배팅하였습니다.');
-								$('#money_crt').val(money_crt-money_bet);
+								$('#money_crt').text(numberWithCommas(money_crt-money_bet+'원'));
 							}
 							else{
 								alert('잘못된 접근입니다.');
@@ -996,7 +1000,7 @@ $(document).ready(function(){
 						alert('삭제 되었습니다.');
 						$("input:checkbox[name=select]:checked").each(function(){
 							var id = $(this).closest('tr').attr('id');
-							$('#'+id).empty();
+							$('#'+id).remove();
 						});	
 					}
 					else{
@@ -1012,6 +1016,7 @@ $(document).ready(function(){
 	/* 유저 캐쉬 충전 */
 	$('.charge_money').click(function(){
 		var money = $('input[name="chargemoney"]').val();
+		money = parseInt(money.replace(/\,/g,''));
 		if (isInt(money)){
 			var check = confirm('충전 요청 하시겠습니까?');
 			if (check){
@@ -1039,6 +1044,78 @@ $(document).ready(function(){
 		}
 		else{
 			alert('잘못된 값입니다.');
+		}
+	});
+	/* 숫자 , 찍는 함수 */
+	$('#charge1').click(function(){
+		var money = $('#chargemoney').val()
+		if (money == ''){
+			$('#chargemoney').val(numberWithCommas(10000));
+		}
+		else{
+			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+10000));
+		}
+	});
+	$('#charge2').click(function(){
+		var money = $('#chargemoney').val()
+		if (money == ''){
+			$('#chargemoney').val(numberWithCommas(30000));
+		}
+		else{
+			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+30000));
+		}
+	});
+	$('#charge3').click(function(){
+		var money = $('#chargemoney').val()
+		if (money == ''){
+			$('#chargemoney').val(numberWithCommas(50000));
+		}
+		else{
+			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+50000));
+		}
+	});
+	$('#charge_init').click(function(){
+		$('#chargemoney').val('');
+	});
+	$('#chargemoney').on('input',function(){
+		$(this).val(numberWithCommas($(this).val().replace(/\,/g,'')));
+	});	
+
+	$('.toComma').each(function(){
+		$(this).text(numberWithCommas($(this).text()));
+	});	
+	$('#money_bet').each(function(){
+		$(this).val(numberWithCommas($(this).val()));
+	});	
+	$('#money_bet').on('input',function(){
+		$(this).val(numberWithCommas($(this).val().replace(/\,/g,'')));
+	});	
+
+	/* 유저 배팅 내역 삭제 */
+	$('.history_delete').click(function(){
+		var id = $(this).closest('table').attr('id');
+		var check = confirm('배팅 내역을 삭제하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/user/betting/history/delete',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : id
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('삭제하였습니다.');
+						$('#'+id).remove();
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
 		}
 	});
 });
@@ -1080,4 +1157,7 @@ function validateFormDetail(){
 function isInt(x){
 	var y = parseInt(x, 10);
 	return !isNaN(y) && x == y && x.toString() == y.toString();
+}
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

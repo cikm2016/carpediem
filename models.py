@@ -75,13 +75,6 @@ class BlockIp(db.Model):
 	
 
 
-# 입금계좌 디비
-class BankAccount(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	level = db.Column(db.Integer)
-	bank = db.Column(db.String(255))
-	bank_account = db.Column(db.String(255))
-	bank_name = db.Column(db.String(255))
 
 
 #############################################
@@ -130,12 +123,22 @@ class Game(db.Model):
 	home_score = db.Column(db.Integer, default=0)
 	away_score = db.Column(db.Integer, default=0)
 
+	win = db.Column(db.Integer) 
+
 	date_first = db.Column(db.String(255))
 	date_second = db.Column(db.String(255))
 
 	league_detail_id = db.Column(db.Integer, db.ForeignKey('league_detail.id'))
 	league_detail = db.relationship('LeagueDetail',
 			backref=db.backref('games', cascade='all, delete-orphan', lazy='dynamic'))
+
+# 입금계좌 디비
+class BankAccount(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	level = db.Column(db.Integer)
+	bank = db.Column(db.String(255))
+	bank_account = db.Column(db.String(255))
+	bank_name = db.Column(db.String(255))
 
 #############################################
 ####  유저 배팅 정보, 배팅한 게임 정보   ####
@@ -151,6 +154,8 @@ class UserBet(db.Model):
 
 	state = db.Column(db.Integer, default=0)
 	date = db.Column(db.DateTime())
+
+
 
 class UserBetGame(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

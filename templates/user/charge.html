@@ -18,11 +18,11 @@
 		</tr>
 		<tr>
 			<th>보유캐쉬</th>
-			<td style="text-align:left;">{{user.money_crt}} 원</td>
+			<td style="text-align:left;" class="toComma">{{user.money_crt}} 원</td>
 		</tr>
 		<tr>
 			<th>충전 금액</th>
-			<td> <input type="text" class="form-control" name="chargemoney" value=""></td>
+			<td> <input type="text" id="chargemoney" class="form-control toComma" name="chargemoney" value=""><button id="charge1" class="btn sBtn">1만원</button><button id="charge2" class="btn sBtn">3만원</button><button id="charge3" class="btn sBtn">5만원</button><button id="charge_init" class="btn sBtn">초기화</button></td>
 		</tr>
 		<tr>
 			<th>입금계좌정보</th>

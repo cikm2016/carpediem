@@ -28,11 +28,11 @@
 	</tr>
 	<tr>
 		<th>은행명</th>
-		<td> {{ user.bank }}</td>
+		<td><input class="form-control" type="text" id="bank" value="{{user.bank}}"/></td>
 		<th>계좌번호</th>
-		<td> {{ user.bank_account }}</td>
+		<td><input class="form-control" type="text" id="bank_account" value="{{user.bank_account}}"/></td>
 		<th>예금주</th>
-		<td> {{ user.bank_name }}</td>
+		<td><input class="form-control" type="text" id="bank_name" value="{{user.bank_name}}"/></td>
 	</tr>
 	<tr>
 		<th>보유금액</th>
@@ -70,24 +70,6 @@
 				<option value="-2" {% if user.danger == -2%}selected{%endif%}>매우위험</option>
 			</select>
 		</td>
-	</tr>
-</table>
-<h1>회원별 별도 입금계좌 설정<small>(미설정시 레벨별 입금계좌 적용)</small></h1>
-<table class="dataTable tableStyle01">
-	<tr>
-		<th>은행명</th>
-		<td>
-			<select class="form-control" name="ank">
-				<option value="0" {% if user.bank == 0%}selected{%endif%}>국민은행</option>
-				<option value="1" {% if user.bank == 1%}selected{%endif%}>신한은행</option>
-				<option value="2" {% if user.bank == 2%}selected{%endif%}>우리은행</option>
-				<option value="3" {% if user.bank == 3%}selected{%endif%}>농협</option>
-			</select>
-		</td>
-		<th>계좌번호</th>
-		<td><input class="form-control" type="text" value="{{user.bank_account}}"/></td>
-		<th>예금주</th>
-		<td><input class="form-control" type="text" value="{{user.bank_name}}"/></td>
 	</tr>
 </table>
 

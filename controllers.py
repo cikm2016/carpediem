@@ -260,6 +260,9 @@ def admin_user_modify():
 		if user is None:
 			return jsonify(success=False)
 		else:
+			user.bank = request.form['bank']
+			user.bank_account = request.form['bank_account']
+			user.bank_name = request.form['bank_name']
 			user.level = int(request.form['level'])
 			user.state = int(request.form['state'])
 			user.danger = int(request.form['danger'])
@@ -822,6 +825,26 @@ def admin_finish_cross():
 			game.home_score = home_score
 			game.away_score = away_score
 			game.finish = 1
+			
+			if home_score > away_score:
+				game.win = 1
+			elif home_score == away_score:
+				game.win = 0
+			else:
+				game.win = -1
+
+			games = game.betgames.all()
+			for g in games:
+				if home_score > away_score:
+					if g.betting == 1:
+						g.isSuccess = 1
+				elif home_score == away_score:
+					if g.betting == 0:
+						g.isSuccess = 1
+				else:
+					if g.betting == -1:
+						g.isSuccess = 1
+
 			db.session.commit()
 			return jsonify(success=True)
 	else:
@@ -1060,24 +1083,33 @@ def user_betting_history():
 		user = User.query.get(session['id'])
 		history = user.mybets.order_by(desc(UserBet.date)).all()
 		betlist = []
-		datelist = []
-		moneylist = []
-		ratelist = []
-		lottolist = []
 
 		for h in history:
 			betlist.append(h.betgames.all())
-			datelist.append(h.date)
-			moneylist.append(h.money_bet)
-			ratelist.append(h.rate)
-			lottolist.append(int((h.rate)*(h.money_bet)))
 
-		return render_template('user/betting_history.html', betlist=betlist, datelist=datelist, moneylist=moneylist, ratelist=ratelist, lottolist=lottolist, menu='bet_history')
+		return render_template('user/betting_history.html',history=history,  betlist=betlist, menu='bet_history')
 
 	else:
 		return redirect(url_for('main'))
 
 
+## 유저 배팅 내역 - 삭제
+@app.route('/user/betting/history/delete', methods=['POST'])
+def user_betting_history_delete():
+	if 'id' in session:
+		id = int(request.form['id'])
+		user_bet = UserBet.query.get(id)
+		
+		if user_bet is None:
+			return jsonify(success=False)
+
+		db.session.delete(user_bet)
+		db.session.commit()
+
+		return jsonify(success=True)
+
+	else:
+		return jsonify(success=False)
 
 
 
@@ -1090,8 +1122,23 @@ def user_named_ladder():
 		return redirect(url_for('main'))
 
 
+## 사다리
+@app.route('/user/result', methods=['GET'])
+def user_result():
+	if 'id' in session:
+		gamelist = Game.query.filter(Game.finish == 1).all()		
+		return render_template('user/result.html', gamelist=gamelist, menu='result')
+	else:
+		return redirect(url_for('main'))
 
 
+
+
+
+
+
+#############################################################
+## 		유저 개인 관리
 ## 유저 캐쉬 충전
 @app.route('/user/charge', methods=['GET', 'POST'])
 def user_charge():
