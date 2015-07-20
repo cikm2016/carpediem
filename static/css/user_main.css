@@ -1,0 +1,27 @@
+body { background:#000;  }
+#headerWrap { height:100px; width:100%; background:url(../images/main/menu_bg.gif) repeat-x left bottom #000; }
+#header { position:relative; z-index:100; }
+#header .home { float:left; width:112px; height:50px; background:url(../images/main/btn_home.gif) no-repeat left top;  margin-right:20px; }
+#header .home a { font-size:16px; color:#ffe670;float:left; display:block; padding-top:15px; padding-left:45px; width:67px; height:35px;   }
+#header .user { float:left; font-size:16px; color:#ffe670; padding-top:15px; height:35px;  }
+#header .topUtil { position:absolute; top:0px; right:150px; float:left;  padding-top:15px; height:35px;  }
+#header .topUtil li { float:left;padding-left:25px;   }
+#header .topUtil li  a { color:#929292; font-size:16px;  }
+#header .logOut { width:112px; height:50px; background:url(../images/main/btn_logout.gif) no-repeat left top; position:absolute; top:0px; right:0px;  }
+#header .logOut a { font-size:14px; color:#929292;float:left; display:block; padding-top:13px; padding-left:45px; width:67px; height:37px;  }
+	#uGnb { padding-left:1px;width:999px;  background:url(../images/main/menu_line.gif) no-repeat left top;  float:left;  position:absolute; top:51px; left:0px; z-index:100;  }
+	#uGnb li {float:left;width:110px; height:48px; padding-right:1px; background:url(../images/main/menu_line.gif) no-repeat right top;  }
+	#uGnb li a {float:left;display:block; width:110px; height:35px;  text-align:center; background:url(../images/main/menu_box_bg.gif) no-repeat left top; padding-top:13px; font-size:16px; color:#ffe670; }
+	#uGnb li a:hover {  background:url(../images/main/menu_box_r_bg.gif) no-repeat left top;font-size:16px; color:#000; }
+	#uGnb li.hover a {text-decoration:underline;   background:url(../images/main/menu_box_r_bg.gif) no-repeat left top;font-size:16px; color:#000; }
+
+
+
+
+
+#contentsWrap { width:100%; background:url(../images/main/main_bg.gif) no-repeat center top;  min-height:650px; }
+#contents {  }
+#contents .mainMenuList  { float:left; padding-top:196px;width:100%;   }
+#contents .mainMenuList li { float:left;  padding-left:10px;  }
+#contents .mainMenuList li.list01{   padding-left:4px;  }
+#contents .mainMenuList li.list03 {   padding-left:9px;  }
