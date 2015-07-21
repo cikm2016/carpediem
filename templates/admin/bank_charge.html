@@ -1,6 +1,7 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
 <h1>충전신청관리</h1>
+<button class="btn mBtn select_all">전체선택</button>
 <button class="btn mBtn charge_all">선택충전</button>
 <table class="dataTable tableStyle01">
 	<thead>
@@ -25,7 +26,7 @@
 		<td class="toComma" >{{ charge.user.money_crt }}</td>
 		<td>{{ charge.user.bank_name }}</td>
 		<td class="toComma">{{ charge.money }}</td>
-		<td>{{ charge.date }}</td>
+		<td>{{ charge.date.strftime('%Y-%m-%d %H:%M') }}</td>
 		<td>
 			<button class="btn mBtn charge_one">충전</button>
 		</td>

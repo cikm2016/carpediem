@@ -27,6 +27,7 @@ jQuery('#uGnb li').click(function() {
 	jQuery(this).addClass("hover");
 });
 
+$('input, textarea').placeholder();
 
 
 

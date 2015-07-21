@@ -22,7 +22,7 @@ body { background:#000;  }
 #contents  .dataTable thead th { text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:10px;border-right:1px solid #ddd;   }
 #contents  .dataTable tbody th {  text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:15px 10px;;border-right:1px solid #ddd;  }
 #contents  .dataTable tbody td { font-size:14px; color:#000; background:#e5e5e5;padding:15px 10px; ;border-right:1px solid #ddd; }
-
+#contents  .dataTable tbody .clicked td { background: yellow }
 .form-control {
     display: block;
     width: 96%;

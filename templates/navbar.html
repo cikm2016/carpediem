@@ -6,7 +6,7 @@
 			<p class="user">{{ g.nick }} 님 방문을 환영 합니다. </p>
 			<ul class="topUtil">
 				<li><a href="{{ url_for('user_charge') }}">충전</a></li>
-				<li><a href="#">환전</a></li>
+				<li><a href="{{ url_for('user_exchange') }}">환전</a></li>
 				<li><a href="{{ url_for('user_charge_history') }}">충전/환전내역</a></li>
 				<li><a href="{{ url_for('user_mypage') }}">내정보/쪽지</a></li>
 			</ul>

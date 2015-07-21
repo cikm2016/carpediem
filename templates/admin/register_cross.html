@@ -1,15 +1,18 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
 <h1>승무패 관리</h1>
+<button class="btn mBtn select_all">전체선택</button>
+<button class="btn mBtn start_all">전체개시</button>
+<button class="btn mBtn end_all">전체종료</button>
 <button class="btn mBtn cross_all_apply">선택적용</button>
 <button class="btn mBtn game_deleteall">선택삭제</button>
+
 	<table class="dataTable tableStyle01">
 		<thead>
 			<th width="1%">선택</th>
 			<th width="5%">종목</th>
 			<th width="15%">리그명</th>
-			<th width="7%">경기일자</th>
-			<th width="6%">경기시간</th>
+			<th width="10%">경기일자</th>
 			<th width="15%">승(홈팀)</th>
 			<th width="5%">승</th>
 			<th width="5%">무</th>
@@ -25,8 +28,7 @@
 				<td> <input type="checkbox" name="select"></td>
 				<td> {{game.league_detail.league.sport}}</td>
 				<td style="text-align:left;"> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
-				<td>{{ game.date_first }}</td>
-				<td>{{ game.date_second }}</td>
+				<td>{{ game.date.strftime('%Y-%m-%d %H:%M') }}</td>
 				<td style="text-align:left;">{{ game.home }} {{game.league_detail.name}}</td>
 				<td>{{ game.home_rate }}</td>
 				<td>{{ game.draw_rate }}</td>
@@ -41,7 +43,7 @@
 					</select>
 				</td>
 				<td>
-					<button class="btn mBtn cross_apply">적용</button>/<button class="btn mBtn game_delete">삭제</button>
+					<button class="btn sBtn cross_apply">적용</button>/<button class="btn sBtn game_delete">삭제</button>
 				</td>
 			</tr>
 			{% endfor %}

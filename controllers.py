@@ -6,7 +6,7 @@ from sqlalchemy import desc
 
 from app import app, db
 from app.forms import ArticleForm, CommentForm, JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame
 
 import re
 import json
@@ -48,7 +48,10 @@ def main():
 			account = request.form['account']
 			password = request.form['password']
 		
-			user = User.query.filter(User.account == account).first()
+			try:
+				user = User.query.filter(User.account == account).first()
+			except Exception, e:
+				print e
 
 			if user is None:
 				pass
@@ -636,15 +639,18 @@ def admin_register_game():
 		else:
 			game = request.form['game']
 			league_id = int(request.form['league'])
+			date1 = request.form['date_first']
+			date2 =  request.form['date_second']
 			league = League.query.get(league_id)
 			details = league.details.all()
 
 			#이 부분 수정 필요
 			for i in range(int(game)):
 				for detail in details:
+					date = datetime.strptime(date1+' '+date2, '%Y-%m-%d %H:%M')
+
 					game = Game(
-							date_first= request.form['date_first_'+str(i)],
-							date_second= request.form['date_second_'+str(i)],
+							date= date,
 							home= request.form['home_'+str(i)],
 							away= request.form['away_'+str(i)],
 							league_detail = detail
@@ -834,21 +840,154 @@ def admin_finish_cross():
 				game.win = -1
 
 			games = game.betgames.all()
-			for g in games:
+			for g in games:	
+				# 게임 결과 반영
 				if home_score > away_score:
 					if g.betting == 1:
 						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+
 				elif home_score == away_score:
 					if g.betting == 0:
 						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+
 				else:
 					if g.betting == -1:
 						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+			
+			# 경기 결과 및 미당첨 배팅 업데이트
+			db.session.commit()
+						
+			for g in games:	
+
+				# 결과에 의해 유저들의 당첨여부 판단
+				userbet = UserBet.query.get(g.user_bet_id)
+
+				# 이미 당첨 실패 
+				if userbet.state == -1:
+					continue	
+				# state:0 아직 당첨인지 모름, state=1 인 경우는 존재하지 않음
+				elif userbet.state == 1:
+					return jsonify(success=False)
+				else:
+					betlist = userbet.betgames.all()
+					
+					flag = 1
+					for bet in betlist:
+						if bet.isSuccess == 1:
+							pass
+						else:
+							flag = 0	
+							break
+
+					#배팅 목록 모두 적중시 당첨
+					#유저에게 당첨금 지급
+					if flag == 1:
+						userbet.state = 1
+						user = User.query.get(userbet.user_id)
+						user.money_crt += int((userbet.money_bet)*(userbet.rate))
+
 
 			db.session.commit()
 			return jsonify(success=True)
 	else:
 		return redirect(url_for('main_admin'))
+
+
+#선택된 경기 마감  - 승무패
+@app.route('/admin/finish/cross/all', methods=['POST'])
+def admin_finish_cross_all():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			home_score = int(d['home_score'])
+			away_score = int(d['away_score'])
+			game = Game.query.get(id)
+
+			if game is None:
+				return jsonify(success=False)
+			game.home_score = home_score
+			game.away_score = away_score
+			game.finish = 1
+			
+			if home_score > away_score:
+				game.win = 1
+			elif home_score == away_score:
+				game.win = 0
+			else:
+				game.win = -1
+
+			games = game.betgames.all()
+			for g in games:	
+				# 게임 결과 반영
+				if home_score > away_score:
+					if g.betting == 1:
+						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+
+				elif home_score == away_score:
+					if g.betting == 0:
+						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+
+				else:
+					if g.betting == -1:
+						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+			
+			# 경기 결과 및 미당첨 배팅 업데이트
+			db.session.commit()
+						
+			for g in games:	
+
+				# 결과에 의해 유저들의 당첨여부 판단
+				userbet = UserBet.query.get(g.user_bet_id)
+
+				# 이미 당첨 실패 
+				if userbet.state == -1:
+					continue	
+				# state:0 아직 당첨인지 모름, state=1 인 경우는 존재하지 않음
+				elif userbet.state == 1:
+					return jsonify(success=False)
+				else:
+					betlist = userbet.betgames.all()
+					
+					flag = 1
+					for bet in betlist:
+						if bet.isSuccess == 1:
+							pass
+						else:
+							flag = 0	
+							break
+
+					#배팅 목록 모두 적중시 당첨
+					#유저에게 당첨금 지급
+					if flag == 1:
+						userbet.state = 1
+						user = User.query.get(userbet.user_id)
+						user.money_crt += int((userbet.money_bet)*(userbet.rate))
+
+
+		db.session.commit()
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False)
 
 #마감 경기 복원 
 @app.route('/admin/finish/restore', methods=['GET', 'POST'])
@@ -938,10 +1077,122 @@ def admin_bank_charge_allowall():
 @app.route('/admin/bank/charge/complete', methods=['GET'])
 def admin_bank_charge_complete():
 	if 'admin' in session:
-		chargelist = ChargeLog.query.filter(ChargeLog.charged == 1).order_by(desc(ChargeLog.date_finished)).all()
+		chargelist = ChargeLog.query.filter(ChargeLog.charged == 1).order_by(desc(ChargeLog.date)).all()
 		return render_template('admin/bank_charge_complete.html', chargelist=chargelist)
 	else:
 		return redirect(url_for('main_admin'))
+
+
+
+#환전신청 관리 
+@app.route('/admin/bank/exchange', methods=['GET'])
+def admin_bank_exchange():
+	if 'admin' in session:
+		exchangelist = ExchangeLog.query.filter(ExchangeLog.exchanged == 0).order_by(desc(ExchangeLog.date)).all()
+		return render_template('admin/bank_exchange.html', exchangelist=exchangelist)
+	else:
+		return redirect(url_for('main_admin'))
+
+#환전신청 개별 수락
+@app.route('/admin/bank/exchange/allow', methods=['POST'])
+def admin_bank_exchange_allow():
+	if 'admin' in session:
+		id = int(request.form['id'])
+
+		exchange = ExchangeLog.query.get(id)
+		if exchange is None:
+			return jsonify(success=False)
+
+		exchange.exchanged = 1
+		exchange.date_finished = datetime.now()+timedelta(hours=9)
+
+		db.session.commit()
+			
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+#환전신청 모두 수락
+@app.route('/admin/bank/exchange/allowall', methods=['POST'])
+def admin_bank_exchange_allowall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+
+		for d in data:
+			exchange = ExchangeLog.query.get(int(d['id']))
+			if exchange is None:
+				return jsonify(success=False)
+
+			exchange.exchanged = 1
+			exchange.date_finished = datetime.now()+timedelta(hours=9)
+
+		db.session.commit()
+		
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False) 
+
+#환전신청 개별 거절
+@app.route('/admin/bank/exchange/deallow', methods=['POST'])
+def admin_bank_exchange_deallow():
+	if 'admin' in session:
+		id = int(request.form['id'])
+
+		exchange = ExchangeLog.query.get(id)
+		if exchange is None:
+			return jsonify(success=False)
+
+		exchange.exchanged = -1
+		exchange.date_finished = datetime.now()+timedelta(hours=9)
+		exchange.user.money_crt += exchange.money
+
+		db.session.commit()
+			
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+
+#환전신청 모두 수락
+@app.route('/admin/bank/exchange/deallowall', methods=['POST'])
+def admin_bank_exchange_deallowall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+
+		for d in data:
+			exchange = ExchangeLog.query.get(int(d['id']))
+			if exchange is None:
+				return jsonify(success=False)
+
+			exchange.exchanged = 1
+			exchange.date_finished = datetime.now()+timedelta(hours=9)
+			exchange.user.money_crt += exchange.money
+
+		db.session.commit()
+			
+		#유저에게 쪽지?
+		
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+#환전완료 내역 관리 
+@app.route('/admin/bank/exchange/complete', methods=['GET'])
+def admin_bank_exchange_complete():
+	if 'admin' in session:
+		exchangelist = ExchangeLog.query.filter(ExchangeLog.exchanged != 0).order_by(desc(ExchangeLog.date)).all()
+		return render_template('admin/bank_exchange_complete.html', exchangelist=exchangelist)
+	else:
+		return redirect(url_for('main_admin'))
+
+
+
+
+
+
 
 
 
@@ -1030,7 +1281,7 @@ def user_main():
 def user_cross():
 	if 'id' in session:
 		user = User.query.get(session['id'])
-		gamelist = Game.query.filter(Game.state == 1).order_by(desc(Game.league_detail_id)).all()
+		gamelist = Game.query.filter(Game.state == 1).order_by(desc(Game.date)).all()
 		return render_template('user/cross.html',user=user, gamelist=gamelist, menu='cross')
 	else:
 		return redirect(url_for('main'))
@@ -1169,12 +1420,42 @@ def user_charge():
 def user_charge_history():
 	if 'id' in session:
 		user = User.query.get(session['id'])
-		history = user.chargelogs.order_by(ChargeLog.date_finished).all()
+		history = user.chargelogs.order_by(desc(ChargeLog.date)).all()
+		history_ex = user.exchangelogs.order_by(desc(ExchangeLog.date)).all()
 
-		return render_template('user/charge_history.html', history=history)
+		return render_template('user/charge_history.html', history=history, history_ex=history_ex)
 
 	else:
 		return redirect(url_for('main'))
+
+
+## 유저 캐쉬 환전
+@app.route('/user/exchange', methods=['GET', 'POST'])
+def user_exchange():
+	if 'id' in session:
+		if request.method == 'GET':
+			user = User.query.get(session['id'])
+			return render_template('user/exchange.html',user=user)
+		else:
+			user = User.query.get(session['id'])
+			money = int(request.form['exchangemoney'])
+
+			charge = ExchangeLog(
+						user = user,
+						money = money,
+						date = datetime.now()+timedelta(hours=9)
+						)
+
+			db.session.add(charge)
+			user.money_crt -= money
+
+			db.session.commit()
+			return jsonify(success=True)
+			
+	else:
+		return redirect(url_for('main'))
+
+
 
 
 ## 내정보

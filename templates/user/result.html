@@ -17,7 +17,7 @@
 			{% for game in gamelist|sort(reverse=True,attribute='league_detail.league.name') %}
 			<tr class="" id="{{ game.id }}">
 				<td>{{game.league_detail.league.name}}</td>
-				<td>{{ game.date_first }} {{ game.date_second }}</td>
+				<td>{{ game.date.strftime('%Y-%m-%d %H:%M') }}</td>
 					<td class="home {%if game.win == 1%}clicked{%endif%}" style="text-align:left;"><span class="name">{{ game.home }}</span><span> {{game.league_detail.name}}</span><span class="rate">{{ game.home_rate }}</span></td>
 				{% if game.draw_rate == 0 %}
 				<td> VS</td>

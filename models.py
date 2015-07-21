@@ -58,6 +58,20 @@ class ChargeLog(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('User',backref=db.backref('chargelogs', cascade='all, delete-orphan', lazy='dynamic'))
 
+## exchange log
+class ExchangeLog(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	money = db.Column(db.Integer)
+
+	date = db.Column(db.DateTime())
+	date_finished = db.Column(db.DateTime())
+
+	exchanged = db.Column(db.Integer, default=0)
+
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = db.relationship('User',backref=db.backref('exchangelogs', cascade='all, delete-orphan', lazy='dynamic'))
+
+
 #message to user
 class Message(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -125,8 +139,7 @@ class Game(db.Model):
 
 	win = db.Column(db.Integer) 
 
-	date_first = db.Column(db.String(255))
-	date_second = db.Column(db.String(255))
+	date = db.Column(db.DateTime())
 
 	league_detail_id = db.Column(db.Integer, db.ForeignKey('league_detail.id'))
 	league_detail = db.relationship('LeagueDetail',

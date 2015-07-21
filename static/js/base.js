@@ -384,36 +384,40 @@ $(document).ready(function(){
 			});
 		}
 	});
-	$('select[name="game"]').change(function(){
+	$('input[name="date_first"]').val(moment().year()+'-'+(moment().month()+1)+'-');
+	$('#waitgamebtn').click(function(){
 		var game = $('select[name="game"]').val();
 		var i;
 		var date_first = $('input[name="date_first"]').val();
 		var date_second = $('input[name="date_second"]').val();
 		var league_name = $('select[name="league"] option:selected').text();
+
 		if (date_first == "" || date_second == ""){
 			alert('경기날짜와 시간을 입력하세요.');
+			return false;
+		}	
+		else if (!moment(date_first+' '+date_second, 'YYYY-M-D HH:mm', true).isValid()){
+			alert('날짜, 시간 형식이 잘못되었습니다.');
 			return false;
 		}	
 		else{
 			$('.addlist').empty();
 			for (i=0;i<game;i++){
-				var str = '<tr> <td><input type="text" class="form-control" name="date_first_'+i+'" value="'+date_first+'"></td> <td><input type="text" class="form-control" name="date_second_'+i+'" value="'+date_second+'"></td> <td><input type="text" class="form-control" name="league_'+i+'" value="'+league_name+'" disabled></td> <td><input type="text" class="form-control home" name="home_'+i+'"></td> <td><input type="text" class="form-control away" name="away_'+i+'"></td> </tr>'
+				var str = '<tr> <td><input type="text" class="form-control" name="date_first_'+i+'" value="'+date_first+'" disabled></td> <td><input type="text" class="form-control" name="date_second_'+i+'" value="'+date_second+'" disabled></td> <td><input type="text" class="form-control" name="league_'+i+'" value="'+league_name+'" disabled></td> <td><input type="text" class="form-control home" name="home_'+i+'"></td> <td><input type="text" class="form-control away" name="away_'+i+'"></td> </tr>'
 				$('.addlist').append(str);	
 			}		
-			if (game == 0){
-				$('#addgamebtn').hide();
-			}
-			else{
-				$('#addgamebtn').show();
-			}
 		}
 		
 	});
+	$('#emptygamebtn').click(function(){
+		$('.addlist').empty();
+	});
+	
 	// 등록 경기 수정
 	$('.game_modify').click(function(){
 		var id = $(this).closest('tr').attr('id');
 
-		var check = confirm('수정 하시겠습니까?');
+		var check = confirm('적용하시겠습니까?');
 		if (check){
 			$.ajax({
 				url : '/admin/register/game/modify',
@@ -427,7 +431,7 @@ $(document).ready(function(){
 				},
 				success : function(resp){
 					if(resp.success){
-						alert('수정 되었습니다.');
+						alert('적용 되었습니다.');
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -475,7 +479,7 @@ $(document).ready(function(){
 			var tmp_away = $('#'+tmp_id).find('input[name="away_rate_'+tmp_id+'"]').val();
 			data.push({id:tmp_id, home:tmp_home, draw:tmp_draw, away:tmp_away})
 		});	
-		var check = confirm('수정 하시겠습니까?');
+		var check = confirm('적용하시겠습니까?');
 		if (check){
 			$.ajax({
 				url : '/admin/register/game/applyall',
@@ -720,6 +724,163 @@ $(document).ready(function(){
 			});
 		}
 	});
+	// 환전 개별 수락
+	$('.exchange_one').click(function(){
+		var id = $(this).closest('tr').attr('id');
+
+		var check = confirm('환전하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/bank/exchange/allow',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : id
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('환전 완료 되었습니다.');
+						$('#'+id).remove();
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	// 선택 항목 전체 환전 수락
+	$('.exchange_all').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			data.push({ id:tmp_id })
+		});	
+
+		var check = confirm('선택 항목들을 환전하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/bank/exchange/allowall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('모두 환전하였습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var tmp_id = $(this).closest('tr').attr('id');
+							$('#'+tmp_id).remove();
+						});	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	// 환전 거절
+	$('.cancel_one').click(function(){
+		var id = $(this).closest('tr').attr('id');
+
+		var check = confirm('환전을 거절하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/bank/exchange/deallow',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : id
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('환전요청이 거절되었습니다.');
+						$('#'+id).remove();
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	// 선택 항목 전체 환전 수락
+	$('.cancel_all').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			data.push({ id:tmp_id })
+		});	
+
+		var check = confirm('선택 항목들을 환전 거절하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/bank/exchange/deallowall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('모두 환전 거절하였습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var tmp_id = $(this).closest('tr').attr('id');
+							$('#'+tmp_id).remove();
+						});	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.start_all').click(function(){
+		$('.select').each(function(){
+			$(this).find('select').val(1);
+		});
+	});
+	$('.end_all').click(function(){
+		$('.select').each(function(){
+			$(this).find('select').val(3);
+		});
+	});
+	$('.select_all').click(function(){
+		var flag = 0;
+		var len = $('.select').length;
+		$('.select').each(function(){
+			if ($(this).hasClass('clicked')){
+				flag += 1;
+			}
+		});
+		$('.select').each(function(){
+			if (flag == len){
+				$(this).removeClass('clicked');
+				$(this).find("input:checkbox").prop("checked",false);
+			}
+			else{
+				$(this).addClass('clicked');
+				$(this).find("input:checkbox").prop("checked",true);
+			}
+		});
+	});
 	$('.select').click(function(){
 		var check = $(this).hasClass('clicked')
 		
@@ -750,6 +911,43 @@ $(document).ready(function(){
 					if(resp.success){
 						alert('마감 되었습니다.');
 						$('#'+id).remove();
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.cross_finish_all').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_home = $('input[name="home_score_'+tmp_id+'"]').val();
+			var tmp_away = $('input[name="away_score_'+tmp_id+'"]').val();
+			data.push({ id:tmp_id, home_score:tmp_home, away_score:tmp_away  })
+		});	
+		var id = $(this).closest('tr').attr('id');
+
+		var check = confirm('마감 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/finish/cross/all',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					data: JSON.stringify(data)
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('마감 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var tmp_id = $(this).closest('tr').attr('id');
+							$('#'+tmp_id).remove();
+						});	
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -902,8 +1100,6 @@ $(document).ready(function(){
 		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
 		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
 		var rate = $('#rate_cml').text();
-		alert(money_bet);
-		alert(rate);
 		if (money_bet > money_crt){
 			alert('캐쉬가 부족합니다.');
 		}
@@ -1046,6 +1242,45 @@ $(document).ready(function(){
 			alert('잘못된 값입니다.');
 		}
 	});
+	/* 유저 캐쉬 환전 */
+	$('.exchange_money').click(function(){
+		var money = $('input[name="exchangemoney"]').val();
+		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
+		money = parseInt(money.replace(/\,/g,''));
+		if (isInt(money)){
+			if (money > money_crt){ 
+				alert('보유한 캐쉬보다 많은 양입니다.');
+				return false;
+			}
+			var check = confirm('환전 요청 하시겠습니까?');
+			if (check){
+				$.ajax({
+					url : '/user/exchange',
+					type: 'POST',
+					dataType: 'json',
+					data: { 
+						exchangemoney : money
+					},
+					success : function(resp){
+						if(resp.success){
+							alert('환전 요청하였습니다.');
+							$('input[name="exchangemoney"]').val('');
+							$('#money_crt').text(numberWithCommas(money_crt-money+' 원'));
+						}
+						else{
+							alert('잘못된 접근입니다.');
+						}
+					},
+					error : function(resp){
+						console.log('server error');
+					}	
+				});
+			}
+		}
+		else{
+			alert('잘못된 값입니다.');
+		}
+	});
 	/* 숫자 , 찍는 함수 */
 	$('#charge1').click(function(){
 		var money = $('#chargemoney').val()
@@ -1161,3 +1396,4 @@ function isInt(x){
 function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+$('input, textarea').placeholder();

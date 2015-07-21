@@ -4,25 +4,50 @@
 <table class="dataTable tableStyle01">
 	<thead>
 		<th width="1%">선택</th>
-		<th>신청일</th>
-		<th>충전금액</th>
-		<th>상태</th>
+		<th width="20%">신청일</th>
+		<th width="20%">처리일</th>
+		<th width="40%">충전금액</th>
+		<th width="10%">상태</th>
 	</thead>
 	<tbody>
 	{% if history %}
 	{% for h in history %}
 	<tr class="select" id="{{ h.id }}">
 		<td> <input type="checkbox" name="select"></td>
-		<td>{{ h.date }}</td>
+		<td>{{ h.date.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td>{%if h.date_finished %}{{ h.date_finished.strftime('%Y-%m-%d %H:%M') }}{%else%}처리중{%endif%}</td>
 		<td>{{ h.money }}</td>
-		<td>{% if h.charged == 0 %}처리중{% else %}처리완료{% endif %}</td>
+		<td>{% if h.charged == 0 %}처리중{% else %}충전완료{% endif %}</td>
 	</tr>
 	{% endfor %}
 	{% else %}
 	{% endif %}
 	</tbody>
 </table>
-</div>
+<h1>환전내역</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th width="20%">신청일</th>
+		<th width="20%">처리일</th>
+		<th width="40%">환전금액</th>
+		<th width="10%">상태</th>
+	</thead>
+	<tbody>
+	{% if history_ex %}
+	{% for h in history_ex %}
+	<tr class="select" id="{{ h.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td>{{ h.date.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td>{%if h.date_finished %}{{ h.date_finished.strftime('%Y-%m-%d %H:%M') }}{%else%}처리중{%endif%}</td>
+		<td>{{ h.money }}</td>
+		<td>{% if h.exchanged == 0 %}처리중{%elif h.exchanged ==1%}환전완료{% else %}환전거절{% endif %}</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
 
 {% endblock %}
 

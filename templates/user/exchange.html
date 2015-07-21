@@ -1,0 +1,48 @@
+{% extends "layout_main.html" %}
+{% block contents %}
+<h1>캐쉬충전</h1>
+<table class="dataTable tableStyle01">
+	<tr>
+		<td style="text-align:left;" colspan="2">
+			<ul>
+				<li>1. 입금하실 계좌에 PC 뱅킹, 폰뱅킹, 무통장 입금, ATM등의 방법 중 하나를 선택하여 입금합니다.</li>
+				<li>2. 입금자이름에는 입금하신분의 성함을 넣어주세요.</li>
+				<li>3. 확인 버튼을 클릭하시면 충전신청이 완료됩니다.</li>
+				<li>4. 입금하시기전 고객센터로  계좌번호 확인 부탁드립니다.(계좌번호가 수시로 변경될 수 있습니다.)      </li>
+				<li>5 .충전시 현재 발급된 계좌 외에 다른 어떤 계좌로 입금할 경우 그 입금액은 절대 보호 받으실 수 없습니다.</li>
+				<li>6. 최소 충전금액은 10,000원 단위 입니다.</li>
+				<li>7. 입금자명과 가입시 등록된 예금주명과 동일해야만 충전이 승인되니 이점 유의하시기 바랍니다.</li>
+				<li>8. 수표입금 불가능 입니다.</li>
+				(참고 사이트 유의사항 그냥 긁어옮)
+			</td>
+		</tr>
+		<tr>
+			<th>보유캐쉬</th>
+			<td style="text-align:left;" class="toComma" id="money_crt">{{user.money_crt}} 원</td>
+		</tr>
+		<tr>
+			<th>환전 금액</th>
+			<td> <input type="text" id="chargemoney" class="form-control toComma" name="exchangemoney" value=""><button id="charge1" class="btn sBtn">1만원</button><button id="charge2" class="btn sBtn">3만원</button><button id="charge3" class="btn sBtn">5만원</button><button id="charge_init" class="btn sBtn">초기화</button></td>
+		</tr>
+		<tr>
+			<th>거래은행</th>
+			<td style="text-align:left;">{{ user.bank }}</td>
+		</tr>
+		<tr>
+			<th>계좌번호</th>
+			<td style="text-align:left;">{{ user.bank_account }}</td>
+		</tr>
+		<tr>
+			<th>예금주</th>
+			<td style="text-align:left;">{{ user.bank_name }}</td>
+		</tr>
+	</tr>
+</table>
+<div align="center">
+	<button class="btn mBtn exchange_money">환전요청</button>
+</div>
+{% endblock %}
+
+
+
+

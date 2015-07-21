@@ -1,0 +1,46 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>환전신청관리</h1>
+<button class="btn mBtn select_all">전체선택</button>
+<button class="btn mBtn exchange_all">선택환전</button>
+<button class="btn mBtn cancel_all">선택환전취소</button>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th width="10%">아이디</th>
+		<th width="10%">닉네임</th>
+		<th width="1%">레벨</th>
+		<th width="10%">보유금액</th>
+		<th>입금자명</th>
+		<th width="10%">환전금액</th>
+		<th width="15%">신청시간</th>
+		<th width="10%">환전/취소</th>
+	</thead>
+	<tbody>
+	{% if exchangelist %}
+	{% for exchange in exchangelist %}
+	<tr class="select" id="{{ exchange.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td>{{ exchange.user.account }}</td>
+		<td>{{ exchange.user.nickname }}</td>
+		<td>{{ exchange.user.level }}</td>
+		<td class="toComma" >{{ exchange.user.money_crt }}</td>
+		<td>{{ exchange.user.bank }}/{{ exchange.user.bank_account }}/{{ exchange.user.bank_name }}</td>
+		<td class="toComma">{{ exchange.money }}</td>
+		<td>{{ exchange.date.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td>
+			<button class="btn sBtn exchange_one">환전</button>
+			<button class="btn sBtn cancel_one">취소</button>
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+</div>
+
+{% endblock %}
+
+
+

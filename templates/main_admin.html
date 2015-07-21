@@ -16,8 +16,8 @@
 			<form method="post" role="form" onsubmit="return validateLogin()">
 				<fieldset>
 					<legend></legend>
-					<input type="text" name="account"  maxlength="20"/>
-					<input type="password" name="password"  maxlength="20"/>		
+					<input type="text" name="account"  maxlength="20" placeholder="아이디"/>
+					<input type="password" name="password"  maxlength="20" placeholder="비밀번호"/>		
 					<p class="formBtn"><input  value="로그인" type="submit" /></p>
 				</fieldset>	
 			</form>
@@ -25,6 +25,7 @@
 	</div>
 </div><!-- loginWrap -->
 <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.placeholder.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/layout.js') }}"></script> 
 </body>
 </html>

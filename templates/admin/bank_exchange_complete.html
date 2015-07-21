@@ -1,0 +1,43 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>환전완료내역</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th width="1%">선택</th>
+		<th>아이디</th>
+		<th>닉네임</th>
+		<th>레벨</th>
+		<th>보유금액</th>
+		<th>입금자명</th>
+		<th>충전금액</th>
+		<th>신청시간</th>
+		<th>완료시간</th>
+		<th>처리결과</th>
+	</thead>
+	<tbody>
+	{% if exchangelist %}
+	{% for exchange in exchangelist %}
+	<tr class="select" id="{{ exchange.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td>{{ exchange.user.account }}</td>
+		<td>{{ exchange.user.nickname }}</td>
+		<td>{{ exchange.user.level }}</td>
+		<td class="toComma">{{ exchange.user.money_crt }}</td>
+		<td>{{ exchange.user.bank_name }}</td>
+		<td>{{ exchange.money }}</td>
+		<td>{{ exchange.date.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td>{{ exchange.date_finished.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td>{% if exchange.exchanged == 1 %}환전완료{%else%}환전거절{%endif%}</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
+</div>
+
+{% endblock %}
+
+
+
+
