@@ -1,0 +1,41 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>레벨별 금액제한 설정</h1>
+<form method="post" role="form" name="" id="levelsetting">
+<table class="dataTable tableStyle01">
+	<tr>
+		<th>레벨</th>
+		<th>승무패 배팅최소</th>
+		<th>승무패 배팅최대</th>
+		<th>승무패 당첨최대</th>
+		<th>핸디캡 배팅최소</th>
+		<th>핸디캡 배팅최대</th>
+		<th>핸디캡 당첨최대</th>
+		<th>스페셜 배팅최소</th>
+		<th>스페셜 배팅최대</th>
+		<th>스페셜 당첨최대</th>
+	</tr>
+	{% if list %}
+	{% for l in list %}
+	<tr class="select" id="{{l.id}}">
+		<td>{{l.level}}
+		<td><input class="toComma_input form-control" type="text" name="cross_minbet_{{l.id}}" value="{{l.cross_minbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="cross_maxbet_{{l.id}}" value="{{l.cross_maxbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="cross_maxgain_{{l.id}}" value="{{l.cross_maxgain}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="handicap_minbet_{{l.id}}" value="{{l.handicap_minbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="handicap_maxbet_{{l.id}}" value="{{l.handicap_maxbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="handicap_maxgain_{{l.id}}" value="{{l.handicap_maxgain}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="special_minbet_{{l.id}}" value="{{l.special_minbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="special_maxbet_{{l.id}}" value="{{l.special_maxbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="special_maxgain_{{l.id}}" value="{{l.special_maxgain}}"></td>
+	</tr>
+	{% endfor %}
+	{% endif %}
+</table>
+<div align="center">
+	<button type="submit" class="btn mBtn">수정하기</button>
+</div>
+</form>
+{% endblock %}
+
+

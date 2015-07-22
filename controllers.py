@@ -6,7 +6,7 @@ from sqlalchemy import desc
 
 from app import app, db
 from app.forms import ArticleForm, CommentForm, JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit
 
 import re
 import json
@@ -173,7 +173,7 @@ def admin_main():
 def admin_user_wait():
 	if 'admin' in session:
 		userlist = User.query.filter(User.allow == 0).all()
-		return render_template('admin/user_wait.html', userlist=userlist)
+		return render_template('admin/user_wait.html', userlist=userlist, menu='user')
 	else:
 		return redirect(url_for('admin_main'))
 
@@ -210,18 +210,34 @@ def admin_user_info():
 	if 'admin' in session:
 		if request.method == 'POST':
 			type = int(request.form['searchtype'])
+			level = int(request.form['searchlevel'])
 			text = request.form['searchtext']	
-			if type == 0:
-				user = User.query.filter(User.account == text).first()
+
+			if level == 0:
+				if type == 0:
+					userlist = User.query.filter(User.allow == 1, User.account.contains(text)).all()
+				elif type == 1:
+					userlist = User.query.filter(User.allow == 1, User.nickname.contains(text)).all()
+				elif type == 2:
+					userlist = User.query.filter(User.allow == 1, User.ip.contains(text)).all()
+				else:
+					userlist = User.query.filter(User.allow == 1).all()
 			else:
-				user = User.query.filter(User.nickname == text).first()
-			userlist = []
-			if user is not None:
-				userlist.append(user)
-			return render_template('admin/user_info.html', userlist=userlist)
+				if type == 0:
+					userlist = User.query.filter(User.level == level, User.allow == 1, User.account.contains(text)).all()
+				elif type == 1:                                 
+					userlist = User.query.filter(User.level == level, User.allow == 1, User.nickname.contains(text)).all()
+				elif type == 2:                                 
+					userlist = User.query.filter(User.level == level, User.allow == 1, User.ip.contains(text)).all()
+				else:                                           
+					userlist = User.query.filter(User.level == level, User.allow == 1).all()
+				
+
+			return render_template('admin/user_info.html', userlist=userlist, menu='user')
+
 		else:
 			userlist = User.query.filter(User.allow == 1).all()
-			return render_template('admin/user_info.html', userlist=userlist)
+			return render_template('admin/user_info.html', userlist=userlist, menu='user')
 			
 	else:
 		return redirect(url_for('admin_main'))
@@ -249,7 +265,8 @@ def admin_user_detail(id):
 			return render_template('404user.html')
 		else:
 			log = user.loginlogs.order_by(desc(LoginLog.date)).first()
-			return render_template('admin/user_detail.html',log=log, user=user)
+			leveldata = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+			return render_template('admin/user_detail.html',log=log, user=user, leveldata=leveldata)
 	else:
 		return redirect(url_for('admin_main'))
 
@@ -320,11 +337,11 @@ def admin_user_ip():
 			iplist = []
 			if bip is not None:
 				iplist.append(bip)
-			return render_template('admin/user_blockip.html', iplist=iplist)
+			return render_template('admin/user_blockip.html', iplist=iplist, menu='user')
 
 		else:
 			iplist = BlockIp.query.all()
-			return render_template('admin/user_blockip.html', iplist = iplist)
+			return render_template('admin/user_blockip.html', iplist = iplist, menu='user')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -355,7 +372,7 @@ def admin_user_blockip():
 def admin_user_stop():
 	if 'admin' in session:
 		userlist = User.query.filter(User.state == 1).all()
-		return render_template('admin/user_stop.html', userlist=userlist)
+		return render_template('admin/user_stop.html', userlist=userlist, menu='user')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -364,7 +381,7 @@ def admin_user_stop():
 def admin_user_admin():
 	if 'admin' in session:
 		userlist = User.query.filter(User.allow == 2).all()
-		return render_template('admin/user_admin.html', userlist=userlist)
+		return render_template('admin/user_admin.html', userlist=userlist, menu='user')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -379,7 +396,7 @@ def admin_league_sport():
 	if 'admin' in session:
 		if request.method == 'GET':
 			sportlist = SportandNation.query.filter(SportandNation.type == 0).all()
-			return render_template('admin/league_sport.html', sportlist=sportlist)
+			return render_template('admin/league_sport.html', sportlist=sportlist, menu='league')
 		else:
 			sport = request.form['sport']
 			san = SportandNation(
@@ -434,7 +451,7 @@ def admin_league_nation():
 	if 'admin' in session:
 		if request.method == 'GET':
 			nationlist = SportandNation.query.filter(SportandNation.type == 1).all()
-			return render_template('admin/league_nation.html', nationlist=nationlist)
+			return render_template('admin/league_nation.html', nationlist=nationlist, menu='league')
 		else:
 			nation = request.form['nation']
 			san = SportandNation(
@@ -491,7 +508,7 @@ def admin_league_league():
 			nationlist = SportandNation.query.filter(SportandNation.type == 1)
 			sportlist = SportandNation.query.filter(SportandNation.type == 0)
 			leaguelist = League.query.all()
-			return render_template('admin/league_league.html', leaguelist=leaguelist, nationlist=nationlist, sportlist=sportlist)
+			return render_template('admin/league_league.html', leaguelist=leaguelist, nationlist=nationlist, sportlist=sportlist, menu='league')
 		else:
 			nation = request.form['nation']
 			sport = request.form['sport']
@@ -561,7 +578,7 @@ def admin_league_detail():
 		if request.method == 'GET':
 			leaguelist = League.query.all()
 			detaillist = LeagueDetail.query.all()
-			return render_template('admin/league_detail.html', leaguelist=leaguelist,detaillist=detaillist)
+			return render_template('admin/league_detail.html', leaguelist=leaguelist,detaillist=detaillist, menu='league')
 		else:
 			leagueid = int(request.form['league'])
 			name = request.form['name']
@@ -635,7 +652,7 @@ def admin_register_game():
 			leaguelist = League.query.all()
 			gamelist = Game.query.filter(Game.state == 0, Game.finish == 0).all()
 
-			return render_template('admin/register_game.html', leaguelist=leaguelist, gamelist=gamelist)
+			return render_template('admin/register_game.html', leaguelist=leaguelist, gamelist=gamelist, menu='register')
 		else:
 			game = request.form['game']
 			league_id = int(request.form['league'])
@@ -760,7 +777,7 @@ def admin_register_cross():
 	if 'admin' in session:
 		if request.method == 'GET':
 			gamelist = Game.query.filter(Game.finish == 0).all()
-			return render_template('admin/register_cross.html', gamelist=gamelist)
+			return render_template('admin/register_cross.html', gamelist=gamelist, menu='register')
 		else:
 			return redirect(url_for('admin_register_cross'))
 	else:
@@ -819,7 +836,7 @@ def admin_finish_cross():
 	if 'admin' in session:
 		if request.method == 'GET':
 			gamelist = Game.query.filter(Game.state == 3, Game.finish == 0).all()
-			return render_template('admin/finish_cross.html', gamelist=gamelist)
+			return render_template('admin/finish_cross.html', gamelist=gamelist, menu='finish')
 		else:
 			id = int(request.form['id'])
 			home_score = int(request.form['home_score'])
@@ -995,7 +1012,7 @@ def admin_finish_restore():
 	if 'admin' in session:
 		if request.method == 'GET':
 			gamelist = Game.query.filter(Game.finish == 1).all()
-			return render_template('admin/finish_restore.html', gamelist=gamelist)
+			return render_template('admin/finish_restore.html', gamelist=gamelist, menu='finish')
 		else:
 			id = int(request.form['id'])
 			game = Game.query.get(id)
@@ -1018,7 +1035,7 @@ def admin_finish_restore():
 def admin_bank_charge():
 	if 'admin' in session:
 		chargelist = ChargeLog.query.filter(ChargeLog.charged == 0).order_by(desc(ChargeLog.date)).all()
-		return render_template('admin/bank_charge.html', chargelist=chargelist)
+		return render_template('admin/bank_charge.html', chargelist=chargelist, menu='bank')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -1078,7 +1095,7 @@ def admin_bank_charge_allowall():
 def admin_bank_charge_complete():
 	if 'admin' in session:
 		chargelist = ChargeLog.query.filter(ChargeLog.charged == 1).order_by(desc(ChargeLog.date)).all()
-		return render_template('admin/bank_charge_complete.html', chargelist=chargelist)
+		return render_template('admin/bank_charge_complete.html', chargelist=chargelist, menu='bank')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -1089,7 +1106,7 @@ def admin_bank_charge_complete():
 def admin_bank_exchange():
 	if 'admin' in session:
 		exchangelist = ExchangeLog.query.filter(ExchangeLog.exchanged == 0).order_by(desc(ExchangeLog.date)).all()
-		return render_template('admin/bank_exchange.html', exchangelist=exchangelist)
+		return render_template('admin/bank_exchange.html', exchangelist=exchangelist, menu='bank')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -1184,7 +1201,7 @@ def admin_bank_exchange_deallowall():
 def admin_bank_exchange_complete():
 	if 'admin' in session:
 		exchangelist = ExchangeLog.query.filter(ExchangeLog.exchanged != 0).order_by(desc(ExchangeLog.date)).all()
-		return render_template('admin/bank_exchange_complete.html', exchangelist=exchangelist)
+		return render_template('admin/bank_exchange_complete.html', exchangelist=exchangelist, menu='bank')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -1204,7 +1221,7 @@ def admin_bank_exchange_complete():
 def admin_bank_account():
 	if 'admin' in session:
 		banklist = BankAccount.query.all()
-		return render_template('admin/bank_account.html', banklist=banklist)
+		return render_template('admin/bank_account.html', banklist=banklist, menu='bank')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -1262,6 +1279,35 @@ def admin_bank_account_modifyall():
 	else:
 		return jsonify(success=False) 
 
+
+
+#관리자 설정 페이지
+@app.route('/admin/setting', methods=['GET', 'POST'])
+def admin_setting():
+	if 'admin' in session:
+		if request.method == 'GET':
+			list = LevelLimit.query.order_by(LevelLimit.level).all()
+			return render_template('admin/setting.html', list=list, menu='setting')
+		else:
+			for i in range(7):
+				leveldata = LevelLimit.query.filter(LevelLimit.level==(i+1)).first()
+				
+				leveldata.cross_minbet = request.form['cross_minbet_'+str(i+1)]
+				leveldata.cross_maxbet = request.form['cross_maxbet_'+str(i+1)]
+				leveldata.cross_maxgain = request.form['cross_maxgain_'+str(i+1)]
+				
+				leveldata.handicap_minbet = request.form['handicap_minbet_'+str(i+1)]
+				leveldata.handicap_maxbet = request.form['handicap_maxbet_'+str(i+1)]
+				leveldata.handicap_maxgain = request.form['handicap_maxgain_'+str(i+1)]
+
+				leveldata.special_minbet = request.form['special_minbet_'+str(i+1)]
+				leveldata.special_maxbet = request.form['special_maxbet_'+str(i+1)]
+				leveldata.special_maxgain = request.form['special_maxgain_'+str(i+1)]
+
+			db.session.commit()
+			return redirect(url_for('admin_setting'))
+	else:
+		return redirect(url_for('main_admin'))
 
 ####################################
 ############   user    #############
@@ -1463,8 +1509,9 @@ def user_exchange():
 def user_mypage():
 	if 'id' in session:
 		user = User.query.get(session['id'])
+		leveldata = LevelLimit.query.filter(LevelLimit.level == user.level).first()
 		messages = user.messages.order_by(desc(Message.date)).all()
-		return render_template('user/mypage.html',user=user, msgs = messages)
+		return render_template('user/mypage.html',user=user, leveldata=leveldata, msgs = messages)
 	else:
 		return redirect(url_for('main'))
 

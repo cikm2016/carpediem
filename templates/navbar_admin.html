@@ -1,7 +1,7 @@
 <div id="headerWrap">
 		<div id="header" class="container">
 			<ul id="gnb">
-				<li><a href="#">리그관리</a>
+				<li {% if menu=='league'%}class="hover"{%endif%}><a href="#">리그관리</a>
 					<ul class="hiddenX">
 						<li><a href="{{url_for('admin_league_sport')}}">종목관리</a></li>
 						<li><a href="{{url_for('admin_league_nation')}}">국가관리</a></li>
@@ -9,7 +9,7 @@
 						<li><a href="{{url_for('admin_league_detail')}}">세부리그관리</a></li>
 					</ul>
 				</li>
-				<li><a href="#">경기등록/개시</a>
+				<li {% if menu=='register'%}class="hover"{%endif%}><a href="#">경기등록/개시</a>
 					<ul class="hiddenX">
 						<li><a href="{{url_for('admin_register_game')}}">경기등록</a></li>
 						<li><a href="{{url_for('admin_register_cross')}}">승무패관리</a></li>
@@ -17,7 +17,7 @@
 						<li><a href="#">스페셜관리</a></li>
 					</ul>
 				</li>
-				<li><a href="#">경기마감/복원</a>
+				<li {% if menu=='finish'%}class="hover"{%endif%}><a href="#">경기마감/복원</a>
 					<ul class="hiddenX">
 						<li><a href="{{url_for('admin_finish_cross')}}">승무패마감</a></li>
 						<li><a href="{{url_for('admin_finish_cross')}}">핸디캡마감</a></li>
@@ -25,7 +25,7 @@
 						<li><a href="{{url_for('admin_finish_restore')}}">마감경기복원</a></li>
 					</ul>
 				</li>
-				<li><a href="#">회원관리</a>
+				<li {% if menu=='user'%}class="hover"{%endif%}><a href="#">회원관리</a>
 					<ul class="hiddenX">
 						<li><a href="{{url_for('admin_user_wait')}}">가입신청관리</a></li>
 						<li><a href="{{url_for('admin_user_info')}}">일반회원관리</a></li>
@@ -34,7 +34,7 @@
 						<li><a href="{{url_for('admin_user_ip')}}">아이피차단</a></li>
 					</ul>
 				</li>
-				<li><a href="#">입출금관리</a>
+				<li {% if menu=='bank'%}class="hover"{%endif%}><a href="#">입출금관리</a>
 					<ul class="hiddenX">
 						<li><a href="{{ url_for('admin_bank_charge') }}">충전신청관리</a></li>
 						<li><a href="{{ url_for('admin_bank_charge_complete') }}">충전완료내역</a></li>
@@ -71,21 +71,15 @@
 						<li><a href="#"></a></li>
 					</ul>
 				</li>
-				<li><a href="#">통계</a>
+				<li {% if menu=='setting'%}class="hover"{%endif%}><a href="#">관리자설정</a>
 					<ul class="hiddenX">
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
-					</ul>
-				</li>
-				<li><a href="#">설정</a>
-					<ul class="hiddenX">
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
+						<li><a href="{{url_for('admin_setting')}}">레벨별 금액제한</a></li>
+						<li><a href="#">기타설정</a></li>
 						<li><a href="#"></a></li>
 					</ul>
 				</li>
 			</ul><!-- gnb -->
+			<p class="aHome"><a href="#"><img src="{{ url_for('static', filename='images/admin/btn_home.gif') }}" width="50" height="50" alt="È¨" /></a></p>
 			<p class="logOut"><a href="{{ url_for('signout') }}">로그아웃</a></p>
 		</div><!-- header -->
 	</div><!-- headerWrap -->

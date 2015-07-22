@@ -23,8 +23,8 @@ jQuery('.mainMenuList li').bind('focusout mouseout', function() {
 
 
 jQuery('#uGnb li').click(function() {
-	jQuery('#uGnb li').removeClass("hover");
-	jQuery(this).addClass("hover");
+	jQuery('#uGnb li').removeClass("active");
+	jQuery(this).addClass("active");
 });
 
 $('input, textarea').placeholder();

@@ -1,29 +1,46 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
-<h1>일반 회원 관리 <button class="btn mBtn reload">새로고침</button></h1>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<a href="{{url_for('admin_user_info')}}" class="btn mBtn pinkBtn">전체보기</a>
+</p>
+<h1>회원검색</h1>
 <table class="dataTable tableStyle01">
 	<form method="post" role="form" name="searchform" onsubmit="return validateForm()">
 	<tr>
-		<th>회원 검색</th>
+		<th>검색 분류</th>
 		<td>
-			<select class="form-control" name="searchtype" name="searchtype">
+			<select class="form-control" id="searchtype" name="searchtype">
 				<option value="0">아이디</option>
 				<option value="1">닉네임</option>
+				<option value="2">아이피</option>
 			</select>
 		</td>
-		<td><input type="text" name="searchtext" class="form-control"></td>
-		<td><button class="btn btn-default search">검색</button></td>
-		<th>정렬</th>
+		<th>검색어</th>
+		<td class="input_space"><input type="text" name="searchtext" class="form-control"></td>
+		<th>회원레벨</th>
 		<td>
-			<select class="form-control" id="sort" name="sort">
-				<option value="0">닉네임</option>
-				<option value="1">상태</option>
-				<option value="2">레벨</option>
+			<select class="form-control" name="searchlevel">
+				<option value="0">모든레벨</option>
+				<option value="1">레벨1</option>
+				<option value="2">레벨2</option>
+				<option value="3">레벨3</option>
+				<option value="4">레벨4</option>
+				<option value="5">레벨5</option>
+				<option value="6">레벨6</option>
+				<option value="7">레벨7</option>
 			</select>
 		</td>
+		<td><button class="btn btn-default search">검색</button></td>
 	</tr>
 	</form>	
 </table>
+</div>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn pinkBtn reload">새로고침</button>
+<h1>일반 회원 관리</h1> 
+</p>
 	<table class="dataTable tableStyle01">
 		<thead>
 			<th >아이디/닉네임</th>
@@ -52,7 +69,7 @@
 				<td>{{ user.money_bet }}</td>
 				<td>{{ user.join_date.strftime('%Y-%m-%d %H:%m') }}</td>
 				<td>{{ user.ip }}</td>
-				<td><button class="btn mBtn chk_login">확인</button></td>
+				<td><button class="btn mBtn greyBtn chk_login">확인</button></td>
 				<td><button class="btn mBtn detail">보기</button></td>
 			</tr>
 			{% endfor %}
@@ -61,7 +78,7 @@
 			{% endif %}
 		</tbody>
 	</table>
-
+</div>
 {% endblock %}
 
 

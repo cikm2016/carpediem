@@ -1,8 +1,10 @@
-{% extends "base.html" %}
+{% extends "base_admin.html" %}
 
 {% block layout %}
-<div id="contents" class="container">
+<div id="contentsWrap">
+	<div id="contents" class="container">
 {% block contents %}{% endblock %}
+</div>
 </div>
 {% endblock %}
 

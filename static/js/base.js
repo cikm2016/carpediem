@@ -60,7 +60,7 @@ $(document).ready(function(){
 	});
 	$('.detail').click(function(){
 		var id = $(this).closest('tr').attr('id');
-		popupOpen('/admin/user/detail/'+id, 'width=800, height=800, resizable=yes,scrollbars=yes;');
+		popupOpen('/admin/user/detail/'+id, 'width=1000, height=800, resizable=yes,scrollbars=yes;');
 	});
 	$('.message_open').click(function(){
 		var id = $('input[name="id"]').val();
@@ -1319,6 +1319,13 @@ $(document).ready(function(){
 	$('.toComma').each(function(){
 		$(this).text(numberWithCommas($(this).text()));
 	});	
+	$('.toComma_input').each(function(){
+		$(this).val(numberWithCommas($(this).val()));
+	});	
+	$('.toComma_input').on('input',function(){
+		$(this).val(numberWithCommas($(this).val().replace(/\,/g,'')));
+	});	
+
 	$('#money_bet').each(function(){
 		$(this).val(numberWithCommas($(this).val()));
 	});	
@@ -1353,6 +1360,11 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('#levelsetting').submit(function(){
+		$('.toComma_input').each(function(){
+			$(this).val(parseInt($(this).val().replace(/\,/g,'')))
+		});
+	})
 });
 function popupOpen(url, op){
 	var popUrl = url;

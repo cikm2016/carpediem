@@ -3,30 +3,40 @@ body { background:#000;  }
 #header { position:relative;z-index:100;   }
  #gnb { float:left;  }
  #gnb li { float:left;  position:relative; z-index:100;  }
- #gnb li a {display:block;  float:left; padding:15px 9px 0px 9px; height:37px; font-size:14px; color:#ffe670;  }
+ #gnb li a {display:block;  float:left; padding:15px 7px 0px 7px; height:37px; font-size:14px; color:#ffe670;  }
  #gnb li a:hover { background:#e1bb36; color:#000;  }
  #gnb li.hover a { background:#e1bb36; color:#000; text-decoration:underline; }
- #gnb li ul  {position:absolute;z-index:100; top:50px; left:0px; width:130px; background:#e1bb36;padding:15px;  }
+ #gnb li ul  {position:absolute;z-index:100; top:50px; left:0px; width:200px; background:#e1bb36;padding:15px;  }
  #gnb li ul  li {width:100%;padding-bottom:10px;  }
  #gnb li ul  li a { color:#000; height:auto;  padding:0px; }
   #gnb li.hover ul  li a { text-decoration:none;  }
   #gnb li.hover ul  li a:hover { text-decoration:underline;   }
-
+#header .home {position:absolute;z-index:100; right:120px; top:0px;  }
 #header .logOut { position:absolute;z-index:100; font-size:14px; padding-left:45px; padding-top:15px;  top:0px; right:0px; width:75px;height:35px;  background:url(../images/admin/btn_logout.gif) no-repeat left top; }
 #header .logOut a { color:#929292; }
 
 
+
+
+
+
+
 #contents { clear:both; padding-top:35px; padding-bottom:50px; }
-#contents  h1 {font-size:30px; color:#fff; margin-bottom:20px;  }
-#contents  .dataTable {width:100%; margin-bottom:20px; border-collapse:collapse;  }
-#contents  .dataTable thead th { text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:10px;border-right:1px solid #ddd;   }
-#contents  .dataTable tbody th {  text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:15px 10px;;border-right:1px solid #ddd;  }
-#contents  .dataTable tbody td { font-size:14px; color:#000; background:#e5e5e5;padding:15px 10px; ;border-right:1px solid #ddd; }
-#contents  .dataTable tbody .clicked td { background: yellow }
+#contents  h1 {font-size:24px; color:#fff; margin-bottom:5px;  }
+#contents  .dataTable {width:100%; margin-bottom:25px; border-collapse:collapse;  }
+#contents  .dataTable thead th { text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:10px;border-right:1px solid #ddd; border-bottom:1px solid #ddd;  }
+#contents  .dataTable tbody th {  text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:15px 10px; border-right:1px solid #ddd; border-bottom:1px solid #ddd;}
+#contents  .dataTable tbody td { text-align:center; font-size:14px; color:#000; background:#e5e5e5;padding:15px 10px; ;border-right:1px solid #ddd; border-bottom:1px solid #ddd;}
+#contents .dataTable tbody .clicked td {     background: #cafee7; }
+
+
+#contents .relativeWrap { position:relative;  }
+#contents .relativeWrap .topBtnWrap { position:absolute; top:0px; right:0px; }
+
 .form-control {
     display: block;
     width: 96%;
-    height: 25px;
+    height: 20px;
     padding: 4px 2%;
     font-size: 14px;
     line-height: 1.4285;
@@ -41,37 +51,22 @@ body { background:#000;  }
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
-
+select.form-control { height:30px;  }
 
 
 .btn {     display: inline-block; 
-    padding: 6px 12px 0 ;
-    margin-bottom: 0px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.4285;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-	 color: #333;
-    background-color: #fff;
-    border-color: #ccc;
+   width:80px; height:30px; text-align:center; color:#000;padding-top:3px;  font-size:14px; border:0px; background:#f7d032; cursor: pointer; border-radius: 3px;
+  
+}
+
+.greyBtn {   background:#b8b8b8; 
+}
+.pinkBtn {   background:#ed9e62; 
 }
 
 .sBtn {
-    padding: 5px 5px 0px;
+   width:60px; height:30px; 
     font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
+  
 }
-
-
 

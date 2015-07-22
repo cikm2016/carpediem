@@ -145,7 +145,7 @@ class Game(db.Model):
 	league_detail = db.relationship('LeagueDetail',
 			backref=db.backref('games', cascade='all, delete-orphan', lazy='dynamic'))
 
-# 입금계좌 디비
+# 레벨별 입금계좌 테이블
 class BankAccount(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	level = db.Column(db.Integer)
@@ -153,6 +153,23 @@ class BankAccount(db.Model):
 	bank_account = db.Column(db.String(255))
 	bank_name = db.Column(db.String(255))
 
+
+# 레벨별 제한금액 테이블
+class LevelLimit(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	level = db.Column(db.Integer)
+
+	cross_minbet = db.Column(db.Integer)
+	cross_maxbet = db.Column(db.Integer)
+	cross_maxgain = db.Column(db.Integer)
+
+	handicap_minbet = db.Column(db.Integer)
+	handicap_maxbet = db.Column(db.Integer)
+	handicap_maxgain = db.Column(db.Integer)
+
+	special_minbet = db.Column(db.Integer)
+	special_maxbet = db.Column(db.Integer)
+	special_maxgain = db.Column(db.Integer)
 #############################################
 ####  유저 배팅 정보, 배팅한 게임 정보   ####
 #############################################

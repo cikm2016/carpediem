@@ -1,7 +1,7 @@
 {% extends "layout_popup.html" %}
 {% block contents %}
 <h1> 회원 상세 정보 <button class="btn mBtn message_open">쪽지보내기</button></h1>
-<table class="dataTable tableStyle01">
+<table class="dataTable">
 	<tr>
 		<th>아이디</th>
 		<td>{{user.account}}</td>
@@ -73,32 +73,34 @@
 	</tr>
 </table>
 
-<h1>회원별 배팅금액 설정</h1>
-<table class="dataTable tableStyle01">
+<h1>회원 레벨에 따른 배팅금액</h1>
+<table class="dataTable">
+	{% if leveldata %}
 	<tr>
 		<th>승무패 배팅최소 </th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.cross_minbet}}</td>
 		<th>승무패 배팅최대</th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.cross_maxbet}}</td>
 		<th>승무패 당첨최대</th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.cross_maxgain}}</td>
 	</tr>
 	<tr>
 		<th>핸디캡 배팅최소 </th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.handicap_minbet}}</td>
 		<th>핸디캡 배팅최대</th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.handicap_maxbet}}</td>
 		<th>핸디캡 당첨최대</th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.handicap_maxgain}}</td>
 	</tr>
 	<tr>
 		<th>스페셜 배팅최소 </th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.special_minbet}}</td>
 		<th>스페셜 배팅최대</th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.special_maxbet}}</td>
 		<th>스페셜 당첨최대</th>
-		<td><input class="form-control" type="text" value=""></td>
+		<td class="toComma">{{leveldata.special_maxgain}}</td>
 	</tr>
+	{% endif %}
 </table>
 <div align="center">
 	<button class="btn mBtn user_modify">수정</button>
