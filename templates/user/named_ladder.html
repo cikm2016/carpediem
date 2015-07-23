@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block contents %}
-<h1>사다리</h1>
-<iframe src="http://named.com/game/ladder/v2_index.php" width=800 height=700 frameborder=1 scrolling=no>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit04.gif') }}" alt="게시판" /></p>
+<div class="iframeWrap">
+<iframe class="iframeContents" src="http://named.com/game/ladder/v2_index.php" width=800 height=700 frameborder=1 scrolling=no></iframe>
+</div>
 {% endblock %}
 
 

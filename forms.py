@@ -78,16 +78,6 @@ class JoinForm(Form):
 
 
 class ArticleForm(Form):
-	nick = StringField(
-	    u'닉네임',
-	    [validators.data_required(u'이름을 입력하시기 바랍니다.')],
-	    description={'placeholder': u'이름을 입력하세요.'}
-	)
-	password = PasswordField(
-			u'비밀번호',
-			[validators.data_required(u'비밀번호를 입력해야 합니다.'),validators.Length(min=4, max=16)],
-			description={'placeholder': u'비밀번호를 입력하세요.'}
-			)
 	title = StringField(
 			u'제목',
 			[validators.data_required(u'제목을 입력하시기 바랍니다.')],
@@ -98,33 +88,7 @@ class ArticleForm(Form):
 			[validators.data_required(u'내용을 입력하시기 바랍니다.')],
 			description={'placeholder': u'내용을 입력하세요.'}
 			)
-	#category = StringField(
-	#    u'카테고리',
-	#    [validators.data_required(u'카테고리를 입력하시기 바랍니다.')],
-	#    description={'placeholder': u'카테고리를 입력하세요.'}
-	#)
 
 
-class CommentForm(Form):
-	content = StringField(
-			u'내용',
-			[validators.data_required(u'내용을 입력하시기 바랍니다.')],
-			description={'placeholder': u'내용을 입력하세요.'}
-			)
-	#author = StringField(
-	#    u'작성자',
-	#    [validators.data_required(u'이름을 입력하시기 바랍니다.')],
-	#    description={'placeholder': u'이름을 입력하세요.'}
-	#)
-	password = PasswordField(
-			u'비밀번호',
-			[validators.data_required(u'비밀번호를 입력하시기 바랍니다.'), validators.Length(min=4, max=16)],
-			description={'placeholder': u'비밀번호를 입력하세요.'}
-			)
-	#email = EmailField(
-	#    u'이메일',
-	#    [validators.data_required(u'이메일을 입력하시기 바랍니다.')],
-	#    description={'placeholder': u'이메일을 입력하세요.'}
-	#)
 
 

@@ -170,6 +170,8 @@ class LevelLimit(db.Model):
 	special_minbet = db.Column(db.Integer)
 	special_maxbet = db.Column(db.Integer)
 	special_maxgain = db.Column(db.Integer)
+
+
 #############################################
 ####  유저 배팅 정보, 배팅한 게임 정보   ####
 #############################################
@@ -208,21 +210,19 @@ class UserBetGame(db.Model):
 class Article(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String(255))
-	like = db.Column(db.Integer, default=0)
-	nick = db.Column(db.String(255))
-	password = db.Column(db.String(255))
 	content = db.Column(db.Text())
 	nofc = db.Column(db.Integer, default=0)
 	date_created = db.Column(db.DateTime())
 
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = db.relationship('User', backref=db.backref('articles', cascade='all, delete-orphan', lazy='dynamic'))
 
 #Comment of TalkRoom
 class Comment(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	like = db.Column(db.Integer, default=0)
 	article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
-	article = db.relationship('Article',
-			backref=db.backref('comments', cascade='all, delete-orphan', lazy='dynamic'))
+	article = db.relationship('Article', backref=db.backref('comments', cascade='all, delete-orphan', lazy='dynamic'))
 
 	nick = db.Column(db.String(255))
 	password = db.Column(db.String(255))

@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import desc
 
 from app import app, db
-from app.forms import ArticleForm, CommentForm, JoinForm, LoginForm, AdminForm
+from app.forms import ArticleForm,  JoinForm, LoginForm, AdminForm
 from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit
 
 import re
@@ -1414,12 +1414,13 @@ def user_betting_history_delete():
 @app.route('/user/named/ladder', methods=['GET'])
 def user_named_ladder():
 	if 'id' in session:
-		return render_template('user/named_ladder.html', menu='ladder')
+		user = User.query.get(session['id'])
+		return render_template('user/named_ladder.html',user=user,  menu='ladder')
 	else:
 		return redirect(url_for('main'))
 
 
-## 사다리
+## 경기결과
 @app.route('/user/result', methods=['GET'])
 def user_result():
 	if 'id' in session:
@@ -1571,42 +1572,47 @@ def article_list():
 	if 'id' in session:
 		context = {}
 
-		# Article 데이터 전부를 받아와서 최신글 순서대로 정렬하여 'article_list' 라는 key값으로 context에 저장한다.
 		context['article_list'] = Article.query.order_by(desc(Article.date_created)).all()
 		return render_template('article/list.html', context=context, menu='article')
-	return redirect(url_for('main'))
+	else:
+		return redirect(url_for('main'))
 
 @app.route('/article/create/', methods=['GET', 'POST'])
 def article_create():
-	form = ArticleForm()
-	if request.method == 'POST':
-		if form.validate_on_submit():
-			# 사용자가 입력한 글 데이터로 Article 모델 인스턴스를 생성한다.
-			article = Article(
-					nick=form.nick.data,
-					title=form.title.data,
-					password=generate_password_hash(form.password.data),
-					content=form.content.data,
-					date_created=datetime.now()+timedelta(hours=9)
-					)
-			# 데이터베이스에 데이터를 저장
-			db.session.add(article)
-			db.session.commit()
+	if 'id' in session:
+		form = ArticleForm()
+		user = User.query.get(session['id'])
+		if request.method == 'POST':
+			if form.validate_on_submit():
+				# 사용자가 입력한 글 데이터로 Article 모델 인스턴스를 생성한다.
+				article = Article(
+						title=form.title.data,
+						content=form.content.data,
+						date_created=datetime.now()+timedelta(hours=9),
+						user = user
+						)
+				# 데이터베이스에 데이터를 저장
+				db.session.add(article)
+				db.session.commit()
 
-			return redirect(url_for('article_list'))
-		return render_template('article/create.html', form=form)
-
-	return render_template('article/create.html', form=form)
-
+				return redirect(url_for('article_list'))
+			return render_template('article/create.html', user=user, form=form, menu='article')
+		else:
+			return render_template('article/create.html', user=user,form=form, menu='article')
+	else:
+		return redirect(url_for('main'))
 
 @app.route('/article/detail/<int:id>', methods=['GET'])
 def article_detail(id):
-	article = Article.query.get(id)
+	if 'id' in session:
+		article = Article.query.get(id)
 
-	# relationship을 활용한 query
-	comments = article.comments.order_by(desc(Comment.date_created)).all()
+		# relationship을 활용한 query
+		comments = article.comments.order_by(desc(Comment.date_created)).all()
 
-	return render_template('article/detail.html', article=article, comments=comments)
+		return render_template('article/detail.html', article=article, comments=comments, menu='article')
+	else:
+		return redirect(url_for('main'))
 
 @app.route('/article/like')
 def article_like():
@@ -1620,36 +1626,42 @@ def article_like():
 
 @app.route('/article/update/<int:id>', methods=['GET', 'POST'])
 def article_update(id):
-	article = Article.query.get(id)
-	form = ArticleForm(request.form, obj=article)
+	if 'id' in session:
+		article = Article.query.get(id)
+		if session['id'] == article.user_id:
+			form = ArticleForm(request.form, obj=article)
 
-	if request.method == 'POST':
-		if form.validate_on_submit():
-			if check_password_hash(article.password, form.password.data):
-				form.populate_obj(article)
-				db.session.commit()
-				return redirect(url_for('article_detail', id=id))
-			else:
-				return render_template('article/update.html', form=form, error=1)
+			if request.method == 'POST':
+				if form.validate_on_submit():
+					form.populate_obj(article)
+					db.session.commit()
+					return redirect(url_for('article_detail', id=id))
+
+			return render_template('article/update.html', form=form, menu='article', id=article.id)
+		else:
+			return redirect(url_for('article_detail', id=id))
+
+	else:
+		return redirect(url_for('main'))
 
 
-	return render_template('article/update.html', form=form)
+@app.route('/article/delete', methods=['POST'])
+def article_delete():
+	if 'id' in session:
+		id = int(request.form['id'])
+		article = Article.query.get(id)
+		if article.user_id == session['id']:
 
-
-@app.route('/article/delete/<int:id>', methods=['GET', 'POST'])
-def article_delete(id):
-	if request.method == 'GET':
-		return render_template('article/delete.html', article_id=id)
-	elif request.method == 'POST':
-		article_id = request.form['article_id']
-		article = Article.query.get(article_id)
-		if check_password_hash(article.password, request.form['password']):
 			db.session.delete(article)
 			db.session.commit()
 
-			flash(u'게시글을 삭제하였습니다.', 'success')
-			return redirect(url_for('article_list'))
-		return render_template('article/delete.html', article_id=id)
+			return jsonify(success=True)
+		else:	
+			return jsonify(success=False)
+			
+	else:
+		return jsonify(success=False)
+
 
 @app.route('/article/search', methods=['GET'])
 def article_search():

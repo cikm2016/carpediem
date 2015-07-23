@@ -1,6 +1,6 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
-<h1>관리자 회원 관리<button class="btn btn reload">새로고침</button></h1>
+<h1>관리자 회원 관리</h1>
 	<table class="dataTable">
 		<thead>
 			<th >아이디/닉네임</th>
@@ -29,7 +29,7 @@
 				<td>{{ user.money_bet }}</td>
 				<td>{{ user.join_date.strftime('%Y-%m-%d %H:%m') }}</td>
 				<td>{{ user.ip }}</td>
-				<td><button class="btn chk_login">확인</button></td>
+				<td><button class="btn greyBtn chk_login">확인</button></td>
 				<td><button class="btn detail">보기</button></td>
 			</tr>
 			{% endfor %}

@@ -1365,6 +1365,35 @@ $(document).ready(function(){
 			$(this).val(parseInt($(this).val().replace(/\,/g,'')))
 		});
 	})
+	$('.iframeContents').load(function(){
+		alert('');
+	})
+	$('#article_delete').click(function(){
+		var id = $('input[name="id"]').val();
+		var check = confirm('해당 글을 삭제하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/article/delete',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : id
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('삭제하였습니다.');
+						$(location).attr('href', '/article');
+					}
+					else{
+						alert('작성자가 아닙니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	})
 });
 function popupOpen(url, op){
 	var popUrl = url;

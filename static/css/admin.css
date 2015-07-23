@@ -6,6 +6,7 @@ body { background:#000;  }
  #gnb li a {display:block;  float:left; padding:15px 7px 0px 7px; height:37px; font-size:14px; color:#ffe670;  }
  #gnb li a:hover { background:#e1bb36; color:#000;  }
  #gnb li.hover a { background:#e1bb36; color:#000; text-decoration:underline; }
+ #gnb li.active a { background:#e1bb36; color:#000; text-align:underline; }
  #gnb li ul  {position:absolute;z-index:100; top:50px; left:0px; width:200px; background:#e1bb36;padding:15px;  }
  #gnb li ul  li {width:100%;padding-bottom:10px;  }
  #gnb li ul  li a { color:#000; height:auto;  padding:0px; }
@@ -27,7 +28,8 @@ body { background:#000;  }
 #contents  .dataTable thead th { text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:10px;border-right:1px solid #ddd; border-bottom:1px solid #ddd;  }
 #contents  .dataTable tbody th {  text-align:center; font-size:14px; color:#000; background:#f1e9a9; padding:15px 10px; border-right:1px solid #ddd; border-bottom:1px solid #ddd;}
 #contents  .dataTable tbody td { text-align:center; font-size:14px; color:#000; background:#e5e5e5;padding:15px 10px; ;border-right:1px solid #ddd; border-bottom:1px solid #ddd;}
-#contents .dataTable tbody .clicked td {     background: #cafee7; }
+#contents  .dataTable tbody tr:hover td { background:#5bf1ef;}
+#contents .dataTable tbody .clicked td {     background: #5bf1ef; }
 
 
 #contents .relativeWrap { position:relative;  }

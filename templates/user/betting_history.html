@@ -1,6 +1,6 @@
 {% extends "layout_main.html" %}
 {% block contents %}
-<h1>배팅내역</h1>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit07.gif') }}" alt="게시판" /></p>
 {% if betlist and history %}
 {% for bet in betlist %}
 <table id="{{history[loop.index-1].id}}" class="table">

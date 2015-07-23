@@ -1,9 +1,12 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
-<h1>환전신청관리</h1>
-<button class="btn mBtn select_all">전체선택</button>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn pinkBtn select_all">전체선택</button>
 <button class="btn mBtn exchange_all">선택환전</button>
-<button class="btn mBtn cancel_all">선택환전취소</button>
+<button class="btn mBtn greyBtn cancel_all">환전취소</button>
+</p>
+<h1>환전신청관리</h1>
 <table class="dataTable tableStyle01">
 	<thead>
 		<th width="1%">선택</th>

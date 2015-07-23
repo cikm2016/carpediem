@@ -8,6 +8,10 @@ jQuery(function() {
 			jQuery(this).find('>ul').addClass("hiddenX");
 			jQuery(this).removeClass("hover");
 	});
+		jQuery('#gnb li').click(function() {
+			jQuery('#gnb li').removeClass("active");
+			jQuery(this).addClass("active");
+	});
 
 	
    });
@@ -23,8 +27,8 @@ jQuery('.mainMenuList li').bind('focusout mouseout', function() {
 
 
 jQuery('#uGnb li').click(function() {
-	jQuery('#uGnb li').removeClass("active");
-	jQuery(this).addClass("active");
+	jQuery('#uGnb li').removeClass("hover");
+	jQuery(this).addClass("hover");
 });
 
 $('input, textarea').placeholder();
