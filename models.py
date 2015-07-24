@@ -145,6 +145,26 @@ class Game(db.Model):
 	league_detail = db.relationship('LeagueDetail',
 			backref=db.backref('games', cascade='all, delete-orphan', lazy='dynamic'))
 
+class Ladder(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+
+	odd_rate = db.Column(db.Float, default=0.0)
+	even_rate = db.Column(db.Float, default=0.0)
+
+	date = db.Column(db.Date())
+
+class LadderGame(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+
+	win = db.Column(db.Integer, default=0) 
+	number = db.Column(db.Integer) 
+
+	state = db.Column(db.Integer, default=0)
+
+	ladder_id = db.Column(db.Integer, db.ForeignKey('ladder.id'))
+	ladder = db.relationship('Ladder',
+			backref=db.backref('games', cascade='all, delete-orphan', lazy='dynamic'))
+
 # 레벨별 입금계좌 테이블
 class BankAccount(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -171,7 +191,13 @@ class LevelLimit(db.Model):
 	special_maxbet = db.Column(db.Integer)
 	special_maxgain = db.Column(db.Integer)
 
+	ladder_minbet = db.Column(db.Integer)
+	ladder_maxbet = db.Column(db.Integer)
+	ladder_maxgain = db.Column(db.Integer)
 
+	snail_minbet = db.Column(db.Integer)
+	snail_maxbet = db.Column(db.Integer)
+	snail_maxgain = db.Column(db.Integer)
 #############################################
 ####  유저 배팅 정보, 배팅한 게임 정보   ####
 #############################################
@@ -191,8 +217,12 @@ class UserBet(db.Model):
 
 class UserBetGame(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+
 	game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
 	game = db.relationship('Game', backref=db.backref('betgames', cascade='all, delete-orphan', lazy='dynamic'))
+
+	ladder_game_id = db.Column(db.Integer, db.ForeignKey('ladder_game.id'))
+	ladder_game = db.relationship('LadderGame', backref=db.backref('laddergames', cascade='all, delete-orphan', lazy='dynamic'))
 
 	user_bet_id = db.Column(db.Integer, db.ForeignKey('user_bet.id'))
 	user_bet = db.relationship('UserBet', backref=db.backref('betgames', cascade='all, delete-orphan', lazy='dynamic'))
@@ -220,12 +250,13 @@ class Article(db.Model):
 #Comment of TalkRoom
 class Comment(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	like = db.Column(db.Integer, default=0)
+
 	article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
 	article = db.relationship('Article', backref=db.backref('comments', cascade='all, delete-orphan', lazy='dynamic'))
 
-	nick = db.Column(db.String(255))
-	password = db.Column(db.String(255))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = db.relationship('User', backref=db.backref('comments', cascade='all, delete-orphan', lazy='dynamic'))
+	
 	content = db.Column(db.Text())
 	date_created = db.Column(db.DateTime())
 

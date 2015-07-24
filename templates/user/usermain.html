@@ -1,6 +1,5 @@
-{% extends "layout_main.html" %}
+{% extends "layout_onlymain.html" %}
 {% block contents %}
-<div id="contentsWrap">
 	<ul class="mainMenuList">
 		<li class="list01"><a href="{{url_for('user_cross')}}"><img src="{{ url_for('static', filename='images/main/ban01_off.gif') }} " alt="스포츠 배팅" /></a></li>
 		<li class="list02"><a href="{{ url_for('user_named_ladder') }}"><img src="{{ url_for('static', filename='images/main/ban02_off.gif') }}" alt="네임드 게임" /></a></li>
@@ -8,7 +7,6 @@
 		<li class="list04"><a href="{{ url_for('user_betting_history') }}"><img src="{{ url_for('static', filename='images/main/ban04_off.gif') }}" alt="내정보 배팅내역" /></a></li>
 		<li class="list05"><a href="{{ url_for('article_list') }}"><img src="{{ url_for('static', filename='images/main/ban05_off.gif') }}" alt="게시판 고객센터" /></a></li>
 	</ul><!-- mainMenuList -->
-</div><!-- contentsWrap -->
 
 {% endblock %}
 

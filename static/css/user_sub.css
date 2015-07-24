@@ -8,8 +8,18 @@
 
 .boardTable {  margin-bottom:30px;  width:100%; border-collapse:collapse; background:url(../images/board/bar_bg.gif) no-repeat left top;  }
 .boardTable thead th { height:50px; background:url(../images/board/bar_line.gif) no-repeat left top; color:#000; font-size:16px; }
-.boardTable tbody td { text-align:center; height:50px;padding:0 20px;  border-bottom:1px solid #4f4011;  font-size:16px; color:#888; }
+.boardTable thead th:first-child { background:none;  }
+.boardTable tbody td { text-align:center; padding:10px 20px; line-height:1.5;  border-bottom:1px solid #4f4011;  font-size:16px; color:#888; }
 .boardTable tbody td a { color:#ffe670; }
+.boardTable tbody td.viewContents { text-align:left; font-size:14px; color:#ffe670; }
+.boardTable tbody td.writeField {  border:1px solid #4f4011;  background:#000;  }
+.boardTable tbody td.writeFile { text-align:left;margin-top:20px;  border:1px solid #4f4011;  background:#000;  }
+.boardTable tbody td.writeFile label { color:#ffe670; font-size:14px; width:10%;  }
+.boardTable tbody td.writeFile input[type="file"] {background:#252525;  color:#fff; font-size:14px; width:90%;  }
+.boardTable tbody #textarea { width:100%; overflow:auto;height:300px;   background:#000;color:#ffe670; border:0px;  }
+
+.iframeWrap {overflow: hidden;}
+.iframeContents {margin-top: -70px;}
 
 
 .width50 { width:50%;  }
@@ -20,21 +30,18 @@
 .paging a.hover {  color:#ffe670;  text-decoration:underline;   }
 .paging a.img { padding:0 5px;   }
 
-
-.iframeWrap {overflow: hidden;}
-.iframeContents {margin-top: -70px;}
-
 .rightForm { float:left;   }
-.rightForm .write { float:left;  }
-.rightForm .write a { border-radius:3px; display:block; margin-right:10px;  float:left; padding-top:8px; width:120px; height:32px; background:#e4bb15;text-align:center;  font-size:16px; color:#000;  }
-.rightForm form { float:left;   }
+.rightForm .write { float:left; }
+.rightForm .write a {display:block; border-radius: 3px;  margin-right:10px;  float:left; padding-top:8px; width:120px; height:32px; background:#e4bb15;text-align:center;  font-size:16px; color:#000;  }
+.rightForm form { float:left; border-radius: 3px; border:1px solid #fff;    }
 .rightForm form * { vertical-align:top;  }
-.rightForm form .formBg {float:left; }
-.rightForm form select { float:left; height:40px;width:75px; background:#fff; border:0px;   font-size:16px; }
+.rightForm form .formBg {float:left; background:#fff;   }
+.rightForm form select { float:left;   height:38px;width:75px;  border:0px;   font-size:16px; }
 .rightForm form input { float:left; }
-.rightForm form input[type="text"] { border-radius:3px; float:left; width:125px; border:0px; font-size:16px; padding:1px 5px 0px;height:39px;  color:#000;  }
-.rightForm form select { border-radius:5px;  }
-.rightForm form input[type="submit"] { border-radius:3px; width:40px;float:left;  height:40px; border:0px; color:#000; font-size:16px;background:#b0b0b0; cursor:pointer;  }
+.rightForm form input[type="text"] {  float:left; width:125px; border:0px; font-size:16px; padding:1px 5px 0px;height:37px;  color:#000;  }
+.rightForm form input[type="submit"] {  width:40px;float:left;  height:38px; border:0px; color:#000; font-size:16px;background:#b0b0b0;   }
+
+.tCenter { text-align:center;}
 
 button.btn {     display: inline-block; width:80px; height:30px; text-align:center; color:#000;padding-top:3px;  font-size:14px; border:0px; background:#e4bb15; cursor: pointer; border-radius: 3px; }
 button.greyBtn {   background:#b8b8b8; }

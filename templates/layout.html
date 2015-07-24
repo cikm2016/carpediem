@@ -19,9 +19,17 @@
 			<div class="blackbox">예상당첨금</div>
 			<div  id="money_cml" class="toComma">0</div>
 			<div class="blackbox">배팅금액</div>
-			<div class=""><input id="money_bet" class="form-control input-sm" type="text" value="5000"></div>
-			<button id="bet_btn" class="btn btn-default">배팅하기</button>
+			<div class=""><input id="money_bet" class="form-control input-sm toComma_input" type="text" value="{{minbet}}"></div>
+			<input type="hidden" name="minbet" value="{{minbet}}">
+			<input type="hidden" name="maxbet" value="{{maxbet}}">
+			<input type="hidden" name="maxgain" value="{{maxgain}}">
+			{% if menu == 'cross' %}
+			<button id="crossbet_btn" class="btn">배팅하기</button>
+			{% else %}
+			<button id="ladderbet_btn" class="btn">배팅하기</button>
 			{% endif %}
+			{% endif %}
+			<button id="max_btn" class="btn">MAX</button>
 			<div class="blackbox">
 				<table class="bet_table">
 				</table>

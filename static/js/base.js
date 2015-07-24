@@ -385,6 +385,7 @@ $(document).ready(function(){
 		}
 	});
 	$('input[name="date_first"]').val(moment().year()+'-'+(moment().month()+1)+'-');
+	$('input[name="date"]').val(moment().year()+'-'+(moment().month()+1)+'-');
 	$('#waitgamebtn').click(function(){
 		var game = $('select[name="game"]').val();
 		var i;
@@ -537,6 +538,40 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('.ip_deleteall').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			data.push({id:tmp_id})
+		});	
+		var check = confirm('삭제 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/user/ip/deleteall',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					data: JSON.stringify(data)
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('삭제 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var id = $(this).closest('tr').attr('id');
+							$('#'+id).remove();
+						});	
+						
+					}
+					else{
+						alert(resp.msg);
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
 	$('.cross_apply').click(function(){
 		var id = $(this).closest('tr').attr('id');
 
@@ -576,6 +611,72 @@ $(document).ready(function(){
 		if (check){
 			$.ajax({
 				url : '/admin/register/cross/applyall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.ladder_all_apply').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_odd = $('#'+tmp_id).find('input[name="odd_rate_'+tmp_id+'"]').val();
+			var tmp_even = $('#'+tmp_id).find('input[name="even_rate_'+tmp_id+'"]').val();
+			data.push({id:tmp_id, odd:tmp_odd, even:tmp_even})
+		});	
+
+		var check = confirm('수정 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/register/ladder/applyall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.ladder_detail_all_apply').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_win = $('#'+tmp_id).find('select[name="win_'+tmp_id+'"]').val();
+			var tmp_state = $('#'+tmp_id).find('select[name="state_'+tmp_id+'"]').val();
+			data.push({id:tmp_id, win:tmp_win, state:tmp_state})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/register/ladder/detail/applyall',
 				type: 'POST',
 				dataType: 'json',
 				data: {
@@ -854,12 +955,14 @@ $(document).ready(function(){
 	});
 	$('.start_all').click(function(){
 		$('.select').each(function(){
-			$(this).find('select').val(1);
+			var id = $(this).attr('id');
+			$(this).find('select[name="state_'+id+'"]').val(1);
 		});
 	});
 	$('.end_all').click(function(){
 		$('.select').each(function(){
-			$(this).find('select').val(3);
+			var id = $(this).attr('id');
+			$(this).find('select[name="state_'+id+'"]').val(3);
 		});
 	});
 	$('.select_all').click(function(){
@@ -986,6 +1089,19 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('#max_btn').click(function(){
+		var money = $('input[name="maxbet"]').val();
+		var rate_cml = parseFloat($('#rate_cml').text());
+
+		if ((money*rate_cml) > $('input[name="maxgain"]').val()){
+			alert('현재 배팅에 최대 배팅금액을 설정할수 없습니다.');
+		}
+		else{
+			$('#money_bet').val(numberWithCommas($('input[name="maxbet"]').val()));
+			$('#money_cml').text(numberWithCommas(Math.round(rate_cml*$('input[name="maxbet"]').val())));
+		}
+
+	});
 	$(".clickbox").hover(
 		function(){
 			$(this).css("border-color","red");
@@ -995,6 +1111,31 @@ $(document).ready(function(){
 			$(this).css("border-color","black");
 		}
 	);
+
+	$('.bet_table').on("click",".bet_cancel",function(){
+		var id = $(this).closest('tr').attr('id').split("_")[1];
+
+		var rate_cml = parseFloat($('#rate_cml').text());
+		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
+		var rate = parseFloat($('#'+id).find('.clicked').find('.rate').text());
+
+		var ret_rate;
+		/* 같은팀 재클릭 */
+		if (rate_cml == rate){
+			ret_rate = 0;
+		}
+		else{
+			ret_rate = rate_cml/rate;
+		}
+
+		$('#bet_'+id).remove();
+		$('input[name="'+id+'"]').remove();
+		$('#'+id).find('.clicked').removeClass('clicked');
+
+		$('#rate_cml').text(numberWithCommas(ret_rate.toFixed(2)));
+		$('#money_cml').text(numberWithCommas(Math.round(ret_rate*money_bet)));
+		
+	});
 	$(".clickbox").click(function(){
 		var id = $(this).closest('tr').attr('id');
 		var	home = $('#'+id).find('td.home').find('span.name').text();
@@ -1022,6 +1163,8 @@ $(document).ready(function(){
 			$('#bet_'+id).remove();
 			$('input[name="'+id+'"]').remove();
 			$(this).removeClass('clicked');
+			$('#rate_cml').text(numberWithCommas(ret_rate.toFixed(2)));
+			$('#money_cml').text(numberWithCommas(Math.round(ret_rate*money_bet)));
 		}
 		/* 새로운팀 클릭 */
 		else{
@@ -1034,26 +1177,33 @@ $(document).ready(function(){
 				else{
 					ret_rate = rate_cml*rate;
 				}
-				$(this).addClass('clicked');
-				
-				var betteam;
-				var isHome = $(this).hasClass('home');
-				if (isHome){
-					$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="1">');
-					betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div class="selected">'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
-				}
+				if(Math.round(ret_rate*money_bet) > $('input[name="maxgain"]').val()){
+					alert('최대 당첨금을 넘습니다.');	
+				} 
 				else{
-					var isAway = $(this).hasClass('away');
-					if(isAway){
-						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="-1">');
-						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div class="selected">'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+					$(this).addClass('clicked');
+					
+					var betteam;
+					var isHome = $(this).hasClass('home');
+					if (isHome){
+						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="1">');
+						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div class="selected">'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn bet_cancel">X</button></td></tr>';
 					}
 					else{
-						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="0">');
-						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+						var isAway = $(this).hasClass('away');
+						if(isAway){
+							$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="-1">');
+							betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div class="selected">'+away+'</div></td><td><button class="btn sBtn bet_cancel">X</button></td></tr>';
+						}
+						else{
+							$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="0">');
+							betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn bet_cancel">X</button></td></tr>';
+						}
 					}
+					$('.bet_table').prepend(betteam);
+					$('#rate_cml').text(numberWithCommas(ret_rate.toFixed(2)));
+					$('#money_cml').text(numberWithCommas(Math.round(ret_rate*money_bet)));
 				}
-				$('.bet_table').prepend(betteam);
 			}
 			/* 클릭된 팀이 있을때 */
 			else{
@@ -1064,39 +1214,46 @@ $(document).ready(function(){
 				else{
 					ret_rate = ((rate_cml/sameline)*rate);
 				}
-				clicked.removeClass('clicked');
-				$(this).addClass('clicked');
-				$('#bet_'+id).remove();
 
-				$('input[name="'+id+'"]').remove();
-
-
-				var betteam;
-				var isHome = $(this).hasClass('home');
-				// 승,무,패 어디 선택됐는지 판단
-				if (isHome){
-					$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="1">');
-					betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div class="selected">'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
-				}
+				if(Math.round(ret_rate*money_bet) > $('input[name="maxgain"]').val()){
+					alert('최대 당첨금을 넘습니다.');	
+				} 
 				else{
-					var isAway = $(this).hasClass('away');
-					if(isAway){
-						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="-1">');
-						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div class="selected">'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+					clicked.removeClass('clicked');
+					$(this).addClass('clicked');
+					$('#bet_'+id).remove();
+
+					$('input[name="'+id+'"]').remove();
+
+
+					var betteam;
+					var isHome = $(this).hasClass('home');
+					// 승,무,패 어디 선택됐는지 판단
+					if (isHome){
+						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="1">');
+						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div class="selected">'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn bet_cancel">X</button></td></tr>';
 					}
 					else{
-						$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="0">');
-						betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div>'+away+'</div></td><td><button class="btn sBtn">X</button></td></tr>';
+						var isAway = $(this).hasClass('away');
+						if(isAway){
+							$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="-1">');
+							betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div class="selected">'+away+'</div></td><td><button class="btn sBtn bet_cancel">X</button></td></tr>';
+						}
+						else{
+							$('.bet_table').prepend('<input class="mybet" type="hidden" name="'+id+'" value="0">');
+							betteam = '<tr id="bet_'+id+'"><td>'+rate+'</td><td><div>'+home+'</div><div>'+away+'</div></td><td><button onclick="bet_cancel()" class="btn sBtn bet_cancel">X</button></td></tr>';
+						}
 					}
+					$('.bet_table').prepend(betteam);
+					$('#rate_cml').text(numberWithCommas(ret_rate.toFixed(2)));
+					$('#money_cml').text(numberWithCommas(Math.round(ret_rate*money_bet)));
 				}
-				$('.bet_table').prepend(betteam);
 
 			}
 		}
-		$('#rate_cml').text(numberWithCommas(ret_rate.toFixed(2)));
-		$('#money_cml').text(numberWithCommas(Math.round(ret_rate*money_bet)));
 	});
-	$('#bet_btn').click(function(){
+	//승무패 배팅
+	$('#crossbet_btn').click(function(){
 		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
 		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
 		var rate = $('#rate_cml').text();
@@ -1144,7 +1301,56 @@ $(document).ready(function(){
 			}	
 		}
 	});
+	//사다리 배팅
+	$('#ladderbet_btn').click(function(){
+		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
+		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
+		var rate = $('#rate_cml').text();
+		if (money_bet > money_crt){
+			alert('캐쉬가 부족합니다.');
+		}
+		else{
+			if ($('.mybet').length == 1){
+				var data = []
 
+				var id = $('.mybet').attr('name');
+				var betting = $('.mybet').val();
+
+				var check = confirm('배팅 하시겠습니까?');
+				if (check){
+					$.ajax({
+						url : '/user/named/ladder/betting',
+						type: 'POST',
+						dataType: 'json',
+						data: { 
+							id: id,
+							betting: betting,
+							money: money_bet,
+							rate: rate
+						},
+						success : function(resp){
+							if(resp.success){
+								alert('성공적으로 배팅하였습니다.');
+								$('#money_crt').text(numberWithCommas(money_crt-money_bet+'원'));
+							}
+							else{
+								alert('잘못된 접근입니다.');
+							}
+						},
+						error : function(resp){
+							console.log('server error');
+						}	
+					});
+				}
+			}
+			else if ($('.mybet').length > 1){
+				alert('사다리는 한번에 하나의 배팅만 가능합니다.');
+			}	
+			else{
+				alert('배팅한 항목이 없습니다.');
+			}	
+		}
+	});
 
 	/* 유저가 자기 정보 수정 */
 	$('.mypage_modify').click(function(){
@@ -1326,11 +1532,25 @@ $(document).ready(function(){
 		$(this).val(numberWithCommas($(this).val().replace(/\,/g,'')));
 	});	
 
-	$('#money_bet').each(function(){
-		$(this).val(numberWithCommas($(this).val()));
-	});	
 	$('#money_bet').on('input',function(){
-		$(this).val(numberWithCommas($(this).val().replace(/\,/g,'')));
+		var rate_cml = parseFloat($('#rate_cml').text());
+		var money = $(this).val();
+		$(this).val(numberWithCommas(money.replace(/\,/g,'')));
+		if(parseInt(money.replace(/\,/g,'')) > $('input[name="maxbet"]').val()){
+			alert('배팅 최대액을 넘었습니다.');
+			$(this).val(numberWithCommas($('input[name="minbet"]').val()));
+			$('#money_cml').text(numberWithCommas(Math.round(rate_cml*$('input[name="minbet"]').val())));
+		}
+		else{
+			if (rate_cml*parseInt(money.replace(/\,/g,'')) > $('input[name="maxgain"]').val()){
+				alert('최대 당첨금을 넘습니다.');	
+				$(this).val(numberWithCommas($('input[name="minbet"]').val()));
+				$('#money_cml').text(numberWithCommas(Math.round(rate_cml*$('input[name="minbet"]').val())));
+			}
+			else{
+				$('#money_cml').text(numberWithCommas(Math.round(rate_cml*parseInt(money.replace(/\,/g,'')))));
+			}
+		}
 	});	
 
 	/* 유저 배팅 내역 삭제 */
@@ -1366,7 +1586,6 @@ $(document).ready(function(){
 		});
 	})
 	$('.iframeContents').load(function(){
-		alert('');
 	})
 	$('#article_delete').click(function(){
 		var id = $('input[name="id"]').val();
@@ -1407,13 +1626,6 @@ function validateForm(){
 		return false;
 	}
 }
-function validateFormIp(){
-	var x = document.forms["ipform"]["ip2"].value;
-	if (x == null || x == ""){
-		alert("아이피를 입력하세요.");
-		return false;
-	}
-}
 function validateFormLeague(){
 	var x = document.forms["addleague"]["league"].value;
 	if (x == null || x == ""){
@@ -1427,6 +1639,13 @@ function validateFormDetail(){
 	var z = document.forms["adddetail"]["away"].value;
 	if (x == "" ||y == "" ||z == "" ){
 		alert("값을 입력하세요.");
+		return false;
+	}
+}
+function validateDate(){
+	var date = $('input[name="date"]').val();
+	if (!moment(date, 'YYYY-M-D', true).isValid()){
+		alert("날짜형식이 잘못되었습니다.");
 		return false;
 	}
 }

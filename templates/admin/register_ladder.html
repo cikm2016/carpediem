@@ -1,0 +1,56 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>사다리 게임 생성</h1>
+<form method="post" role="form" name="" onsubmit="return validateDate()">
+	<table class="dataTable tableStyle01">
+		<tr>
+			<th>게임날짜</th>
+			<td><input type="text" name="date" class="form-control"></td>
+			<th>게임생성</th>
+			<td>
+				<button type="submit" class="btn">생성</button>
+			</td>
+		</tr>
+	</table>
+</form>
+<div class="relativeWrap">
+	<h1>사다리 게임 목록</h1>
+	<p class="topBtnWrap">
+	<button class="btn sBtn pinkBtn select_all">전체선택</button>
+	<button class="btn sBtn ladder_all_apply">선택적용</button>
+	</p>
+
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th>선택</th>
+			<th width="40%">경기날짜</th>
+			<th>홀</th>
+			<th>짝</th>
+		</thead>
+		<tbody>
+		{% if ladderlist %}
+		{% for ladder in ladderlist %}
+		<tr class="select" id="{{ ladder.id }}">
+			<td> <input type="checkbox" name="select"></td>
+			<td><a href="{{url_for('admin_register_ladder_detail',id=ladder.id)}}"> <strong>{{ladder.date}} 의 사다리 목록</strong></a></td>
+			<td><input type="text" name="odd_rate_{{ladder.id}}" class="form-control" value="{{ ladder.odd_rate }}" maxlength="5"></td>
+			<td><input type="text" name="even_rate_{{ladder.id}}" class="form-control" value="{{ ladder.even_rate }}" maxlength="5"></td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		{% endif %}
+		</tbody>
+	</table>
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

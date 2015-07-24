@@ -2,8 +2,48 @@
 {% block contents %}
 <p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit04.gif') }}" alt="게시판" /></p>
 <div class="iframeWrap">
-<iframe class="iframeContents" src="http://named.com/game/ladder/v2_index.php" width=800 height=700 frameborder=1 scrolling=no></iframe>
+	<iframe class="iframeContents" src="http://named.com/game/ladder/v2_index.php" width=800 height=700 frameborder=1 scrolling=no></iframe>
 </div>
+<table class="table">
+	<thead>
+		<th width="15%">날짜</th>
+		<th width="12%">회차</th>
+		<th width="30%">홀</th>
+		<th width="10%">무</th>
+		<th width="30%">짝</th>
+		<th>결과</th>
+	</thead>
+	<tbody>
+	{% if ladderlist %}
+	{% for ladder in ladderlist %}
+	{% if ladder.state == 2 %}
+	<tr class="current_ladder" id="{{ ladder.id }}">
+		<td>{{ ladder.ladder.date }}</td>
+		<td>{{ ladder.number }}</td>
+		<td class="home clickbox"><span class="rate">{{ ladder.ladder.odd_rate }}</span></td>
+		<td> VS</td>
+		<td  class="away clickbox"><span class="rate">{{ ladder.ladder.even_rate }}</span></td>
+		<td>
+			{% if ladder.win == 1 %}홀{% elif ladder.win == -1%} 짝{% else %} 미정 {% endif %}
+		</td>
+	</tr>
+	{% else %}
+	<tr class="" id="{{ ladder.id }}">
+		<td>{{ ladder.ladder.date }}</td>
+		<td>{{ ladder.number }}</td>
+		<td class="home"><span class="rate">{{ ladder.ladder.odd_rate }}</span></td>
+		<td> VS</td>
+		<td  class="away"><span class="rate">{{ ladder.ladder.even_rate }}</span></td>
+		<td>
+			{% if ladder.win == 1 %}홀{% elif ladder.win == -1%} 짝{% else %} 미정 {% endif %}
+		</td>
+	</tr>
+	{% endif %}
+	{% endfor %}
+	{% else %}
+	{% endif %}
+	</tbody>
+</table>
 {% endblock %}
 
 

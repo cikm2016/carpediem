@@ -15,6 +15,7 @@
 						<li><a href="{{url_for('admin_register_cross')}}">승무패관리</a></li>
 						<li><a href="#">핸디캡관리</a></li>
 						<li><a href="#">스페셜관리</a></li>
+						<li><a href="{{url_for('admin_register_ladder')}}">사다리관리</a></li>
 					</ul>
 				</li>
 				<li {% if menu=='finish'%}class="hover"{%endif%}><a href="#">경기마감/복원</a>
@@ -31,7 +32,7 @@
 						<li><a href="{{url_for('admin_user_info')}}">일반회원관리</a></li>
 						<li><a href="{{url_for('admin_user_stop')}}">정지회원관리</a></li>
 						<li><a href="{{url_for('admin_user_admin')}}">관리자회원</a></li>
-						<li><a href="{{url_for('admin_user_ip')}}">아이피차단</a></li>
+						<li><a href="{{url_for('admin_user_ip')}}">아이피관리</a></li>
 					</ul>
 				</li>
 				<li {% if menu=='bank'%}class="hover"{%endif%}><a href="#">입출금관리</a>
@@ -73,7 +74,8 @@
 				</li>
 				<li {% if menu=='setting'%}class="hover"{%endif%}><a href="#">관리자설정</a>
 					<ul class="hiddenX">
-						<li><a href="{{url_for('admin_setting')}}">레벨별 금액제한</a></li>
+						<li><a href="{{url_for('admin_setting')}}">스포츠베팅 금액제한</a></li>
+						<li><a href="{{url_for('admin_setting_named')}}">네임드게임 금액제한</a></li>
 						<li><a href="#">기타설정</a></li>
 						<li><a href="#"></a></li>
 					</ul>

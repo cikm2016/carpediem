@@ -1,21 +1,28 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
-<h1>아이피 관리 </h1>
+<h1>아이피 차단/검색 </h1>
 <table class="dataTable tableStyle01">
 	<tr>
 		<th>차단할 아이피</th>
 		<td><input id="ip1" type="text" class="form-control" placeholder="차단할 아이피 입력"></td>
 		<td><button id="blockip" class="btn mBtn">차단</button></td>
-	<form method="post" role="form" name="ipform" onsubmit="return validateFormIp()">
+	<form method="post" role="form" name="ipform">
 		<th>차단 아이피 검색</th>
 		<td><input name="ip2" type="text" class="form-control"></td>
 		<td><button type="submit" class="btn mBtn">검색</button></td>
 	</tr>
 	</form>
 </table>
+<div class="relativeWrap">
+<h1>차단 아이피 목록 </h1>
+	<p class="topBtnWrap">
+	<button class="btn sBtn pinkBtn select_all">전체선택</button>
+	<button class="btn sBtn ip_deleteall">선택삭제</button>
+	</p>
 	<table class="dataTable">
 		<thead>
 			<tr>
+				<th width="1%">선택</th>
 				<th>차단한 날짜</th>
 				<th>차단 아이피</th>
 			</tr>
@@ -23,7 +30,8 @@
 		<tbody id="iplist">
 		{% if iplist %}
 		{% for ip in iplist %}
-		<tr class="" id="{{ ip.id }}">
+		<tr class="select" id="{{ ip.id }}">
+			<td> <input type="checkbox" name="select"></td>
 			<td>{{ ip.date.strftime('%Y-%m-%d %H:%m:%S') }}</td>
 			<td>{{ ip.ip }}</td>
 		</tr>
@@ -31,7 +39,7 @@
 		{% endif %}
 		</tbody>
 	</table>
-
+</div>
 {% endblock %}
 
 

@@ -1,0 +1,38 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<form method="post" role="form" name="" id="levelsetting">
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button type="submit" class="btn mBtn">수정하기</button>
+</p>
+<h1>네임드게임 금액제한</h1>
+<table class="dataTable tableStyle01">
+	<tr>
+		<th>레벨</th>
+		<th>사다리 배팅최소</th>
+		<th>사다리 배팅최대</th>
+		<th>사다리 당첨최대</th>
+		<th>달팽이 배팅최소</th>
+		<th>달팽이 배팅최대</th>
+		<th>달팽이 당첨최대</th>
+	</tr>
+	{% if list %}
+	{% for l in list %}
+	<tr class="select" id="{{l.id}}">
+		<td>{{l.level}}
+		<td><input class="toComma_input form-control" type="text" name="ladder_minbet_{{l.id}}" value="{{l.ladder_minbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="ladder_maxbet_{{l.id}}" value="{{l.ladder_maxbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="ladder_maxgain_{{l.id}}" value="{{l.ladder_maxgain}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="snail_minbet_{{l.id}}" value="{{l.snail_minbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="snail_maxbet_{{l.id}}" value="{{l.snail_maxbet}}"></td>
+		<td><input class="toComma_input form-control" type="text" name="snail_maxgain_{{l.id}}" value="{{l.snail_maxgain}}"></td>
+	</tr>
+	{% endfor %}
+	{% endif %}
+</table>
+</div>
+</form>
+{% endblock %}
+
+
+

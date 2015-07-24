@@ -2,15 +2,37 @@
 
 {% block contents %}
 <p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit09.gif') }}" alt="게시판" /></p>
-<h1>게시물 작성</h1>	
-<div>작성자: {{user.nickname}}</div>
 
 <form role="form" method="post" class="form-horizontal">
-	{{ form.hidden_tag() }}
-	<div class="title">{{ form.title(placeholder=form.title.description.placeholder) }}</div>
-	<div class="content">{{ form.content(placeholder=form.content.description.placeholder) }}</div>
-	<input type="hidden" name="uid" value="{{user.id}}">
-
-	<button type="submit" class="btn">글 등록</button>
+	<table class="boardTable">
+		<colgroup>
+			<col width="100%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th>안녕하십니까? 임의로 등록된 게시물 제목입니다.</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr><input name="title" class="form-control" placeholder="제목을 입력하세요"/></tr>
+		<tr>
+			<td><span class="viewInfo">작성자 | {{user.nickname}}</span></td>
+		</tr>
+		<tr>
+			<td class="writeField">
+				<textarea id="textarea" name="content" rows="14" cols="78" placeholder="내용을 입력하세요"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="writeFile">
+				<label for="addFile">첨부파일</label>
+				<input type="file" id="addFile" />
+			</td>
+		</tr>	
+		</tbody>
+	</table><!-- boardTable -->		
+	<p class="tCenter"><button type="submit" class="btn">등록하기</button><a href="{{ url_for('article_list') }}" class="btn greyBtn">목록보기</a></p>
 </form>
+<p>&nbsp;</p>
+
 {% endblock %}

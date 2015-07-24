@@ -6,7 +6,7 @@ from sqlalchemy import desc
 
 from app import app, db
 from app.forms import ArticleForm,  JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit, Ladder, LadderGame
 
 import re
 import json
@@ -14,6 +14,7 @@ from datetime import date, datetime, timedelta
 from time import strftime
 
 from jinja2 import evalcontextfilter, Markup, escape
+from urllib2 import urlopen
 
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
 
@@ -333,10 +334,7 @@ def admin_user_ip():
 	if 'admin' in session:
 		if request.method == 'POST':
 			ip = request.form['ip2']	
-			bip = BlockIp.query.filter(BlockIp.ip == ip).first()
-			iplist = []
-			if bip is not None:
-				iplist.append(bip)
+			iplist = BlockIp.query.filter(BlockIp.ip.contains(ip)).all()
 			return render_template('admin/user_blockip.html', iplist=iplist, menu='user')
 
 		else:
@@ -367,6 +365,23 @@ def admin_user_blockip():
 		return jsonify(success=False)
 
 
+#차단 아이피 - 삭제
+@app.route('/admin/user/ip/deleteall', methods=['POST'])
+def admin_user_ip_deleteall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			ip = BlockIp.query.get(id)
+			db.session.delete(ip)
+
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+		
 #정지 회원 관리
 @app.route('/admin/user/stop', methods=['GET'])
 def admin_user_stop():
@@ -644,7 +659,7 @@ def admin_league_detail_delete():
 ## 경기 등록/개시 
 ## /admin/register/~~
 
-#종목 추가
+#경기 등록
 @app.route('/admin/register/game', methods=['GET', 'POST'])
 def admin_register_game():
 	if 'admin' in session:
@@ -824,9 +839,114 @@ def admin_register_cross_applyall():
 		return jsonify(success=False) 
 
 
+#사다리 등록
+@app.route('/admin/register/ladder', methods=['GET', 'POST'])
+def admin_register_ladder():
+	if 'admin' in session:
+		if request.method == 'GET':
+			ladderlist = Ladder.query.order_by(desc(Ladder.date)).all()
+
+			return render_template('admin/register_ladder.html', ladderlist=ladderlist, menu='register')
+		else:
+			date = request.form['date']
+
+			date = datetime.strptime(date, '%Y-%m-%d').date()
+
+			test = Ladder.query.filter(Ladder.date == date).first()
+			if test is not None:
+				return redirect(url_for('admin_register_ladder'))
+				
+			ladder = Ladder(
+					date = date
+					)
+			db.session.add(ladder)
+
+			for i in range(1,289):
+				game = LadderGame(
+						number = i,
+						ladder = ladder
+						)
+				db.session.add(game)
 
 
+			db.session.commit()
+			
+			return redirect(url_for('admin_register_ladder'))
+	else:
+		return redirect(url_for('main_admin'))
 
+#사다리 배당 입력
+@app.route('/admin/register/ladder/applyall', methods=['POST'])
+def admin_register_ladder_applyall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			ladder = Ladder.query.get(id)
+			ladder.odd_rate =  d['odd']
+			ladder.even_rate =  d['even']
+
+
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+#사다리 회차별 보기
+@app.route('/admin/register/ladder/detail/<int:id>', methods=['GET', 'POST'])
+def admin_register_ladder_detail(id):
+	if 'admin' in session:
+		if request.method == 'GET':
+			ladder = Ladder.query.get(id)
+			ladderlist = ladder.games.order_by(desc(LadderGame.number)).all()
+			return render_template('admin/register_ladder_detail.html', ladderlist=ladderlist, menu='register')
+		else:
+			date = request.form['date']
+
+			date = datetime.strptime(date, '%Y-%m-%d').date()
+
+			test = Ladder.query.filter(Ladder.date == date).first()
+			if test is not None:
+				return redirect(url_for('admin_register_ladder'))
+				
+			ladder = Ladder(
+					date = date
+					)
+			db.session.add(ladder)
+
+			for i in range(1,289):
+				game = LadderGame(
+						number = i,
+						ladder = ladder
+						)
+				db.session.add(game)
+
+
+			db.session.commit()
+			
+			return redirect(url_for('admin_register_ladder'))
+	else:
+		return redirect(url_for('main_admin'))
+
+#사다리 회차별 결과 반영
+@app.route('/admin/register/ladder/detail/applyall', methods=['POST'])
+def admin_register_ladder_detail_applyall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			ladder = LadderGame.query.get(id)
+			ladder.win =  d['win']
+			ladder.state =  d['state']
+
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
 ## 경기 마감/복원 
 ## /admin/finish/~~
 
@@ -1309,6 +1429,29 @@ def admin_setting():
 	else:
 		return redirect(url_for('main_admin'))
 
+#관리자 설정 페이지- 네임드
+@app.route('/admin/setting/named', methods=['GET', 'POST'])
+def admin_setting_named():
+	if 'admin' in session:
+		if request.method == 'GET':
+			list = LevelLimit.query.order_by(LevelLimit.level).all()
+			return render_template('admin/setting_named.html', list=list, menu='setting')
+		else:
+			for i in range(7):
+				leveldata = LevelLimit.query.filter(LevelLimit.level==(i+1)).first()
+				
+				leveldata.ladder_minbet = request.form['ladder_minbet_'+str(i+1)]
+				leveldata.ladder_maxbet = request.form['ladder_maxbet_'+str(i+1)]
+				leveldata.ladder_maxgain = request.form['ladder_maxgain_'+str(i+1)]
+				
+				leveldata.snail_minbet = request.form['snail_minbet_'+str(i+1)]
+				leveldata.snail_maxbet = request.form['snail_maxbet_'+str(i+1)]
+				leveldata.snail_maxgain = request.form['snail_maxgain_'+str(i+1)]
+
+			db.session.commit()
+			return redirect(url_for('admin_setting_named'))
+	else:
+		return redirect(url_for('main_admin'))
 ####################################
 ############   user    #############
 ####################################
@@ -1327,8 +1470,10 @@ def user_main():
 def user_cross():
 	if 'id' in session:
 		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
 		gamelist = Game.query.filter(Game.state == 1).order_by(desc(Game.date)).all()
-		return render_template('user/cross.html',user=user, gamelist=gamelist, menu='cross')
+
+		return render_template('user/cross.html',user=user, gamelist=gamelist, minbet=level.cross_minbet, maxbet=level.cross_maxbet, maxgain=level.cross_maxgain, menu='cross')
 	else:
 		return redirect(url_for('main'))
 
@@ -1337,8 +1482,14 @@ def user_cross():
 def user_cross_betting():
 	if 'id' in session:
 		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+
 		data = json.loads(request.form['data'])
 		money = int(request.form['money'])
+
+		if level.cross_maxbet < money:
+			return jsonify(success=False)
+			
 		rate = float(request.form['rate'])
 
 		user_bet = UserBet(
@@ -1415,10 +1566,62 @@ def user_betting_history_delete():
 def user_named_ladder():
 	if 'id' in session:
 		user = User.query.get(session['id'])
-		return render_template('user/named_ladder.html',user=user,  menu='ladder')
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+		ladder = Ladder.query.filter(Ladder.date==date.today()).first()
+
+		if ladder is not None:
+			ladderlist = ladder.games.filter(LadderGame.state!=0).order_by(desc(LadderGame.number)).all()
+
+
+		return render_template('user/named_ladder.html', ladderlist=ladderlist, user=user, minbet=level.ladder_minbet, maxbet=level.ladder_maxbet, maxgain=level.ladder_maxgain, menu='ladder')
+
 	else:
 		return redirect(url_for('main'))
 
+#사다리 배팅
+@app.route('/user/named/ladder/betting', methods=['POST'])
+def user_namd_ladder_betting():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+
+		money = int(request.form['money'])
+
+		if level.ladder_maxbet < money:
+			return jsonify(success=False)
+			
+		rate = float(request.form['rate'])
+
+		user_bet = UserBet(
+						user = user,
+						money_bet = money,
+						rate = rate,
+						date = datetime.now()+timedelta(hours=9)
+					)
+		laddergame = LadderGame.query.get(int(request.form['id']))
+		
+		try:
+			bet = UserBetGame(
+						ladder_game = laddergame,
+						user_bet = user_bet,
+						betting = int(request.form['betting'])
+					)
+		except Exception, e:
+			print e
+			jsonify(success=False)
+
+		db.session.add(bet)
+		db.session.add(user_bet)
+		
+
+		user.bet_cnt += 1
+		user.money_crt -= money
+		
+		db.session.commit()
+		
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False)
 
 ## 경기결과
 @app.route('/user/result', methods=['GET'])
@@ -1580,14 +1783,16 @@ def article_list():
 @app.route('/article/create/', methods=['GET', 'POST'])
 def article_create():
 	if 'id' in session:
-		form = ArticleForm()
 		user = User.query.get(session['id'])
 		if request.method == 'POST':
-			if form.validate_on_submit():
-				# 사용자가 입력한 글 데이터로 Article 모델 인스턴스를 생성한다.
+			title = request.form['title']
+			content = request.form['content']
+
+			if title != '' and content != '':
+			#if form.validate_on_submit():
 				article = Article(
-						title=form.title.data,
-						content=form.content.data,
+						title=title,
+						content=content,
 						date_created=datetime.now()+timedelta(hours=9),
 						user = user
 						)
@@ -1596,9 +1801,9 @@ def article_create():
 				db.session.commit()
 
 				return redirect(url_for('article_list'))
-			return render_template('article/create.html', user=user, form=form, menu='article')
+			return render_template('article/create.html', user=user, menu='article')
 		else:
-			return render_template('article/create.html', user=user,form=form, menu='article')
+			return render_template('article/create.html', user=user, menu='article')
 	else:
 		return redirect(url_for('main'))
 
@@ -1608,7 +1813,9 @@ def article_detail(id):
 		article = Article.query.get(id)
 
 		# relationship을 활용한 query
-		comments = article.comments.order_by(desc(Comment.date_created)).all()
+		comments = article.comments.order_by(Comment.date_created).all()
+		article.nofc += 1
+		db.session.commit()
 
 		return render_template('article/detail.html', article=article, comments=comments, menu='article')
 	else:
@@ -1623,6 +1830,7 @@ def article_like():
 	db.session.commit()
 
 	return jsonify(like=article.like)
+
 
 @app.route('/article/update/<int:id>', methods=['GET', 'POST'])
 def article_update(id):
@@ -1665,35 +1873,40 @@ def article_delete():
 
 @app.route('/article/search', methods=['GET'])
 def article_search():
-	if request.method == 'GET':
+	if 'id' in session:	
 		search = request.args.get('search')	
 		context = {}
 		context['article_list'] = Article.query.filter(Article.title.contains(search)).order_by(desc(Article.date_created)).all()
 
-		return render_template('home.html', context=context)
+		return render_template('article/list.html', context=context, menu='article')
 	else:
-		return redirect(url_for('article_list'))
+		return redirect(url_for('main'))
+
+
+
+
 #
 # @comment controllers
 #
-@app.route('/comment/create', methods=['GET', 'POST'])
+@app.route('/comment/create', methods=['POST'])
 def comment_create():
-	if request.method == 'POST':
-		#비번 해쉬로 해야할듯
-		arc = Article.query.get(request.form['aid'])
+	if 'id' in session:
+	#비번 해쉬로 해야할듯
+		user = User.query.get(session['id'])
+		id = request.form['id']
+		arc = Article.query.get(id)
 		comment = Comment(
-				nick=request.form['nick'],
+				user=user,
 				content=request.form['comment'],
-				password=request.form['passwd'],
 				article=arc,
 				date_created=datetime.now()+timedelta(hours=9)
 				)
-		arc.nofc += 1
 		db.session.add(comment)
 		db.session.commit()
 
-		return jsonify(success=True, id=comment.id, content=comment.content, nick=comment.nick, date_created=comment.date_created.isoformat())
-	return redirect(url_for('article_list'))
+		return redirect(url_for('article_detail', id=id))
+	else:
+		return redirect(url_for('main'))
 
 @app.route('/comment/like/<int:id>', methods=['GET'])
 def comment_like(id):

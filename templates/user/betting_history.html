@@ -16,6 +16,7 @@
 	<tbody>
 	{% for v in bet %}
 	<tr class="" id="{{ v.id }}">
+		{% if v.game %}
 		<td>{{v.game.league_detail.league.name}}</td>
 		<td>{{ v.game.date.strftime('%Y-%m-%d %H:%M') }}</td>
 		<td class="home {%if v.betting == 1 %}clicked{% endif %}" style="text-align:left;"><span class="name">{{ v.game.home }}</span><span> {{v.game.league_detail.name}}</span><span class="rate">{{ v.game.home_rate }}</span></td>
@@ -38,6 +39,20 @@
 				{% endif %}
 			</td>
 		</tr>
+		{% elif v.ladder_game %}
+		<td>사다리{{v.ladder_game.number}} 회차</td>
+		<td>{{ v.ladder_game.ladder.date.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td class="odd {%if v.betting == 1 %}clicked{% endif %}" style="text-align:left;"><span class="name">홀</span><span class="rate">{{ v.ladder_game.ladder.odd_rate }}</span></td>
+		<td> VS</td>
+		<td  class="even {%if v.betting == -1 %}clicked{% endif %}" style="text-align:right;"><span class="rate">{{ v.ladder_game.ladder.even_rate }}</span><span class="name">짝</span> </td>
+			<td>{% if v.ladder_game.win == 0%}짝 {% elif v.ladder_game.win == 1 %}홀{% else %}미정 {% endif %}
+			</td>
+			<td>{% if v.ladder_game.win != -1 and v.ladder_game.win != 1%}미정 {% else %}
+					{% if v.ladder_game.win == v.betting %}적중{% else %}미적중{% endif %}
+				{% endif %}
+			</td>
+		</tr>
+		{% endif %}
 		{% endfor %}
 		</tbody>
 		<tr>
