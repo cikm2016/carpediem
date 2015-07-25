@@ -9,7 +9,6 @@
 			<th width="15%">홈팀 세부 리그명</th>
 			<th width="15%">원정팀 세부리그명</th>
 			<th>메뉴</th>
-			<th>게임</th>
 			<th>등록</th>
 		</tr>
 		<tr>
@@ -26,14 +25,12 @@
 			<td><input type="text" name="home" class="form-control"></td>
 			<td><input type="text" name="away" class="form-control"></td>
 			<td>
-				<select class="form-control"  name="menu">
-					<option value="">메뉴 </option>
-				</select>
-			</td>
-			<td>
-				<select class="form-control"  name="game">
-					<option value="">게임 </option>
-				</select>
+			<select class="form-control"  name="menu">
+				<option value="0">메뉴</option>
+				<option value="1">승무패</option>
+				<option value="2">핸디캡</option>
+				<option value="3">스페셜</option>
+			</select>
 			</td>
 			<td><button type="submit" class="btn sBtn">등록</button></td>
 		</tr>
@@ -46,39 +43,26 @@
 		<th width="12%">홈팀 세부 리그명</th>
 		<th width="12%">원정팀 세부 리그명</th>
 		<th>메뉴</th>
-		<th>게임</th>
 		<th>수정/삭제</th>
 	</thead>
 	<tbody>
 	{% if detaillist %}
 	{% for detail in detaillist|sort(reverse=True,attribute='league.name') %}
 	<tr class="" id="{{ detail.id }}">
-		<td>{{detail.league.name}} {{detail.name}}</td>
-		{% if detail.name %}
+		<td style="text-align:left;">{{detail.league.name}} {{detail.name}}</td>
 		<td><input type="text" name="name_{{detail.id}}" class="form-control" value="{{ detail.name }}"></td>
 		<td><input type="text" name="home_{{detail.id}}" class="form-control" value="{{ detail.home }}"></td>
 		<td><input type="text" name="away_{{detail.id}}" class="form-control" value="{{ detail.away }}"></td>
-		{% else %}
-		<td><input type="text" name="name_{{detail.id}}" class="form-control" value="{{ detail.name }}" disabled></td>
-		<td><input type="text" name="home_{{detail.id}}" class="form-control" value="{{ detail.home }}" disabled></td>
-		<td><input type="text" name="away_{{detail.id}}" class="form-control" value="{{ detail.away }}" disabled></td>
-		{% endif %}
 		<td>
 			<select class="form-control"  name="menu">
-				<option value="">메뉴 </option>
+				<option value="0" {% if detail.menu == 0%}selected{%endif%}>메뉴</option>
+				<option value="1" {% if detail.menu == 1%}selected{%endif%}>승무패</option>
+				<option value="2" {% if detail.menu == 2%}selected{%endif%}>핸디캡</option>
+				<option value="3" {% if detail.menu == 3%}selected{%endif%}>스페셜</option>
 			</select>
 		</td>
 		<td>
-			<select class="form-control"  name="game">
-				<option value="">게임 </option>
-			</select>
-		</td>
-		<td>
-			{% if detail.name %}
 			<button class="btn sBtn detail_modify">수정</button>/<button class="btn sBtn greyBtn detail_delete">삭제</button>
-			{% else %}
-			<button class="btn sBtn detail_modify" disabled="disabled">수정</button>/<button class="btn sBtn greyBtn detail_delete" disabled="disabled">삭제</button>
-			{% endif %}
 		</td>
 	</tr>
 	{% endfor %}

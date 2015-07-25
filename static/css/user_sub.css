@@ -1,6 +1,8 @@
 
 
 
+
+
 #contentsWrap { width:100%; background:url(../images/sub_common/sub_bg.gif) no-repeat center top;  min-height:650px; }
 #contents { padding-top:40px;  }
 #contents .subTitle { padding-bottom:30px;  }
@@ -17,6 +19,16 @@
 .boardTable tbody td.writeFile label { color:#ffe670; font-size:14px; width:10%;  }
 .boardTable tbody td.writeFile input[type="file"] {background:#252525;  color:#fff; font-size:14px; width:90%;  }
 .boardTable tbody #textarea { width:100%; overflow:auto;height:300px;   background:#000;color:#ffe670; border:0px;  }
+.boardTable thead .titleWrite {  text-align:left;padding:0 20px; }
+.boardTable thead .titleWrite label {color:#000; font-size:14px; width:80px; text-align:center;display:block; float:left;padding-top:3px;   }
+.boardTable thead .titleWrite input[type="text"] {background:#252525;height:30px;   color:#fff; font-size:14px; width:870px;padding-left:10px;   float:left; border:0px;  }
+
+.boardTable tbody .re { text-align:left; padding-left:150px;color:#fff;   }
+
+.boardTable tbody .re a {color:#fff;     }
+
+
+
 
 .iframeWrap {overflow: hidden;}
 .iframeContents {margin-top: -70px;}
@@ -53,3 +65,69 @@ a.greyBtn {   background:#b8b8b8; }
 a.pinkBtn {   background:#ed9e62; }
 
 a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
+
+.vsLeft { width:800px; float:left; margin-right:10px;  }
+.userDataTable { margin-bottom:30px;  width:100%; border-collapse:collapse; background:url(../images/sub_common/bar_bg.gif) no-repeat left top; }
+.sUserDataTable {background:url(../images/sub_common/bar_bg_s.gif) no-repeat left top;}
+.userDataTable thead th { height:50px; background:url(../images/board/bar_line.gif) no-repeat left top; color:#000; font-size:16px; }
+.userDataTable thead th:first-child { background:none;  }
+.userDataTable tbody td {background:#252525; padding:10px 0px 5px; line-height:1.5; font-size:14px; color:#888;  border-bottom:2px solid #000; }
+.userDataTable tbody .kind {  padding-bottom:10px;padding-left:20px; padding-right:20px;  border-bottom:1px solid #ffe670; color:#ffe670;font-size:18px;   } 
+.userDataTable tbody .bettingContents { width:100%; float:left;  }
+.userDataTable tbody .date {color:#fff;font-size:14px;float:left; margin:10px 0px 10px;   text-align:center; width:120px; padding:10px 20px;  } 
+.userDataTable tbody .victory {float:left; width:230px;margin:10px 0px 10px; padding:10px 20px;  color:#ffe670;font-size:14px;background:#000;   } 
+.userDataTable tbody .victory .team { float:left;  } 
+.userDataTable tbody .victory .distribution{float:right;    } 
+.userDataTable tbody .draw { color:#ffe670; margin:10px;float:left;width:80px; padding:10px 20px;     font-size:14px;background:#000; text-align:center;   } 
+.userDataTable tbody .lose {   float:left; width:230px;margin:10px 0px 10px; padding:10px 20px;  color:#ffe670;font-size:14px;background:#000;} 
+.userDataTable tbody .lose .team { float:right;  } 
+.userDataTable tbody .lose .distribution{float:left;    } 
+.userDataTable tbody .state {   color:#fff;  padding:10px 20px;width:120px;margin:10px 0px 10px;   float:left;  font-size:14px;text-align:center;  } 
+.userDataTable tbody .clicked { background:#c6562a;     } 
+
+.sUserDataTable tbody .date { width:120px; }
+.sUserDataTable tbody .victory { width:180px;  }
+.sUserDataTable tbody .draw {width:20px;  }
+.sUserDataTable tbody .lose {  width:180px;}
+.sUserDataTable tbody .state {width:80px;  }
+
+
+
+.userDataTable tbody .bettingContentsWrap { width:100%; float:left;margin-top:30px;border-top:1px solid #ffe670;    }
+.userDataTable tbody .bettingContentsWrap .myBatting { border:1px solid #ffe670; float:left; width:998px;  }
+.userDataTable tbody .bettingContentsWrap .myBatting div { background:#000;  }
+.userDataTable tbody .bettingContentsWrap .myBatting div p { width:100%;  padding-bottom:10px; }
+.userDataTable tbody .bettingContentsWrap .myBatting p strong {font-size:14px; font-weight:normal; color:#ffe670;   }
+.userDataTable tbody .bettingContentsWrap .myBatting p span {font-size:14px; color:#fff;   }
+.userDataTable tbody .bettingContentsWrap .myBatting .how {  float:left;padding:15px 20px 0px;  height:115px; width:159px; border-right:1px solid #332f16;  }
+.userDataTable tbody .bettingContentsWrap .myBatting .how p strong { display:block;  } 
+.userDataTable tbody .bettingContentsWrap .myBatting .what { width:259px; float:left; padding:30px 20px 0px;height:100px;  border-right:1px solid #332f16;  }
+.userDataTable tbody .bettingContentsWrap .myBatting .what p strong { float:left;  }
+.userDataTable tbody .bettingContentsWrap .myBatting .what p span {  float:right;font-weight:bold; font-size:16px; }
+.userDataTable tbody .bettingContentsWrap .myBatting .money {  width:259px; float:left; padding:30px 20px 0px;height:100px; border-right:1px solid #332f16;   }
+.userDataTable tbody .bettingContentsWrap .myBatting .money p strong { float:left;  }
+.userDataTable tbody .bettingContentsWrap .myBatting .money p span {  float:right;font-weight:bold; font-size:16px; }
+.userDataTable tbody .bettingContentsWrap .myBatting div p { width:100%; float:left; }
+.userDataTable tbody .bettingContentsWrap .buttonWrap { padding-top:15px; float:left; width:198px;  text-align:center; height:115px; }
+.userDataTable tbody .bettingContentsWrap .buttonWrap button { margin-bottom:10px;  width:120px; height:40px;  }
+
+
+
+.vsRight { width:190px; float:left;position:relative; position:relative;   }
+.vsRight #sidebar { width:188px; border:1px solid #444; position:fixed;    }
+.vsRight #sidebar h3 {  }
+.vsRight #sidebar dl  { margin-bottom:20px; width:158px; margin-left:15px; margin-right:15px; border:1px solid #252525;  }
+.vsRight #sidebar dl dt {text-align:center; background:#252525; color:#fff; padding:5px 0px;  }
+.vsRight #sidebar dl dd { text-align:right; color:#83650b; font-size:20px; font-weight:bold; padding-right:10px; width:148px;   }
+.vsRight #sidebar dl.all  { margin-top:30px; margin-bottom:0px;   }
+.vsRight #sidebar dl.all dt {background:#775b08;  }
+.vsRight #sidebar dl.all dd {text-align:right; color:#ffe670; font-size:20px; font-weight:bold;    }
+.vsRight #sidebar .max { border:0px; float:left; width:160px; height:30px; padding:0px; margin:0px;margin-left:15px; margin-right:15px;  margin-bottom:20px;  }
+
+.vsRight #sidebar .moneyGo { border:0px; width:167px; height:60px; padding:0px; margin:0px;margin-left:10px; margin-right:10px;   }
+.vsRight #sidebar .moneyGo img { width:170px;height:60px;  }
+.vsRight #sidebar .footCon { width:178px;  float:left;padding-left:10px; padding-right:10px;  padding-top:10px; padding-bottom:10px;  }
+.vsRight #sidebar .footCon .distribution {float:left;  width: 65px; text-align:center; color:#ffe670; font-size:20px; font-weight:bold;}
+.vsRight #sidebar .footCon .team  {float:left;  width: 60px; text-align:right;padding-right:10px;  font-size:14px; font-weight:bold;}
+.vsRight #sidebar .footCon .team span {display:block; color:#888;line-height:1.2;  }
+.vsRight #sidebar .footCon .team span.check { color:#ffe670; text-decoration:underline;   }

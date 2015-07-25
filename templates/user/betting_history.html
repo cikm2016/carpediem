@@ -3,73 +3,110 @@
 <p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit07.gif') }}" alt="게시판" /></p>
 {% if betlist and history %}
 {% for bet in betlist %}
-<table id="{{history[loop.index-1].id}}" class="table">
+<table id="{{history[loop.index-1].id}}" class="userDataTable">
+	<colgroup>
+		<col width="160px" />
+		<col width="270px" />
+		<col width="140px" />
+		<col width="270px" />
+		<col width="160px" />
+	</colgroup>
 	<thead>
-		<th width="8%">리그</th>
-		<th width="15%">경기시간</th>
-		<th width="30%">승(홈팀)</th>
-		<th width="10%">무</th>
-		<th width="30%">패(원정팀)</th>
+		<th>경기시간</th>
+		<th>승(홈팀)</th>
+		<th>무</th>
+		<th>패(원정팀)</th>
 		<th>결과</th>
-		<th>상태</th>
 	</thead>
 	<tbody>
-	{% for v in bet %}
-	<tr class="" id="{{ v.id }}">
-		{% if v.game %}
-		<td>{{v.game.league_detail.league.name}}</td>
-		<td>{{ v.game.date.strftime('%Y-%m-%d %H:%M') }}</td>
-		<td class="home {%if v.betting == 1 %}clicked{% endif %}" style="text-align:left;"><span class="name">{{ v.game.home }}</span><span> {{v.game.league_detail.name}}</span><span class="rate">{{ v.game.home_rate }}</span></td>
-		{% if v.game.draw_rate == 0 %}
-		<td> VS</td>
-		{% else %}
-		<td class="draw {%if v.betting == 0 %}clicked{% endif %}"><span class="rate">{{ v.game.draw_rate }}</span></td>
-		{% endif %}	
-		<td  class="away {%if v.betting == -1 %}clicked{% endif %}" style="text-align:right;"><span class="rate">{{ v.game.away_rate }}</span><span><span>{{v.game.league_detail.name}}</span><span class="name"> {{ v.game.away }}</span> </td>
-			<td>{% if v.game.finish == 0%}
-				경기중
-				{% else %}
-					{{v.game.home_score}}:{{v.game.away_score}}
-				{% endif %}
-			</td>
-			<td>{% if v.game.finish == 0%}
-				경기중
-				{% else %}
-					{% if v.isSuccess == 1 %}적중{% else %}미적중{% endif %}
-				{% endif %}
-			</td>
-		</tr>
-		{% elif v.ladder_game %}
-		<td>사다리{{v.ladder_game.number}} 회차</td>
-		<td>{{ v.ladder_game.ladder.date.strftime('%Y-%m-%d %H:%M') }}</td>
-		<td class="odd {%if v.betting == 1 %}clicked{% endif %}" style="text-align:left;"><span class="name">홀</span><span class="rate">{{ v.ladder_game.ladder.odd_rate }}</span></td>
-		<td> VS</td>
-		<td  class="even {%if v.betting == -1 %}clicked{% endif %}" style="text-align:right;"><span class="rate">{{ v.ladder_game.ladder.even_rate }}</span><span class="name">짝</span> </td>
-			<td>{% if v.ladder_game.win == 0%}짝 {% elif v.ladder_game.win == 1 %}홀{% else %}미정 {% endif %}
-			</td>
-			<td>{% if v.ladder_game.win != -1 and v.ladder_game.win != 1%}미정 {% else %}
-					{% if v.ladder_game.win == v.betting %}적중{% else %}미적중{% endif %}
-				{% endif %}
-			</td>
-		</tr>
-		{% endif %}
-		{% endfor %}
-		</tbody>
-		<tr>
-			<th>배팅시간</th><td>{{history[loop.index-1].date}}</td>
-			<th>배당률</th><td>{{history[loop.index-1].rate}}</td>
-			<th>예상당첨금액</th><td><span class="toComma">{{(history[loop.index-1].rate*history[loop.index-1].money_bet)|int}}</span>원</td>
-			<td><button class="btn mBtn history_delete">내역삭제</button></td>
-		</tr>
-		<tr>
-			<th>게임종류</th><td></td>
-			<th>배팅금액</th><td><span class="toComma">{{history[loop.index-1].money_bet}}</span>원</td>
-			<th>당첨금액</th><td>{% if history[loop.index-1].state == 1%}<span class="toComma">{{(history[loop.index-1].rate*history[loop.index-1].money_bet)|int}}</span>원{%else%}0원{% endif %}</td>
-		</tr>
+	<tr class="" id="">
+		<td colspan="5">
+			<div class="bettingContentsWrap">
+				{% for v in bet %}
+				<div class="bettingContents">
+					{% if v.game %}
+					<p class="date">{{ v.game.date.strftime('%Y-%m-%d %H:%M') }}</p>
+					<p class="victory home {%if v.betting == 1 %}clicked{% endif %}"><span class="team">{{ v.game.home }}</span><span class="distribution rate">{{v.game.home_rate}}</span></p>
+					{% if v.game.draw_rate == 0 %}
+					<p class="draw">vs</p>
+					{% else %}
+					<p class="draw {%if v.betting == 0 %}clicked{% endif %}"><span class="rate">{{ v.game.draw_rate }}</span></p>
+					{% endif %}	
+					<p class="lose away {%if v.betting == -1 %}clicked{% endif %}"><span class="distribution rate">{{ v.game.away_rate}}</span><span class="team">{{v.game.away}}</span></p>
+
+					<p class="state">
+					{% if v.game.finish == 0%}
+					경기중
+					{% else %}
+					{% if v.game.win == 1 %}홈승{% elif v.game.win == 0 %}무{% else %}원정승{%endif%}
+					: {% if v.isSuccess == 1 %}적중{% else %}미적중{% endif %}
+					{% endif %}
+					</p>
+
+
+					{% elif v.ladder_game %}
+					<p class="date">{{ v.ladder_game.ladder.date.strftime('%Y-%m-%d %H:%M') }}</p>
+					<p class="victory home {%if v.betting == 1 %}clicked{% endif %}"><span class="team">{{v.ladder_game.number}} 회차(홀)</span><span class="distribution rate">{{v.ladder_game.ladder.odd_rate}}</span></p>
+					<p class="draw">vs</p>
+
+					<p class="lose away {%if v.betting == -1 %}clicked{% endif %}"><span class="distribution rate">{{v.ladder_game.ladder.odd_rate}}</span><span class="team">{{v.ladder_game.number}} 회차(짝)</span></p>
+
+					<p class="state">
+					{% if v.ladder_game.win == 0%}
+					경기중
+					{% elif v.ladder_game.win == -1%}짝
+					: {% if v.ladder_game.win == v.betting %}적중{% else %}미적중{% endif %}
+					{% elif v.ladder_game.win == 1 %}홀
+					: {% if v.ladder_game.win == v.betting %}적중{% else %}미적중{% endif %}
+					{% else %}
+					{% endif %}
+					</p>
+					{% endif %}
+				</div><!-- bettingContents -->
+
+
+				{% endfor %}
+				<div class="myBatting">
+					<div class="how">
+						<p><strong>배팅시간</strong><span>{{history[loop.index-1].date}}</span></p>
+						<p>
+						<strong>배팅방식</strong>
+						<span>
+							{% if history[loop.index-1].game == 1%}
+							승무패
+							{% elif history[loop.index-1].game == 2%} 
+							핸디캡
+							{% elif history[loop.index-1].game == 3%} 
+							스페셜	
+							{% elif history[loop.index-1].game == 4%} 
+							사다리
+							{% else %}
+							{% endif %}	
+						</span>
+						</p>
+					</div><!-- how -->
+					<div class="what">
+						<p><strong>배당률</strong><span>{{history[loop.index-1].rate}}</span></p>
+						<p><strong>예상당첨금액</strong><span class="toComma">{{(history[loop.index-1].rate*history[loop.index-1].money_bet)|int}}원</span></p>
+					</div><!-- what -->
+					<div class="money">
+						<p><strong>배팅금액</strong><span class="toComma">{{history[loop.index-1].money_bet}}원</span></p>
+						<p><strong>당첨금액</strong>{% if history[loop.index-1].state == 1%}<span class="toComma">{{(history[loop.index-1].rate*history[loop.index-1].money_bet)|int}}원</span>{%else%}<span>0원</span>{% endif %}</p>	
+					</div><!-- money -->
+					<div class="buttonWrap">
+						<button class="btn history_delete">내역삭제</button><br/>
+						<button class="btn greyBtn">배팅취소</button>
+					</div>
+				</div><!-- myBatting -->
+			</div><!-- bettingContentsWrap -->
+		</td>
 	</tr>
+	</tbody>
 </table>
 {% endfor %}
 {% else %}
+<h1>배팅 내역이 없습니다.</h1>
 {% endif %}
+
 
 {% endblock %}

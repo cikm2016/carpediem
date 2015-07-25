@@ -33,16 +33,6 @@ body{
 	border-top: 1px solid #C4C4C4;
 	padding-top: 10px;
 }
-#sidebar{
-	background-color: rgba(255,255,255,0.7);
-	border: 1px solid white;
-	border-radius: 5px;
-	position: fixed;
-	right: 80px;
-	top: 127px;
-	min-height: 100px;
-	padding-bottom: 5px;
-}
 .table_area{
 	background-color: rgba(255,255,255,0.9);
 	text-align: center;
@@ -95,10 +85,6 @@ th, td{
 	border-radius: 5px;
 }
 .clickbox{
-	border: 2px solid black;
-}
-.clicked{
-	background-color: yellow;	
 }
 .selected{
 	color: yellow;

@@ -9,38 +9,58 @@
 <div id="contentsWrap">
 	<div id="contents" class="container">
 		{% block contents %}{% endblock %}
-		<div id="sidebar" class="">
-			<h3>배팅 현황</h3>
-			{% if user %}
-			<div class="blackbox">보유금액</div>
-			<div id="money_crt" class="toComma">{{user.money_crt}}원</div>
-			<div class="blackbox">누적배당</div>
-			<div id="rate_cml" class="toComma">0</div>
-			<div class="blackbox">예상당첨금</div>
-			<div  id="money_cml" class="toComma">0</div>
-			<div class="blackbox">배팅금액</div>
-			<div class=""><input id="money_bet" class="form-control input-sm toComma_input" type="text" value="{{minbet}}"></div>
-			<input type="hidden" name="minbet" value="{{minbet}}">
-			<input type="hidden" name="maxbet" value="{{maxbet}}">
-			<input type="hidden" name="maxgain" value="{{maxgain}}">
-			{% if menu == 'cross' %}
-			<button id="crossbet_btn" class="btn">배팅하기</button>
-			{% else %}
-			<button id="ladderbet_btn" class="btn">배팅하기</button>
-			{% endif %}
-			{% endif %}
-			<button id="max_btn" class="btn">MAX</button>
-			<div class="blackbox">
-				<table class="bet_table">
-				</table>
+		<div class="vsRight">
+			
+			<div id="sidebar" class="">
+				<h3><img src="{{url_for('static', filename='images/bettingbox/betting_tit.gif')}}"  alt="배팅현황" /></h3>
+				{% if user and minbet and maxbet and maxgain%}
+				<input type="hidden" name="minbet" value="{{minbet}}">
+				<input type="hidden" name="maxbet" value="{{maxbet}}">
+				<input type="hidden" name="maxgain" value="{{maxgain}}">
+				<dl>
+					<dt>보유금액</dt>
+					<dd id="money_crt" class="toComma">{{user.money_crt}}원</dd>
+				</dl>
+				<dl>
+					<dt>누적배당</dt>
+					<dd id="rate_cml" class="toComma">0</dd>
+				</dl>
+				<dl>
+					<dt>예상당첨금</dt>
+					<dd id="money_cml" class="toComma">0</dd>
+				</dl>
+				<dl class="all">
+					<dt>배팅금액</dt>
+					<dd><input id="money_bet" class="form-control input-sm toComma_input" type="text" value="{{minbet}}"></dd>
+				</dl>
+				<p><a id="max_btn" class="max" href="#"><img src="{{url_for('static', filename='images/bettingbox/btn_max.gif')}}"  alt="max" /></a></p>
+
+				{% if menu == 'cross' %}
+				<p><a id="crossbet_btn" href="#" class="moneyGo"><img src="{{url_for('static', filename='images/bettingbox/btn_bet.gif') }}"  alt="배팅하기" /></a></p>
+				{% elif menu == 'handicap' %}
+				<p><a id="handicapbet_btn" href="#" class="moneyGo"><img src="{{url_for('static', filename='images/bettingbox/btn_bet.gif') }}"  alt="배팅하기" /></a></p>
+				{% elif menu == 'special' %}
+				<p><a id="specialbet_btn" href="#" class="moneyGo"><img src="{{url_for('static', filename='images/bettingbox/btn_bet.gif') }}"  alt="배팅하기" /></a></p>
+				{% else %}
+				<p><a id="ladderbet_btn" href="#" class="moneyGo"><img src="{{url_for('static', filename='images/bettingbox/btn_bet.gif') }}"  alt="배팅하기" /></a></p>
+				{% endif %}
+				<div class="footCon">
+					<p class="distribution">2.2</p>
+					<p class="team"><span>맨시티</span<br/><span class="check">맨유</span></p>
+					<p><a href="#" class="del"><img src="{{url_for('static', filename='images/bettingbox/btn_x.gif') }}"  alt="삭제" /></a></p>
+				</div><!-- footCon -->
+				{% endif %}
+
+				<div class="blackbox">
+					<table class="bet_table">
+					</table>
+				</div>
 			</div>
-		</div<>
+		</div>
 	</div>
 </div><!-- contentsWrap -->
 <div id="footer">
 	<div class="container">
-		<div class="">사업자 등록 주소지 등등 문구들이 올 자리</div>
-		<div class="">간단한 문구.<br><strong>© ?????? corp.</strong></div>
 	</div>
 </div> 
 {% endblock %}

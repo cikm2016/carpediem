@@ -471,31 +471,32 @@ $(document).ready(function(){
 			});
 		}
 	});
-	$('.game_all_apply').click(function(){
+	$('.cross_deleteall').click(function(){
 		var data = []
 		$("input:checkbox[name=select]:checked").each(function(){
 			var tmp_id = $(this).closest('tr').attr('id');
-			var tmp_home = $('#'+tmp_id).find('input[name="home_rate_'+tmp_id+'"]').val();
-			var tmp_draw = $('#'+tmp_id).find('input[name="draw_rate_'+tmp_id+'"]').val();
-			var tmp_away = $('#'+tmp_id).find('input[name="away_rate_'+tmp_id+'"]').val();
-			data.push({id:tmp_id, home:tmp_home, draw:tmp_draw, away:tmp_away})
+			data.push({id:tmp_id})
 		});	
-		var check = confirm('적용하시겠습니까?');
+		var check = confirm('삭제 하시겠습니까?');
 		if (check){
 			$.ajax({
-				url : '/admin/register/game/applyall',
+				url : '/admin/register/cross/deleteall',
 				type: 'POST',
 				dataType: 'json',
-				data: {
+				data: { 
 					data: JSON.stringify(data)
-				
 				},
 				success : function(resp){
 					if(resp.success){
-						alert('적용 되었습니다.');
+						alert('삭제 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var id = $(this).closest('tr').attr('id');
+							$('#'+id).remove();
+						});	
+						
 					}
 					else{
-						alert('잘못된 접근입니다.');
+						alert(resp.msg);
 					}
 				},
 				error : function(resp){
@@ -604,13 +605,52 @@ $(document).ready(function(){
 		$("input:checkbox[name=select]:checked").each(function(){
 			var tmp_id = $(this).closest('tr').attr('id');
 			var tmp_state = $('#'+tmp_id).find('select').val();
-			data.push({id:tmp_id, state:tmp_state})
+			var tmp_home= $('#'+tmp_id).find('input[name="home_rate_'+tmp_id+'"]').val();
+			var tmp_draw= $('#'+tmp_id).find('input[name="draw_rate_'+tmp_id+'"]').val();
+			var tmp_away= $('#'+tmp_id).find('input[name="away_rate_'+tmp_id+'"]').val();
+			data.push({id:tmp_id, state:tmp_state, home:tmp_home, draw:tmp_draw, away:tmp_away})
 		});	
 
-		var check = confirm('수정 하시겠습니까?');
+		var check = confirm('적용 하시겠습니까?');
 		if (check){
 			$.ajax({
 				url : '/admin/register/cross/applyall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.handicap_all_apply').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_state = $('#'+tmp_id).find('select').val();
+			var tmp_home= $('#'+tmp_id).find('input[name="home_rate_'+tmp_id+'"]').val();
+			var tmp_draw= $('#'+tmp_id).find('input[name="draw_rate_'+tmp_id+'"]').val();
+			var tmp_away= $('#'+tmp_id).find('input[name="away_rate_'+tmp_id+'"]').val();
+			var tmp_handi= $('#'+tmp_id).find('input[name="handicap_'+tmp_id+'"]').val();
+			data.push({id:tmp_id, state:tmp_state, home:tmp_home, draw:tmp_draw, away:tmp_away, handicap:tmp_handi})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/register/handicap/applyall',
 				type: 'POST',
 				dataType: 'json',
 				data: {
@@ -668,15 +708,46 @@ $(document).ready(function(){
 		var data = []
 		$("input:checkbox[name=select]:checked").each(function(){
 			var tmp_id = $(this).closest('tr').attr('id');
-			var tmp_win = $('#'+tmp_id).find('select[name="win_'+tmp_id+'"]').val();
 			var tmp_state = $('#'+tmp_id).find('select[name="state_'+tmp_id+'"]').val();
-			data.push({id:tmp_id, win:tmp_win, state:tmp_state})
+			data.push({id:tmp_id, state:tmp_state})
 		});	
 
 		var check = confirm('적용 하시겠습니까?');
 		if (check){
 			$.ajax({
 				url : '/admin/register/ladder/detail/applyall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.ladder_detail_all_finish').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_win = $('#'+tmp_id).find('select[name="win_'+tmp_id+'"]').val();
+			data.push({id:tmp_id, win:tmp_win})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/finish/ladder/detail/applyall',
 				type: 'POST',
 				dataType: 'json',
 				data: {
@@ -1062,6 +1133,43 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('.handicap_finish_all').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_home = $('input[name="home_score_'+tmp_id+'"]').val();
+			var tmp_away = $('input[name="away_score_'+tmp_id+'"]').val();
+			data.push({ id:tmp_id, home_score:tmp_home, away_score:tmp_away  })
+		});	
+		var id = $(this).closest('tr').attr('id');
+
+		var check = confirm('마감 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/finish/handicap/all',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					data: JSON.stringify(data)
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('마감 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var tmp_id = $(this).closest('tr').attr('id');
+							$('#'+tmp_id).remove();
+						});	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
 	$('.cross_restore').click(function(){
 		var id = $(this).closest('tr').attr('id');
 
@@ -1137,7 +1245,8 @@ $(document).ready(function(){
 		
 	});
 	$(".clickbox").click(function(){
-		var id = $(this).closest('tr').attr('id');
+		//var id = $(this).closest('tr').attr('id');
+		var id = $(this).closest('div').attr('id');
 		var	home = $('#'+id).find('td.home').find('span.name').text();
 		var	away = $('#'+id).find('td.away').find('span.name').text();
 
@@ -1168,7 +1277,7 @@ $(document).ready(function(){
 		}
 		/* 새로운팀 클릭 */
 		else{
-			var clicked = $('#'+id).find('td.clicked')
+			var clicked = $('#'+id).find('p.clicked')
 			/* 클릭된 팀이 없을때 */
 			if (clicked.text() == ""){
 				if (rate_cml == 0){
@@ -1274,6 +1383,104 @@ $(document).ready(function(){
 				if (check){
 					$.ajax({
 						url : '/user/cross/betting',
+						type: 'POST',
+						dataType: 'json',
+						data: { 
+							data: JSON.stringify(data),
+							money: money_bet,
+							rate: rate
+						},
+						success : function(resp){
+							if(resp.success){
+								alert('성공적으로 배팅하였습니다.');
+								$('#money_crt').text(numberWithCommas(money_crt-money_bet+'원'));
+							}
+							else{
+								alert('잘못된 접근입니다.');
+							}
+						},
+						error : function(resp){
+							console.log('server error');
+						}	
+					});
+				}
+			}
+			else{
+				alert('배팅한 항목이 없습니다.');
+			}	
+		}
+	});
+	//핸디캡 배팅
+	$('#handicapbet_btn').click(function(){
+		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
+		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
+		var rate = $('#rate_cml').text();
+		if (money_bet > money_crt){
+			alert('캐쉬가 부족합니다.');
+		}
+		else{
+			if ($('.mybet').length){
+				var data = []
+
+				$('.mybet').each(function(){
+					var id =  $(this).attr('name');
+					var betting = $(this).val();
+					data.push({ id:id, betting:betting });
+				});
+
+				var check = confirm('배팅 하시겠습니까?');
+				if (check){
+					$.ajax({
+						url : '/user/handicap/betting',
+						type: 'POST',
+						dataType: 'json',
+						data: { 
+							data: JSON.stringify(data),
+							money: money_bet,
+							rate: rate
+						},
+						success : function(resp){
+							if(resp.success){
+								alert('성공적으로 배팅하였습니다.');
+								$('#money_crt').text(numberWithCommas(money_crt-money_bet+'원'));
+							}
+							else{
+								alert('잘못된 접근입니다.');
+							}
+						},
+						error : function(resp){
+							console.log('server error');
+						}	
+					});
+				}
+			}
+			else{
+				alert('배팅한 항목이 없습니다.');
+			}	
+		}
+	});
+	//스페셜 배팅
+	$('#specialbet_btn').click(function(){
+		var money_crt = parseInt($('#money_crt').text().replace(/\,/g,''));
+		var money_bet = parseInt($('#money_bet').val().replace(/\,/g,''));
+		var rate = $('#rate_cml').text();
+		if (money_bet > money_crt){
+			alert('캐쉬가 부족합니다.');
+		}
+		else{
+			if ($('.mybet').length){
+				var data = []
+
+				$('.mybet').each(function(){
+					var id =  $(this).attr('name');
+					var betting = $(this).val();
+					data.push({ id:id, betting:betting });
+				});
+
+				var check = confirm('배팅 하시겠습니까?');
+				if (check){
+					$.ajax({
+						url : '/user/special/betting',
 						type: 'POST',
 						dataType: 'json',
 						data: { 
@@ -1634,11 +1841,9 @@ function validateFormLeague(){
 	}
 }
 function validateFormDetail(){
-	var x = document.forms["adddetail"]["name"].value;
-	var y = document.forms["adddetail"]["home"].value;
-	var z = document.forms["adddetail"]["away"].value;
-	if (x == "" ||y == "" ||z == "" ){
-		alert("값을 입력하세요.");
+	var t = document.forms["adddetail"]["menu"].value;
+	if (t == 0){
+		alert('메뉴를 선택하세요');
 		return false;
 	}
 }

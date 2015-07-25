@@ -16,6 +16,7 @@
 					<form method="post" role="form" onsubmit="return validateLogin()">
 						<fieldset>
 							<legend></legend>
+							{% if error %}<div class="error">{{error}}</div>{% endif %}
 							<input type="text" name="account" maxlength="20" placeholder="아이디"/>
 							<input type="password" name="password" maxlength="20"  placeholder="비밀번호"/>
 						

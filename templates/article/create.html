@@ -10,11 +10,13 @@
 		</colgroup>
 		<thead>
 			<tr>
-				<th>안녕하십니까? 임의로 등록된 게시물 제목입니다.</th>
+				<th class="titleWrite">	
+					<label for="title">제 목</label>
+					<input type="text" id="title" name="title" class="form-control" placeholder="제목을 입력하세요"/>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
-		<tr><input name="title" class="form-control" placeholder="제목을 입력하세요"/></tr>
 		<tr>
 			<td><span class="viewInfo">작성자 | {{user.nickname}}</span></td>
 		</tr>

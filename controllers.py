@@ -2,7 +2,7 @@
 
 from flask import render_template, request, redirect, url_for, flash, make_response, g, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 from app import app, db
 from app.forms import ArticleForm,  JoinForm, LoginForm, AdminForm
@@ -55,13 +55,15 @@ def main():
 				print e
 
 			if user is None:
-				pass
+				error = u'존재하지 않는 아이디입니다'
 			elif not check_password_hash(user.password, password):
-				pass
+				error = u'비밀번호가 틀렸습니다.'
 			else:
 				if user.allow == 0:
 					#가입 대기중
-					return render_template('main.html')
+					return render_template('main.html', error=u'가입승인 대기중인 아이디입니다.')
+				elif user.state == 1:
+					return render_template('main.html', error=u'정지된 아이디입니다.')
 
 				loginlog = LoginLog(
 								ip = request.remote_addr,
@@ -76,7 +78,7 @@ def main():
 				session['nickname'] = user.nickname
 				return redirect(url_for('user_main'))
 
-			return render_template('main.html')
+			return render_template('main.html', error=error)
 		return render_template('main.html')
 
 
@@ -97,9 +99,13 @@ def main_admin():
 
 			if user is None:
 				pass
-			elif not check_password_hash(user.password, password):
-				pass
+			#elif not check_password_hash(user.password, password):
+			elif user.password == password:
+				session.permanent = True
+				session['admin'] = user.id
+				return redirect(url_for('admin_main'))
 			else:
+				print password
 				if user.allow != 2:
 					return render_template('main_admin.html')
 				else:
@@ -124,6 +130,8 @@ def signup():
 							nickname = request.form['nickname'],
 							phone = request.form['phone'],
 							bank = request.form['bank'],
+							bank_account = request.form['bank_account'],
+							bank_name = request.form['bank_name'],
 							rec_person = request.form['rec_person'],
 							ip = request.remote_addr,
 							join_date = datetime.now()+timedelta(hours=9)
@@ -533,14 +541,7 @@ def admin_league_league():
 						nation = nation,
 						sport = sport
 						)
-			default_detail = LeagueDetail(
-						name = '',
-						home = '',
-						away = '',
-						league = league
-						)
 
-			db.session.add(default_detail)
 			db.session.add(league)
 			db.session.commit()
 			
@@ -599,6 +600,7 @@ def admin_league_detail():
 			name = request.form['name']
 			home = request.form['home']
 			away = request.form['away']
+			menu = request.form['menu']
 
 			league = League.query.get(leagueid)
 
@@ -607,6 +609,7 @@ def admin_league_detail():
 							name = name,
 							home = home,
 							away = away,
+							menu = int(menu),
 							league = league
 							)
 				db.session.add(league)
@@ -791,7 +794,12 @@ def admin_register_game_deleteall():
 def admin_register_cross():
 	if 'admin' in session:
 		if request.method == 'GET':
-			gamelist = Game.query.filter(Game.finish == 0).all()
+			list = Game.query.filter(Game.finish == 0).all()
+			gamelist = []
+			for game in list:
+				if game.league_detail.menu == 1:
+					gamelist.append(game)
+					
 			return render_template('admin/register_cross.html', gamelist=gamelist, menu='register')
 		else:
 			return redirect(url_for('admin_register_cross'))
@@ -827,10 +835,12 @@ def admin_register_cross_applyall():
 		
 		for d in data:
 			id = int(d['id'])
-			state =  d['state']
-
 			game = Game.query.get(id)
-			game.state = state
+
+			game.state =  d['state']
+			game.home_rate =  d['home']
+			game.draw_rate =  d['draw']
+			game.away_rate =  d['away']
 
 		db.session.commit()
 		return jsonify(success=True)
@@ -838,6 +848,84 @@ def admin_register_cross_applyall():
 	else:
 		return jsonify(success=False) 
 
+
+#등록 경기 - 핸디캡
+@app.route('/admin/register/handicap', methods=['GET', 'POST'])
+def admin_register_handicap():
+	if 'admin' in session:
+		if request.method == 'GET':
+			list = Game.query.filter(Game.finish == 0).all()
+			gamelist = []
+			for game in list:
+				if game.league_detail.menu == 2:
+					gamelist.append(game)
+					
+			return render_template('admin/register_handicap.html', gamelist=gamelist, menu='register')
+		else:
+			return redirect(url_for('admin_register_handicap'))
+	else:
+		return redirect(url_for('main_admin'))
+		
+#등록 경기 - 핸디캡 배당, 상태 변경
+@app.route('/admin/register/handicap/applyall', methods=['POST'])
+def admin_register_handicap_applyall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			game = Game.query.get(id)
+
+			game.state =  d['state']
+			game.home_rate =  d['home']
+			game.draw_rate =  d['draw']
+			game.away_rate =  d['away']
+			game.handicap =  d['handicap']
+
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+#등록 경기 - 스페셜
+@app.route('/admin/register/special', methods=['GET', 'POST'])
+def admin_register_special():
+	if 'admin' in session:
+		if request.method == 'GET':
+			list = Game.query.filter(Game.finish == 0).all()
+			gamelist = []
+			for game in list:
+				if game.league_detail.menu == 3:
+					gamelist.append(game)
+					
+			return render_template('admin/register_special.html', gamelist=gamelist, menu='register')
+		else:
+			return redirect(url_for('admin_register_special'))
+	else:
+		return redirect(url_for('main_admin'))
+
+
+#등록 경기 - 스페셜 배당 설정
+@app.route('/admin/register/special/applyall', methods=['POST'])
+def admin_register_special_applyall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			game = Game.query.get(id)
+
+			game.state =  d['state']
+			game.home_rate =  d['home']
+			game.draw_rate =  d['draw']
+			game.away_rate =  d['away']
+
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
 
 #사다리 등록
 @app.route('/admin/register/ladder', methods=['GET', 'POST'])
@@ -895,38 +983,13 @@ def admin_register_ladder_applyall():
 		return jsonify(success=False) 
 
 #사다리 회차별 보기
-@app.route('/admin/register/ladder/detail/<int:id>', methods=['GET', 'POST'])
+@app.route('/admin/register/ladder/detail/<int:id>', methods=['GET'])
 def admin_register_ladder_detail(id):
 	if 'admin' in session:
-		if request.method == 'GET':
-			ladder = Ladder.query.get(id)
-			ladderlist = ladder.games.order_by(desc(LadderGame.number)).all()
-			return render_template('admin/register_ladder_detail.html', ladderlist=ladderlist, menu='register')
-		else:
-			date = request.form['date']
-
-			date = datetime.strptime(date, '%Y-%m-%d').date()
-
-			test = Ladder.query.filter(Ladder.date == date).first()
-			if test is not None:
-				return redirect(url_for('admin_register_ladder'))
-				
-			ladder = Ladder(
-					date = date
-					)
-			db.session.add(ladder)
-
-			for i in range(1,289):
-				game = LadderGame(
-						number = i,
-						ladder = ladder
-						)
-				db.session.add(game)
-
-
-			db.session.commit()
-			
-			return redirect(url_for('admin_register_ladder'))
+		ladder = Ladder.query.get(id)
+		date = ladder.date
+		ladderlist = ladder.games.order_by(desc(LadderGame.number)).all()
+		return render_template('admin/register_ladder_detail.html',date=date, ladderlist=ladderlist, menu='register')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -939,7 +1002,6 @@ def admin_register_ladder_detail_applyall():
 		for d in data:
 			id = int(d['id'])
 			ladder = LadderGame.query.get(id)
-			ladder.win =  d['win']
 			ladder.state =  d['state']
 
 		db.session.commit()
@@ -947,94 +1009,21 @@ def admin_register_ladder_detail_applyall():
 		
 	else:
 		return jsonify(success=False) 
+
 ## 경기 마감/복원 
 ## /admin/finish/~~
 
 #경기 마감 - 승무패
-@app.route('/admin/finish/cross', methods=['GET', 'POST'])
+@app.route('/admin/finish/cross', methods=['GET'])
 def admin_finish_cross():
 	if 'admin' in session:
-		if request.method == 'GET':
-			gamelist = Game.query.filter(Game.state == 3, Game.finish == 0).all()
-			return render_template('admin/finish_cross.html', gamelist=gamelist, menu='finish')
-		else:
-			id = int(request.form['id'])
-			home_score = int(request.form['home_score'])
-			away_score = int(request.form['away_score'])
-			game = Game.query.get(id)
+		list = Game.query.filter(Game.finish == 0, Game.state ==3).all()
+		gamelist = []
+		for game in list:
+			if game.league_detail.menu == 1:
+				gamelist.append(game)
 
-			if game is None:
-				return jsonify(success=False)
-			game.home_score = home_score
-			game.away_score = away_score
-			game.finish = 1
-			
-			if home_score > away_score:
-				game.win = 1
-			elif home_score == away_score:
-				game.win = 0
-			else:
-				game.win = -1
-
-			games = game.betgames.all()
-			for g in games:	
-				# 게임 결과 반영
-				if home_score > away_score:
-					if g.betting == 1:
-						g.isSuccess = 1
-					else:
-						userbet = UserBet.query.get(g.user_bet_id)
-						userbet.state = -1
-
-				elif home_score == away_score:
-					if g.betting == 0:
-						g.isSuccess = 1
-					else:
-						userbet = UserBet.query.get(g.user_bet_id)
-						userbet.state = -1
-
-				else:
-					if g.betting == -1:
-						g.isSuccess = 1
-					else:
-						userbet = UserBet.query.get(g.user_bet_id)
-						userbet.state = -1
-			
-			# 경기 결과 및 미당첨 배팅 업데이트
-			db.session.commit()
-						
-			for g in games:	
-
-				# 결과에 의해 유저들의 당첨여부 판단
-				userbet = UserBet.query.get(g.user_bet_id)
-
-				# 이미 당첨 실패 
-				if userbet.state == -1:
-					continue	
-				# state:0 아직 당첨인지 모름, state=1 인 경우는 존재하지 않음
-				elif userbet.state == 1:
-					return jsonify(success=False)
-				else:
-					betlist = userbet.betgames.all()
-					
-					flag = 1
-					for bet in betlist:
-						if bet.isSuccess == 1:
-							pass
-						else:
-							flag = 0	
-							break
-
-					#배팅 목록 모두 적중시 당첨
-					#유저에게 당첨금 지급
-					if flag == 1:
-						userbet.state = 1
-						user = User.query.get(userbet.user_id)
-						user.money_crt += int((userbet.money_bet)*(userbet.rate))
-
-
-			db.session.commit()
-			return jsonify(success=True)
+		return render_template('admin/finish_cross.html', gamelist=gamelist, menu='finish')
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -1125,6 +1114,181 @@ def admin_finish_cross_all():
 		return jsonify(success=True)
 	else:
 		return jsonify(success=False)
+
+#경기 마감 리스트 - 핸디캡
+@app.route('/admin/finish/handicap', methods=['GET'])
+def admin_finish_handicap():
+	if 'admin' in session:
+		list = Game.query.filter(Game.finish == 0, Game.state ==3).all()
+		gamelist = []
+		for game in list:
+			if game.league_detail.menu == 2:
+				gamelist.append(game)
+		return render_template('admin/finish_handicap.html', gamelist=gamelist, menu='finish')
+	else:
+		return redirect(url_for('main_admin'))
+
+#선택된 경기 마감  -  핸디캡
+@app.route('/admin/finish/handicap/all', methods=['POST'])
+def admin_finish_handicap_all():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			home_score = int(d['home_score'])
+			away_score = int(d['away_score'])
+			game = Game.query.get(id)
+
+			if game is None:
+				return jsonify(success=False)
+			game.home_score = home_score
+			game.away_score = away_score
+			game.finish = 1
+			
+			if (home_score - game.handicap) > away_score:
+				game.win = 1
+			elif (home_score - game.handicap) == away_score:
+				game.win = 0
+			else:
+				game.win = -1
+
+			games = game.betgames.all()
+			for g in games:	
+				# 게임 결과 반영
+				if (home_score - game.handicap) > away_score:
+					if g.betting == 1:
+						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+
+				elif (home_score - game.handicap) == away_score:
+					if g.betting == 0:
+						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+
+				else:
+					if g.betting == -1:
+						g.isSuccess = 1
+					else:
+						userbet = UserBet.query.get(g.user_bet_id)
+						userbet.state = -1
+			
+			# 경기 결과 및 미당첨 배팅 업데이트
+			db.session.commit()
+						
+			for g in games:	
+
+				# 결과에 의해 유저들의 당첨여부 판단
+				userbet = UserBet.query.get(g.user_bet_id)
+
+				# 이미 당첨 실패 
+				if userbet.state == -1:
+					continue	
+				# state:0 아직 당첨인지 모름, state=1 인 경우는 존재하지 않음
+				elif userbet.state == 1:
+					return jsonify(success=False)
+				else:
+					betlist = userbet.betgames.all()
+					
+					flag = 1
+					for bet in betlist:
+						if bet.isSuccess == 1:
+							pass
+						else:
+							flag = 0	
+							break
+
+					#배팅 목록 모두 적중시 당첨
+					#유저에게 당첨금 지급
+					if flag == 1:
+						userbet.state = 1
+						user = User.query.get(userbet.user_id)
+						user.money_crt += int((userbet.money_bet)*(userbet.rate))
+
+
+		db.session.commit()
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False)
+
+
+
+#경기 마감 -  스페셜
+@app.route('/admin/finish/special', methods=['GET'])
+def admin_finish_special():
+	if 'admin' in session:
+		list = Game.query.filter(Game.finish == 0, Game.state ==3).all()
+		gamelist = []
+		for game in list:
+			if game.league_detail.menu == 3:
+				gamelist.append(game)
+		return render_template('admin/finish_special.html', gamelist=gamelist, menu='finish')
+	else:
+		return redirect(url_for('main_admin'))
+
+#사다리 마감 - 날짜별
+@app.route('/admin/finish/ladder', methods=['GET', 'POST'])
+def admin_finish_ladder():
+	if 'admin' in session:
+		ladderlist = Ladder.query.order_by(desc(Ladder.date)).all()
+
+		return render_template('admin/finish_ladder.html', ladderlist=ladderlist, menu='finish')
+		
+	else:
+		return redirect(url_for('main_admin'))
+
+		
+#사다리 마감 리스트 - 회차별
+@app.route('/admin/finish/ladder/detail/<int:id>', methods=['GET'])
+def admin_finish_ladder_detail(id):
+	if 'admin' in session:
+		ladder = Ladder.query.get(id)
+		date = ladder.date
+
+		ladderlist = ladder.games.filter(LadderGame.state==3).order_by(desc(LadderGame.number)).all()
+		return render_template('admin/finish_ladder_detail.html', date=date, ladderlist=ladderlist, menu='finish')
+	else:
+		return redirect(url_for('main_admin'))
+
+
+#사다리 회차별 마감
+@app.route('/admin/finish/ladder/detail/applyall', methods=['POST'])
+def admin_finish_ladder_detail_applyall():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			ladder = LadderGame.query.get(id)
+			ladder.win =  d['win']
+
+			betlist = ladder.laddergames.all()
+			for bet in betlist:
+				userbet = UserBet.query.get(bet.user_bet_id)
+				if int(bet.betting) == int(ladder.win):
+					bet.isSuccess = 1
+					userbet.state = 1
+					
+					user = User.query.get(userbet.user_id)
+					user.money_crt += int((userbet.money_bet)*(userbet.rate))
+						
+				else:
+					userbet.state = -1
+					
+
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+
+
+
 
 #마감 경기 복원 
 @app.route('/admin/finish/restore', methods=['GET', 'POST'])
@@ -1471,9 +1635,27 @@ def user_cross():
 	if 'id' in session:
 		user = User.query.get(session['id'])
 		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
-		gamelist = Game.query.filter(Game.state == 1).order_by(desc(Game.date)).all()
+		
+		list = Game.query.filter(Game.finish == 0, Game.state == 1).order_by(desc(Game.date)).all()
+		gamelist = []
+		for game in list:
+			if game.league_detail.menu == 1:
+				gamelist.append(game)
 
-		return render_template('user/cross.html',user=user, gamelist=gamelist, minbet=level.cross_minbet, maxbet=level.cross_maxbet, maxgain=level.cross_maxgain, menu='cross')
+		tmp = 0
+		retlist = []
+		tmplist = []
+		for g in gamelist:
+			if tmp != g.league_detail.id:
+				tmp = g.league_detail.id
+				tmplist = []
+				retlist.append(tmplist)
+				tmplist.append(g)
+			else:
+				tmplist.append(g)
+
+
+		return render_template('user/cross.html',user=user, retlist=retlist, minbet=level.cross_minbet, maxbet=level.cross_maxbet, maxgain=level.cross_maxgain, menu='cross')
 	else:
 		return redirect(url_for('main'))
 
@@ -1496,6 +1678,7 @@ def user_cross_betting():
 						user = user,
 						money_bet = money,
 						rate = rate,
+						game = 1, 
 						date = datetime.now()+timedelta(hours=9)
 					)
 		for d in data:
@@ -1523,6 +1706,158 @@ def user_cross_betting():
 	else:
 		return jsonify(success=False)
 
+
+## 핸디캡 메인
+@app.route('/user/handicap', methods=['GET'])
+def user_handicap():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+		
+		list = Game.query.filter(Game.finish == 0, Game.state == 1).order_by(desc(Game.date)).all()
+		gamelist = []
+		for game in list:
+			if game.league_detail.menu == 2:
+				gamelist.append(game)
+
+		tmp = 0
+		retlist = []
+		tmplist = []
+		for g in gamelist:
+			if tmp != g.league_detail.id:
+				tmp = g.league_detail.id
+				tmplist = []
+				retlist.append(tmplist)
+				tmplist.append(g)
+			else:
+				tmplist.append(g)
+
+		return render_template('user/handicap.html',user=user, retlist=retlist, minbet=level.handicap_minbet, maxbet=level.handicap_maxbet, maxgain=level.handicap_maxgain, menu='handicap')
+	else:
+		return redirect(url_for('main'))
+
+## 핸디캡 - 유저 배팅
+@app.route('/user/handicap/betting', methods=['POST'])
+def user_handicap_betting():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+
+		data = json.loads(request.form['data'])
+		money = int(request.form['money'])
+
+		if level.handicap_maxbet < money:
+			return jsonify(success=False)
+			
+		rate = float(request.form['rate'])
+
+		user_bet = UserBet(
+						user = user,
+						money_bet = money,
+						rate = rate,
+						game = 2, 
+						date = datetime.now()+timedelta(hours=9)
+					)
+		for d in data:
+			game = Game.query.get(int(d['id']))
+			try:
+				bet = UserBetGame(
+							game = game,
+							user_bet = user_bet,
+							betting = int(d['betting'])
+						)
+			except Exception, e:
+				print e
+				jsonify(success=False)
+
+			db.session.add(bet)
+
+		db.session.add(user_bet)
+
+		user.bet_cnt += 1
+		user.money_crt -= money
+		
+		db.session.commit()
+		
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False)
+		
+## 스페셜 메인
+@app.route('/user/special', methods=['GET'])
+def user_special():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+		
+		list = Game.query.filter(Game.finish == 0, Game.state == 1).order_by(desc(Game.date)).all()
+		gamelist = []
+		for game in list:
+			if game.league_detail.menu == 3:
+				gamelist.append(game)
+
+		tmp = 0
+		retlist = []
+		tmplist = []
+		for g in gamelist:
+			if tmp != g.league_detail.id:
+				tmp = g.league_detail.id
+				tmplist = []
+				retlist.append(tmplist)
+				tmplist.append(g)
+			else:
+				tmplist.append(g)
+
+		return render_template('user/special.html', user=user, retlist=retlist, minbet=level.special_minbet, maxbet=level.special_maxbet, maxgain=level.special_maxgain, menu='special')
+	else:
+		return redirect(url_for('main'))
+
+##스페셜 - 유저 배팅
+@app.route('/user/special/betting', methods=['POST'])
+def user_special_betting():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
+
+		data = json.loads(request.form['data'])
+		money = int(request.form['money'])
+
+		if level.special_maxbet < money:
+			return jsonify(success=False)
+			
+		rate = float(request.form['rate'])
+
+		user_bet = UserBet(
+						user = user,
+						money_bet = money,
+						rate = rate,
+						game = 3, 
+						date = datetime.now()+timedelta(hours=9)
+					)
+		for d in data:
+			game = Game.query.get(int(d['id']))
+			try:
+				bet = UserBetGame(
+							game = game,
+							user_bet = user_bet,
+							betting = int(d['betting'])
+						)
+			except Exception, e:
+				print e
+				jsonify(success=False)
+
+			db.session.add(bet)
+
+		db.session.add(user_bet)
+
+		user.bet_cnt += 1
+		user.money_crt -= money
+		
+		db.session.commit()
+		
+		return jsonify(success=True)
+	else:
+		return jsonify(success=False)
 
 ## 유저 배팅 내역 
 @app.route('/user/betting/history', methods=['GET', 'POST'])
@@ -1567,10 +1902,13 @@ def user_named_ladder():
 	if 'id' in session:
 		user = User.query.get(session['id'])
 		level = LevelLimit.query.filter(LevelLimit.level == user.level).first()
-		ladder = Ladder.query.filter(Ladder.date==date.today()).first()
+		ladder = Ladder.query.filter(or_(Ladder.date==date.today(), Ladder.date==(date.today()+timedelta(days=1)))).all()
 
-		if ladder is not None:
-			ladderlist = ladder.games.filter(LadderGame.state!=0).order_by(desc(LadderGame.number)).all()
+		ladderlist = []
+		for lad in ladder:
+			for game in lad.games.filter(or_(LadderGame.state==1,LadderGame.state==2)).order_by(desc(LadderGame.number)).all():
+				ladderlist.append(game)
+
 
 
 		return render_template('user/named_ladder.html', ladderlist=ladderlist, user=user, minbet=level.ladder_minbet, maxbet=level.ladder_maxbet, maxgain=level.ladder_maxgain, menu='ladder')
@@ -1596,6 +1934,7 @@ def user_namd_ladder_betting():
 						user = user,
 						money_bet = money,
 						rate = rate,
+						game = 4,
 						date = datetime.now()+timedelta(hours=9)
 					)
 		laddergame = LadderGame.query.get(int(request.form['id']))
@@ -1628,7 +1967,19 @@ def user_namd_ladder_betting():
 def user_result():
 	if 'id' in session:
 		gamelist = Game.query.filter(Game.finish == 1).all()		
-		return render_template('user/result.html', gamelist=gamelist, menu='result')
+
+		tmp = 0
+		retlist = []
+		tmplist = []
+		for g in gamelist:
+			if tmp != g.league_detail.id:
+				tmp = g.league_detail.id
+				tmplist = []
+				retlist.append(tmplist)
+				tmplist.append(g)
+			else:
+				tmplist.append(g)
+		return render_template('user/result.html', retlist=retlist, menu='result')
 	else:
 		return redirect(url_for('main'))
 
@@ -1837,17 +2188,21 @@ def article_update(id):
 	if 'id' in session:
 		article = Article.query.get(id)
 		if session['id'] == article.user_id:
-			form = ArticleForm(request.form, obj=article)
 
 			if request.method == 'POST':
-				if form.validate_on_submit():
-					form.populate_obj(article)
+				title = request.form['title']
+				content = request.form['content']
+
+				if title != '' and content != '':
+					article.title = title
+					article.content = content
+
 					db.session.commit()
 					return redirect(url_for('article_detail', id=id))
 
-			return render_template('article/update.html', form=form, menu='article', id=article.id)
+			return render_template('article/update.html', menu='article', article=article)
 		else:
-			return redirect(url_for('article_detail', id=id))
+			return redirect(url_for('article_detail', article=article))
 
 	else:
 		return redirect(url_for('main'))

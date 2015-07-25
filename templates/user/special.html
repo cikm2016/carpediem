@@ -1,22 +1,25 @@
-{% extends "layout_main.html" %}
+{% extends "layout.html" %}
 {% block contents %}
-<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit06.gif') }}" alt="게시판" /></p>
-<table class="userDataTable">
-	<colgroup>
-		<col width="160px" />
-		<col width="270px" />
-		<col width="140px" />
-		<col width="270px" />
-		<col width="160px" />
-	</colgroup>
-	<thead>
-		<th>경기시간</th>
-		<th>승(홈팀)</th>
-		<th>무</th>
-		<th>패(원정팀)</th>
-		<th>경기결과</th>
-	</thead>
-	<tbody>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit03.gif') }}" alt="승무패" /></p>
+<div class="vsLeft">
+	<table class="userDataTable sUserDataTable">
+		<colgroup>
+			<col width="160px" />
+			<col width="210px" />
+			<col width="80px" />
+			<col width="210px" />
+			<col width="120px" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th>경기시간</th>
+				<th>승(홈팀)</th>
+				<th>무</th>
+				<th>패(원정팀</th>
+				<th>상태</th>			
+			</tr>
+		</thead>
+		<tbody>
 	{% if retlist %}
 	{% for ret in retlist %}
 		<tr>
@@ -33,7 +36,12 @@
 				<p class="clickbox draw {%if game.win == 0%}clicked{%endif%}"><span class="rate">{{ game.draw_rate }}</span></p>
 				{% endif %}	
 				<p class="clickbox lose away {%if game.win == -1%}clicked{%endif%}"><span class="distribution rate">{{game.away_rate}}</span><span class="team">{{game.away}}</span></p>
-				<p class="state">{{game.home_score}}:{{game.away_score}}</p>
+				<p class="state">
+				{% if game.state == 0%}{%endif%}
+				{% if game.state == 1%}배팅가능{%endif%}
+				{% if game.state == 2%}배팅중지{%endif%}
+				{% if game.state == 3%}배팅종료{%endif%}
+				</p>
 
 				</div><!-- battingContents -->
 		{% endfor %}
@@ -42,12 +50,10 @@
 		{% endfor %}
 		{% else %}
 		{% endif %}
+		</tbody>
+	</table><!-- userDataTable -->		
+</div><!-- vsLeft -->
 
-	</tbody>
-</table>
-
-<p>&nbsp;</p>
-
-{% endblock %}
+	{% endblock %}
 
 

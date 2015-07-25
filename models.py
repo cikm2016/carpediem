@@ -111,11 +111,13 @@ class League(db.Model):
 
 class LeagueDetail(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+
 	name = db.Column(db.String(255))
 	home = db.Column(db.String(255)) 
 	away = db.Column(db.String(255)) 
-	menu = db.Column(db.String(255))
-	game = db.Column(db.String(255))
+
+	#1:승무패, 2:핸디캡, 3:스페셜
+	menu = db.Column(db.Integer, default=0)
 
 	league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
 	league = db.relationship('League',
@@ -138,6 +140,7 @@ class Game(db.Model):
 	away_score = db.Column(db.Integer, default=0)
 
 	win = db.Column(db.Integer) 
+	handicap = db.Column(db.Float, default=0.0)
 
 	date = db.Column(db.DateTime())
 
@@ -159,6 +162,7 @@ class LadderGame(db.Model):
 	win = db.Column(db.Integer, default=0) 
 	number = db.Column(db.Integer) 
 
+	#0:등록, 1:개시, 2:배팅 3:종료
 	state = db.Column(db.Integer, default=0)
 
 	ladder_id = db.Column(db.Integer, db.ForeignKey('ladder.id'))
@@ -211,6 +215,8 @@ class UserBet(db.Model):
 	rate = db.Column(db.Float)
 
 	state = db.Column(db.Integer, default=0)
+	game = db.Column(db.Integer, default=0)
+
 	date = db.Column(db.DateTime())
 
 

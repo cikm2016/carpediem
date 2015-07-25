@@ -1,16 +1,40 @@
-{% extends "layout.html" %}
+{% extends "layout_main.html" %}
 
 {% block contents %}
-<h4>게시물 수정</h4>	
-<form class="form-horizontal" role="form" method="post">
-	{{ form.hidden_tag() }}
-	<div class="title">{{ form.title(placeholder=form.title.description.placeholder) }}</div>
-	<div class="content">{{ form.content(placeholder=form.content.description.placeholder) }}</div>
-
-
-	<button type="submit" class="btn">글 수정</button>
-	<a href="{{ url_for('article_detail', id=id) }}" class="btn">취소</button>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit09.gif') }}" alt="게시판" /></p>
+<form role="form" method="post" class="form-horizontal">
+	<table class="boardTable">
+		<colgroup>
+			<col width="100%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th class="titleWrite">	
+					<label for="title">제 목</label>
+					<input type="text" id="title" name="title" class="form-control" value="{{article.title}}" placeholder="제목을 입력하세요"/>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td><span class="viewInfo">작성자 | {{article.user.nickname}}</span></td>
+		</tr>
+		<tr>
+			<td class="writeField">
+				<textarea id="textarea" name="content" rows="14" cols="78" placeholder="내용을 입력하세요">{{article.content}}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="writeFile">
+				<label for="addFile">첨부파일</label>
+				<input type="file" id="addFile" />
+			</td>
+		</tr>	
+		</tbody>
+	</table><!-- boardTable -->		
+	<p class="tCenter"><button type="submit" class="btn">수정하기</button><a href="{{ url_for('article_detail', id=article.id) }}" class="btn greyBtn">취소</a></p>
 </form>
+<p>&nbsp;</p>
 {% endblock %}
 
 

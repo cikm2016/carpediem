@@ -1,0 +1,39 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<h1>사다리 마감 관리</h1>
+<div class="relativeWrap">
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th>선택</th>
+			<th width="40%">경기날짜</th>
+			<th>홀</th>
+			<th>짝</th>
+		</thead>
+		<tbody>
+		{% if ladderlist %}
+		{% for ladder in ladderlist %}
+		<tr class="select" id="{{ ladder.id }}">
+			<td> <input type="checkbox" name="select"></td>
+			<td><a href="{{url_for('admin_finish_ladder_detail',id=ladder.id)}}"> <strong>{{ladder.date}} 의 사다리 목록</strong></a></td>
+			<td>{{ ladder.odd_rate }}</td>
+			<td>{{ ladder.even_rate }}</td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		{% endif %}
+		</tbody>
+	</table>
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

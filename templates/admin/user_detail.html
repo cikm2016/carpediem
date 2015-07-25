@@ -40,9 +40,9 @@
 	</tr>
 	<tr>
 		<th>보유금액</th>
-		<td> {{ user.money_crt }}</td>
+		<td class="toComma"> {{ user.money_crt }}</td>
 		<th>총 충전금액</th>
-		<td> {{ user.money_charge }}</td>
+		<td class="toComma"> {{ user.money_charge }}</td>
 		<th>총 배팅횟수</th>
 		<td> {{ user.bet_cnt }}</td>
 	</tr>
@@ -104,6 +104,14 @@
 		<td class="toComma">{{leveldata.special_maxbet}}</td>
 		<th>스페셜 당첨최대</th>
 		<td class="toComma">{{leveldata.special_maxgain}}</td>
+	</tr>
+	<tr>
+		<th>사다리 배팅최소 </th>
+		<td class="toComma">{{leveldata.ladder_minbet}}</td>
+		<th>사다리 배팅최대</th>
+		<td class="toComma">{{leveldata.ladder_maxbet}}</td>
+		<th>사다리 당첨최대</th>
+		<td class="toComma">{{leveldata.ladder_maxgain}}</td>
 	</tr>
 	{% endif %}
 </table>

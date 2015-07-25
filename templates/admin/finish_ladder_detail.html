@@ -1,0 +1,41 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<div class="relativeWrap">
+	<h1>{{date}} 사다리 게임 마감</h1>
+	<p class="topBtnWrap">
+	<button class="btn sBtn pinkBtn select_all">전체선택</button>
+	<button class="btn sBtn ladder_detail_all_finish">선택적용</button>
+	</p>
+
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th width="20%">선택</th>
+			<th width="40%">회차</th>
+			<th>결과</th>
+		</thead>
+		<tbody>
+		{% if ladderlist %}
+		{% for ladder in ladderlist %}
+		<tr class="select" id="{{ ladder.id }}">
+			<td> <input type="checkbox" name="select"></td>
+			<td> <strong>{{ladder.number}}회차</strong></td>
+			<td> 
+				<select class="form-control" name="win_{{ladder.id}}">
+					<option value="0" {% if ladder.win == 0 %}selected{%endif%}>미정</option>
+					<option value="1" {% if ladder.win == 1 %}selected{%endif%}>홀</option>
+					<option value="-1" {% if ladder.win == -1 %}selected{%endif%}>짝</option>
+				</select>
+			</td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		{% endif %}
+		</tbody>
+	</table>
+
+</div>
+{% endblock %}
+
+
+
+

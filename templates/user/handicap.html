@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block contents %}
-<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit01.gif') }}" alt="승무패" /></p>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit02.gif') }}" alt="핸디캡" /></p>
 <div class="vsLeft">
 	<table class="userDataTable sUserDataTable">
 		<colgroup>
@@ -29,7 +29,7 @@
 				<div class="battingContents" id="{{game.id}}">
 
 				<p class="date">{{ game.date.strftime('%Y-%m-%d %H:%M') }}</p>
-				<p class="clickbox victory home {%if game.win == 1%}clicked{%endif%}"><span class="team">{{game.home}}</span><span class="distribution rate">{{game.home_rate}}</span></p>
+				<p class="clickbox victory home {%if game.win == 1%}clicked{%endif%}"><span class="team">{{game.home}}(-{{game.handicap}})</span><span class="distribution rate">{{game.home_rate}}</span></p>
 				{% if game.draw_rate == 0 %}
 				<p class="draw">vs</p>
 				{% else %}
@@ -55,4 +55,5 @@
 </div><!-- vsLeft -->
 
 	{% endblock %}
+
 

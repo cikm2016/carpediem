@@ -14,8 +14,8 @@
 		</div><!-- topUtilWrap -->
 		<ul id="uGnb">
 			<li {%if menu=="cross" %}class="hover"{% endif %}><a href="{{url_for('user_cross')}}">승무패</a></li>
-			<li><a href="#">핸디캡</a></li>
-			<li><a href="#">스페셜</a></li>
+			<li {%if menu=="handicap" %}class="hover"{% endif %}><a href="{{url_for('user_handicap')}}">핸디캡</a></li>
+			<li {%if menu=="special" %}class="hover"{% endif %}><a href="{{url_for('user_special')}}">스페셜</a></li>
 			<li {%if menu=="ladder" %}class="hover"{% endif %}><a href="{{ url_for('user_named_ladder') }}">사다리</a></li>
 			<li><a href="#">달팽이</a></li>
 			<li {%if menu=="result" %}class="hover"{% endif %}><a href="{{ url_for('user_result') }}">경기결과</a></li>

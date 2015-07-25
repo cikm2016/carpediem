@@ -3,8 +3,8 @@
 <h1>마감 경기 복원</h1>
 <table class="dataTable tableStyle01">
 	<thead>
-		<th width="5%">종목</th>
 		<th width="15%">리그명</th>
+		<th >게임종류</th>
 		<th width="10%">경기일자</th>
 		<th width="15%">승(홈팀)</th>
 		<th width="5%">승</th>
@@ -14,16 +14,26 @@
 		<th>홈</th>
 		<th>VS</th>
 		<th>원정</th>
-		<th>상태</th>
 		<th>마감</th>
 	</thead>
 	<tbody>
 	{% if gamelist %}
 	{% for game in gamelist %}
 	<tr class="" id="{{ game.id }}">
-		<td> {{game.league_detail.league.sport}}</td>
 		<td> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
-		<td>{{ game.date }}</td>
+			<td>
+			{% if game.league_detail.menu == 1%}
+			승무패
+			{% elif game.league_detail.menu == 2%} 
+			핸디캡
+			{% elif game.league_detail.menu == 3%} 
+			스페셜	
+			{% elif game.league_detail.menu == 4%} 
+			사다리
+			{% else %}
+			{% endif %}	
+			</td>
+		<td>{{ game.date.strftime('%Y-%m-%d %H:%M') }}</td>
 		<td>{{ game.home }} {{game.league_detail.name}}</td>
 		<td>{{ game.home_rate }}</td>
 		<td>{{ game.draw_rate }}</td>
@@ -32,12 +42,10 @@
 		<td>{{game.home_score}}</td>
 		<td>VS</td>
 		<td>{{game.away_score}}</td>
-		<td>종료</td>
-	</td>
-	<td>
-		<button class="btn mBtn btn-xs cross_restore">복원 </button>
-	</td>
-</tr>
+		<td>
+			<button class="btn mBtn btn-xs cross_restore">복원 </button>
+		</td>
+	</tr>
 {% endfor %}
 {% else %}
 {% endif %}

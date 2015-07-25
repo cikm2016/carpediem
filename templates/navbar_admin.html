@@ -13,16 +13,17 @@
 					<ul class="hiddenX">
 						<li><a href="{{url_for('admin_register_game')}}">경기등록</a></li>
 						<li><a href="{{url_for('admin_register_cross')}}">승무패관리</a></li>
-						<li><a href="#">핸디캡관리</a></li>
-						<li><a href="#">스페셜관리</a></li>
+						<li><a href="{{url_for('admin_register_handicap')}}">핸디캡관리</a></li>
+						<li><a href="{{url_for('admin_register_special')}}">스페셜관리</a></li>
 						<li><a href="{{url_for('admin_register_ladder')}}">사다리관리</a></li>
 					</ul>
 				</li>
 				<li {% if menu=='finish'%}class="hover"{%endif%}><a href="#">경기마감/복원</a>
 					<ul class="hiddenX">
 						<li><a href="{{url_for('admin_finish_cross')}}">승무패마감</a></li>
-						<li><a href="{{url_for('admin_finish_cross')}}">핸디캡마감</a></li>
-						<li><a href="{{url_for('admin_finish_cross')}}">스페셜마감</a></li>
+						<li><a href="{{url_for('admin_finish_handicap')}}">핸디캡마감</a></li>
+						<li><a href="{{url_for('admin_finish_special')}}">스페셜마감</a></li>
+						<li><a href="{{url_for('admin_finish_ladder')}}">사다리마감</a></li>
 						<li><a href="{{url_for('admin_finish_restore')}}">마감경기복원</a></li>
 					</ul>
 				</li>

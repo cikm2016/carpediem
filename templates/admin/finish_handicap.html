@@ -1,0 +1,51 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn pinkBtn select_all">전체선택</button>
+<button class="btn mBtn handicap_finish_all">선택마감</button>
+</p>
+<h1>핸디캡 마감</h1>
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th width="1%">선택</th>
+			<th width="5%">종목</th>
+			<th width="20%">리그명</th>
+			<th width="10%">경기일자</th>
+			<th width="15%">승(홈팀)</th>
+			<th width="5%">핸디</th>
+			<th width="3%">승</th>
+			<th width="3%">무</th>
+			<th width="3%">패</th>
+			<th width="15%">패(원정팀)</th>
+			<th width="7%">홈</th>
+			<th>VS</th>
+			<th width="7%">원정</th>
+		</thead>
+		<tbody>
+			{% if gamelist %}
+			{% for game in gamelist %}
+			<tr class="select" id="{{ game.id }}">
+				<td> <input type="checkbox" name="select"></td>
+				<td> {{game.league_detail.league.sport}}</td>
+				<td style="text-align:left;"> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
+				<td>{{ game.date.strftime('%Y-%m-%d %H:%M') }}</td>
+				<td style="text-align:left;">{{ game.home }} {{game.league_detail.name}}</td>
+				<td>{{ game.handicap }}</td>
+				<td>{{ game.home_rate }}</td>
+				<td>{{ game.draw_rate }}</td>
+				<td>{{ game.away_rate }}</td>
+				<td style="text-align:right;">{{game.league_detail.name}}{{ game.away }} </td>
+				<td><input type="text" class="form-control input-sm" name="home_score_{{game.id}}" value="{{game.home_score}}"></td>
+				<td>VS</td>
+				<td><input type="text" class="form-control input-sm" name="away_score_{{game.id}}" value="{{game.away_score}}"></td>
+				</td>
+			</tr>
+			{% endfor %}
+			{% else %}
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
