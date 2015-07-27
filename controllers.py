@@ -56,7 +56,7 @@ def main():
 
 			if user is None:
 				error = u'존재하지 않는 아이디입니다'
-			elif not check_password_hash(user.password, password):
+			elif user.password != password:
 				error = u'비밀번호가 틀렸습니다.'
 			else:
 				if user.allow == 0:
@@ -100,12 +100,9 @@ def main_admin():
 			if user is None:
 				pass
 			#elif not check_password_hash(user.password, password):
-			elif user.password == password:
-				session.permanent = True
-				session['admin'] = user.id
-				return redirect(url_for('admin_main'))
+			elif user.password != password:
+				error = u'비밀번호가 틀렸습니다.'
 			else:
-				print password
 				if user.allow != 2:
 					return render_template('main_admin.html')
 				else:

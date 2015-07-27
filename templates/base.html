@@ -22,6 +22,25 @@
     <script src="{{ url_for('static', filename='js/moment.js') }}"></script>
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
+<script>
+   $(function(){
+      $(window).scroll(function(){
+         var hh = 250; 
+   
+            var scrollTop = $(window).scrollTop();
+            if ( scrollTop < hh) {
+            $('#sidebar').stop(); 
+            $('#sidebar').animate({"top":   0 + "px"},1000);           
+            } 
+         else{   
+               $('#sidebar').stop(); 
+               $('#sidebar').animate({"top":  scrollTop -260+ "px"},1000); 
+         }
+
+   });
+
+});
+</script>
 {% endblock %}
 </body>
 </html>

@@ -36,7 +36,7 @@
 
 					<p class="state">
 					{% if v.game.finish == 0%}
-					경기중
+					대기중
 					{% else %}
 					{% if v.game.win == 1 %}홈승{% elif v.game.win == 0 %}무{% else %}원정승{%endif%}
 					: {% if v.isSuccess == 1 %}적중{% else %}미적중{% endif %}
@@ -70,7 +70,7 @@
 					<div class="how">
 						<p><strong>배팅시간</strong><span>{{history[loop.index-1].date}}</span></p>
 						<p>
-						<strong>배팅방식</strong>
+						<strong>배팅게임</strong>
 						<span>
 							{% if history[loop.index-1].game == 1%}
 							승무패

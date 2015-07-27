@@ -56,7 +56,7 @@ $(document).ready(function(){
 	});
 	$('.chk_login').click(function(){
 		var id = $(this).closest('tr').attr('id');
-		popupOpen('/admin/user/loginlog/'+id, 'width=800, height=800, resizable=yes,scrollbars=yes;');
+		popupOpen('/admin/user/loginlog/'+id, 'width=800, height=1000, resizable=yes,scrollbars=yes;');
 	});
 	$('.detail').click(function(){
 		var id = $(this).closest('tr').attr('id');
@@ -1707,19 +1707,19 @@ $(document).ready(function(){
 	$('#charge2').click(function(){
 		var money = $('#chargemoney').val()
 		if (money == ''){
-			$('#chargemoney').val(numberWithCommas(30000));
+			$('#chargemoney').val(numberWithCommas(50000));
 		}
 		else{
-			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+30000));
+			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+50000));
 		}
 	});
 	$('#charge3').click(function(){
 		var money = $('#chargemoney').val()
 		if (money == ''){
-			$('#chargemoney').val(numberWithCommas(50000));
+			$('#chargemoney').val(numberWithCommas(100000));
 		}
 		else{
-			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+50000));
+			$('#chargemoney').val(numberWithCommas(parseInt(money.replace(/\,/g,''))+100000));
 		}
 	});
 	$('#charge_init').click(function(){

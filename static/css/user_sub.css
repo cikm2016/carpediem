@@ -4,7 +4,7 @@
 
 
 #contentsWrap { width:100%; background:url(../images/sub_common/sub_bg.gif) no-repeat center top;  min-height:650px; }
-#contents { padding-top:40px;  }
+#contents { padding-top:40px; position:relative;  }
 #contents .subTitle { padding-bottom:30px;  }
 
 
@@ -66,6 +66,10 @@ a.pinkBtn {   background:#ed9e62; }
 
 a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
 
+
+
+/*½Â¹«ÆÐ*/
+
 .vsLeft { width:800px; float:left; margin-right:10px;  }
 .userDataTable { margin-bottom:30px;  width:100%; border-collapse:collapse; background:url(../images/sub_common/bar_bg.gif) no-repeat left top; }
 .sUserDataTable {background:url(../images/sub_common/bar_bg_s.gif) no-repeat left top;}
@@ -114,7 +118,7 @@ a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
 
 
 .vsRight { width:190px; float:left;position:relative; position:relative;   }
-.vsRight #sidebar { width:188px; border:1px solid #444; position:fixed;    }
+.vsRight #sidebar { width:188px; border:1px solid #444; position:absolute; top:0px; padding-bottom:10px;    }
 .vsRight #sidebar h3 {  }
 .vsRight #sidebar dl  { margin-bottom:20px; width:158px; margin-left:15px; margin-right:15px; border:1px solid #252525;  }
 .vsRight #sidebar dl dt {text-align:center; background:#252525; color:#fff; padding:5px 0px;  }
@@ -131,3 +135,38 @@ a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
 .vsRight #sidebar .footCon .team  {float:left;  width: 60px; text-align:right;padding-right:10px;  font-size:14px; font-weight:bold;}
 .vsRight #sidebar .footCon .team span {display:block; color:#888;line-height:1.2;  }
 .vsRight #sidebar .footCon .team span.check { color:#ffe670; text-decoration:underline;   }
+
+
+/*ÃæÀü*/
+
+.textBox { width:918; background:#000; border:1px solid #ffe670;padding:40px;   }
+.textBox .charge .topText { padding-bottom:20px;  }  
+.textBox .charge .topText p { font-size:16px; color:#ffe670; padding-bottom:10px;  }  
+.textBox .charge .allMoney { margin-bottom:10px; padding:0px 30px; width:858px; height:80px; background:#252525;  }
+.textBox .charge .allMoney .title {float:left; padding-top:25px; font-size:20px; font-weight:bold; color:#ffe670;  }
+.textBox .charge .allMoney .money  {padding-top:10px; float:right; font-size:40px; font-weight:bold; color:#ffe670;  }
+.textBox .charge .allMoney .money strong {font-size:40px; }
+.textBox .charge .chargeMoney {  margin-bottom:10px;  padding:0px 30px; width:858px; height:80px; background:#252525;  }
+.textBox .charge .chargeMoney .title {float:left; padding-top:25px;  font-size:20px; padding-right:40px; font-weight:bold; color:#ffe670; }
+.textBox .charge .chargeMoney .money  {margin-right:50px; margin-top:15px;text-align:right;  width:230px;float:left;padding-left:20px;   padding-right:20px;background:#000; font-size:34px; font-weight:bold; color:#ffe670;  }
+.textBox .charge .chargeMoney .buttonWrap { float:left; padding-top:20px;   }
+.textBox .charge .chargeMoney .buttonWrap button { width:100px; height:40px;  }
+.textBox .charge .chargeMoney .money input{ border:0px; width:220px; height:30px; background:#000; font-size:34px; color:#ffe670; text-align:right; }
+.textBox .charge .bankWrap  {  margin-bottom:20px;  padding:0px 30px; width:858px; height:50px; background:#252525;    }
+.textBox .charge .bankWrap  p { font-size:16px;color:#ffe670; padding-top:15px; }
+.textBox .charge .request { text-align:center;  }
+.textBox .charge .request button {width:300px; height:60px; font-size:30px; font-weight:bold; color:#000; }
+
+
+.chargeExchangeWrap {} 
+.chargeExchangeWrap h1 {  font-size:30px; font-weight:bold; color:#ffe670;padding-bottom:20px;  } 
+.chargeTable {margin-bottom:30px;    width:100%; border-collapse:collapse; background:url(../images/sub_common/bar_bg.gif) no-repeat left top; } 
+.chargeTable thead th { height:50px; background:url(../images/board/bar_line.gif) no-repeat left top; color:#000; font-size:16px; }
+.chargeTable thead th:first-child { background:none;  }
+.chargeTable tbody td {text-align:center; background:#252525; padding:10px 0px 5px; line-height:1.5; font-size:16px; color:#fff;  border-bottom:1px solid #444; }
+.chargeTable tbody td .ing { font-weight:bold; color:#ffe670;  }
+.chargeTable tbody td.money { font-size:30px; font-weight:bold; color:#ffe670;  }
+
+.chargeTable tbody tr:hover  td { background: #c6562a;  }
+.chargeTable tbody .clicked td {     background: #c6562a; }
+
