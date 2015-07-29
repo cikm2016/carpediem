@@ -2,6 +2,9 @@
 {% block contents %}
 <div class="relativeWrap">
 <p class="topBtnWrap">
+<button class="btn mBtn view_bet">배팅내역</button>
+<button class="btn mBtn view_charge">충전내역</button>
+<button class="btn mBtn view_exchange">환전내역</button>
 <button class="btn mBtn pinkBtn message_open">쪽지전송</button>
 </p>
 <h1> 회원 상세 정보</h1>
@@ -117,7 +120,7 @@
 </table>
 <div align="center">
 	<button class="btn mBtn user_modify">수정</button>
-	<button class="btn mBtn popclose">닫기</button>
+	<button class="btn mBtn greyBtn popclose">닫기</button>
 </div>
 <input type="hidden" name="id" value="{{user.id}}"/>
 {% endblock %}

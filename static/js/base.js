@@ -73,6 +73,21 @@ $(document).ready(function(){
 	$('.reload').click(function(){
 		location.reload();
 	});
+	$('.view_bet').click(function(){
+		var id = $('input[name="id"]').val();
+		popupOpen('/admin/user/view/bet/'+id, 'width=1000, height=800, resizable=no,scrollbars=yes;');
+
+	})
+	$('.view_charge').click(function(){
+		var id = $('input[name="id"]').val();
+		popupOpen('/admin/user/view/charge/'+id, 'width=1000, height=800, resizable=no,scrollbars=yes;');
+
+	})
+	$('.view_exchange').click(function(){
+		var id = $('input[name="id"]').val();
+		popupOpen('/admin/user/view/exchange/'+id, 'width=1000, height=800, resizable=no,scrollbars=yes;');
+
+	})
 	/* 관리자가 유저 정보 수정 */
 	$('.user_modify').click(function(){
 		var check = confirm('수정 하시겠습니까?');
@@ -93,6 +108,7 @@ $(document).ready(function(){
 				success : function(resp){
 					if(resp.success){
 						alert('수정 되었습니다.');
+						location.reload();
 					}
 					else{
 						alert('잘못된 아이디값입니다.');

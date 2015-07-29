@@ -1,0 +1,27 @@
+{% extends "layout_popup.html" %}
+{% block contents %}
+{% if chargelist %}
+<h1>{{user.account}} 배팅내역</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th>충전금액</th>
+		<th>상태</th>
+		<th>충전신청일</th>
+		<th>충전완료일</th>
+	</thead>
+	<tbody>
+{% for h in chargelist %}
+	<tr class="" id="{{ h.id }}">
+		<td class="toComma">{{ h.money }}</td>
+		<td>{% if h.charged == 1%}처리완료{%else%}처리중{% endif %}</td>
+		<td>{{ h.date.strftime('%Y-%m-%d %H:%m') }}</td>
+		<td>{{ h.date_finished.strftime('%Y-%m-%d %H:%m') }}</td>
+	</tr>
+{% endfor %}
+	</tbody>
+</table>
+
+
+{% endif %}
+{% endblock %}
+

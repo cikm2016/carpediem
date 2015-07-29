@@ -19,6 +19,27 @@
 		</td>
 	</tr>				
 	</tbody>
+	<form method="post" action="{{url_for('comment_create')}}" >
+	<tr>
+		<td class="replyWrite">
+			<label>댓글쓰기</label>
+			<textarea id="replayTextarea" name="comment" rows="14" cols="78" placeholder="댓글을 입력하세요."></textarea>
+			<input class="replayOk" type="submit" />
+		</td>
+	</tr>
+	<input type="hidden" value="{{article.id}}" name="id">
+	</form>
+		{% if comments %}
+		{% for comment in comments %}
+		<tr class="each_comment" id="{{ comment.id }}">
+		<td class="reply">
+			<p class="id">{{ comment.user.nickname}}</p>
+			<p class="text">{{ comment.content }}</p>
+			<p class="date">{{ comment.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+		</td>
+		{% endfor %}
+		{% endif %}
+
 </table><!-- boardTable -->		
 <p class="tCenter">
 <a class="btn" href="{{ url_for('article_update', id=article.id) }}">수정</a> 
@@ -31,27 +52,6 @@
 
 
 
-<div class="article_body">
-	<div class="col-sm-12">내용:  </div>
-	<!-- comments -->
-	아래로 댓글 리스트
-	<div class="comments">
-		{% if comments %}
-		{% for comment in comments %}
-		<div class="each_comment" id="{{ comment.id }}">
-			<div class="col-sm-2">{{ comment.user.nickname}}</div>
-			<div class="col-sm-7">{{ comment.content }}</div>
-			<small> {{ comment.date_created.strftime('%Y-%m-%d %H:%M:%S') }} </small>
-		</div>
-		{% endfor %}
-		{% endif %}
-	</div>
-	<form method="post" action="{{url_for('comment_create')}}" >
-		<textarea name="comment"  class="form-control" rows="3" width="100%" placeholder="댓글을 입력하세요."> </textarea>
-		<button type="submit" href="#" class="btn">댓글 입력</button>
-		<input type="hidden" value="{{article.id}}" name="id">
-	</form>
-</div>
 {% endblock %}
 
 

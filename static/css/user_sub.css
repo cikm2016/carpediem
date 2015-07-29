@@ -8,7 +8,7 @@
 #contents .subTitle { padding-bottom:30px;  }
 
 
-.boardTable {  margin-bottom:30px;  width:100%; border-collapse:collapse; background:url(../images/board/bar_bg.gif) no-repeat left top;  }
+.boardTable {  margin-bottom:30px;   width:100%; border-collapse:collapse;  background:url(../images/board/bar_bg.gif) no-repeat left top;  }
 .boardTable thead th { height:50px; background:url(../images/board/bar_line.gif) no-repeat left top; color:#000; font-size:16px; }
 .boardTable thead th:first-child { background:none;  }
 .boardTable tbody td { text-align:center; padding:10px 20px; line-height:1.5;  border-bottom:1px solid #4f4011;  font-size:16px; color:#888; }
@@ -29,6 +29,17 @@
 
 
 
+/*¸®ÇÃ*/
+	
+.boardTable tbody .replyWrite {  }
+.boardTable tbody .replyWrite label {  float:left;text-align:left;  padding-top:20px;  display:block; height:60px;   font-size:14px;color:#ffe670;width:80px;   }
+.boardTable tbody .replyWrite textarea#replayTextarea {float:left;  margin-right:20px; width:778px;height:80px; overflow-y:auto;  border:1px solid #4f4011; background:#252525;  font-size:14px;color:#ffe670;  }
+.boardTable tbody .replyWrite .replayOk { float:left;  width:80px; height:80px; border:0px; font-size:14px; background:#e4bb15; cursor: pointer; border-radius: 3px;color:#000; }
+.boardTable tbody .reply { padding-right:0px;   float:left;   }
+.boardTable tbody .reply .id { float:left;text-align:left;  display:block;    font-size:14px;color:#ffe670;width:80px;   }
+.boardTable tbody .reply .text {text-align:left;  margin-right:10px; width:748px;font-size:14px; color:#fff; float:left;  }
+.boardTable tbody .reply .date { float:left; font-size:14px; color:#888;width:140px;   }
+/*¸®ÇÃ*/
 
 .iframeWrap {overflow: hidden;}
 .iframeContents {margin-top: -70px;}
@@ -118,40 +129,42 @@ a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
 
 
 .vsRight { width:190px; float:left;position:relative; position:relative;   }
-.vsRight #sidebar { width:188px; border:1px solid #444; position:absolute; top:0px; padding-bottom:10px;    }
+.vsRight #sidebar { width:188px; border:1px solid #444;float:left; padding-bottom:10px; position:absolute; top:0px;  }
 .vsRight #sidebar h3 {  }
 .vsRight #sidebar dl  { margin-bottom:20px; width:158px; margin-left:15px; margin-right:15px; border:1px solid #252525;  }
 .vsRight #sidebar dl dt {text-align:center; background:#252525; color:#fff; padding:5px 0px;  }
-.vsRight #sidebar dl dd { text-align:right; color:#83650b; font-size:20px; font-weight:bold; padding-right:10px; width:148px;   }
+.vsRight #sidebar dl dd { text-align:right; color:#83650b; font-size:20px; font-weight:bold; padding-right:10px; width:148px;  }
 .vsRight #sidebar dl.all  { margin-top:30px; margin-bottom:0px;   }
 .vsRight #sidebar dl.all dt {background:#775b08;  }
-.vsRight #sidebar dl.all dd {text-align:right; color:#ffe670; font-size:20px; font-weight:bold;    }
-.vsRight #sidebar .max { border:0px; float:left; width:160px; height:30px; padding:0px; margin:0px;margin-left:15px; margin-right:15px;  margin-bottom:20px;  }
+.vsRight #sidebar dl.all dd {text-align:right; color:#ffe670; font-size:20px; font-weight:bold;  padding:0px;  width:158px;  }
+.vsRight #sidebar dl.all dd input { width:100%; background:#000; color:#83650b;border:0px; font-size:16px; padding-right:10px; width:148px; font-weight:bold;   text-align:right; }
+.vsRight #sidebar .max { border:0px; display:block; width:160px; height:30px; padding:0px; margin:0px;margin-left:15px; margin-right:15px;  margin-bottom:20px;  }
 
-.vsRight #sidebar .moneyGo { border:0px; width:167px; height:60px; padding:0px; margin:0px;margin-left:10px; margin-right:10px;   }
-.vsRight #sidebar .moneyGo img { width:170px;height:60px;  }
-.vsRight #sidebar .footCon { width:178px;  float:left;padding-left:10px; padding-right:10px;  padding-top:10px; padding-bottom:10px;  }
-.vsRight #sidebar .footCon .distribution {float:left;  width: 65px; text-align:center; color:#ffe670; font-size:20px; font-weight:bold;}
-.vsRight #sidebar .footCon .team  {float:left;  width: 60px; text-align:right;padding-right:10px;  font-size:14px; font-weight:bold;}
+.vsRight #sidebar .moneyGo { border:0px;  display:block;width:167px; height:60px; padding:0px; margin:0px;margin-left:10px; margin-right:10px;   }
+.vsRight #sidebar .footCon { width:178px; padding-left:10px; padding-right:10px;  padding-top:10px; padding-bottom:10px;  }
+.vsRight #sidebar .footCon td { padding:5px 0px; border-bottom:1px solid #444;  }
+.vsRight #sidebar .footCon .distribution {  width: 65px; text-align:center; color:#ffe670; font-size:20px; font-weight:bold;}
+.vsRight #sidebar .footCon .team  { width: 60px; text-align:right;padding-right:10px;  font-size:14px; font-weight:bold;}
 .vsRight #sidebar .footCon .team span {display:block; color:#888;line-height:1.2;  }
 .vsRight #sidebar .footCon .team span.check { color:#ffe670; text-decoration:underline;   }
 
+.vsRight #sidebar .footCon .del a {display:block;   padding-top:5px; }
 
 /*ÃæÀü*/
 
-.textBox { width:918; background:#000; border:1px solid #ffe670;padding:40px;   }
+.textBox { width:918px; background:#000; border:1px solid #ffe670;padding:40px; float:left;  }
 .textBox .charge .topText { padding-bottom:20px;  }  
 .textBox .charge .topText p { font-size:16px; color:#ffe670; padding-bottom:10px;  }  
 .textBox .charge .allMoney { margin-bottom:10px; padding:0px 30px; width:858px; height:80px; background:#252525;  }
 .textBox .charge .allMoney .title {float:left; padding-top:25px; font-size:20px; font-weight:bold; color:#ffe670;  }
-.textBox .charge .allMoney .money  {padding-top:10px; float:right; font-size:40px; font-weight:bold; color:#ffe670;  }
+.textBox .charge .allMoney .money  {padding-top:10px; float:right; font-size:20px; font-weight:bold; color:#ffe670;  }
 .textBox .charge .allMoney .money strong {font-size:40px; }
 .textBox .charge .chargeMoney {  margin-bottom:10px;  padding:0px 30px; width:858px; height:80px; background:#252525;  }
 .textBox .charge .chargeMoney .title {float:left; padding-top:25px;  font-size:20px; padding-right:40px; font-weight:bold; color:#ffe670; }
-.textBox .charge .chargeMoney .money  {margin-right:50px; margin-top:15px;text-align:right;  width:230px;float:left;padding-left:20px;   padding-right:20px;background:#000; font-size:34px; font-weight:bold; color:#ffe670;  }
+.textBox .charge .chargeMoney .money  {margin-right:50px; margin-top:15px;text-align:right;  width:240px;float:left;padding-left:10px;height:40px; padding-top:10px;    padding-right:20px;background:#000; font-size:20px; color:#ffe670;  }
+.textBox .charge .chargeMoney .money  input { border:0px; width:220px;height:30px;  background:#000; font-size:34px; color:#ffe670; text-align:right; }
 .textBox .charge .chargeMoney .buttonWrap { float:left; padding-top:20px;   }
 .textBox .charge .chargeMoney .buttonWrap button { width:100px; height:40px;  }
-.textBox .charge .chargeMoney .money input{ border:0px; width:220px; height:30px; background:#000; font-size:34px; color:#ffe670; text-align:right; }
 .textBox .charge .bankWrap  {  margin-bottom:20px;  padding:0px 30px; width:858px; height:50px; background:#252525;    }
 .textBox .charge .bankWrap  p { font-size:16px;color:#ffe670; padding-top:15px; }
 .textBox .charge .request { text-align:center;  }
@@ -170,3 +183,22 @@ a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
 .chargeTable tbody tr:hover  td { background: #c6562a;  }
 .chargeTable tbody .clicked td {     background: #c6562a; }
 
+
+
+.myInfoWrap { width:100%; float:left;  }
+.myInfoWrap .myInfo{ width:100%; float:left;background:url(../images/sub_common/profile_img.png) no-repeat left bottom;  min-height:360px;margin-bottom:20px;   }
+.myInfoWrap .myInfo h1 {  font-size:30px; font-weight:bold; color:#ffe670; float:left;  }
+.myInfoWrap .myInfo .myContents { margin-left:285px;  }
+.myInfoWrap .infoTable { width:100%;  }
+.myInfoWrap .infoTable tbody th { padding:15px 10px 20px 10px; border-bottom:10px solid #000; color:#ffe670; font-size:16px; background:#252525;  }
+.myInfoWrap .infoTable tbody td { padding:15px 10px 20px 10px; border-bottom:10px solid #000; color:#fff; font-size:16px; background:#252525;  }
+.myInfoWrap h2 { font-size:20px; font-weight:bold; color:#ffe670;margin-bottom:10px;  }
+
+.message {padding-top:30px; clear:both; position:relative;  }
+.message h1 { font-size:30px; font-weight:bold; color:#ffe670;margin-bottom:10px; }
+.message .delBtn { position:absolute; top:40px; right:0px;  }
+.messageTable {margin-bottom:30px;    width:100%; border-collapse:collapse; background:url(../images/sub_common/bar_bg.gif) no-repeat left top; } 
+.messageTable thead th { height:50px; background:url(../images/board/bar_line.gif) no-repeat left top; color:#000; font-size:16px; }
+.messageTable thead th:first-child { background:none;  }
+.messageTable tbody td {text-align:center; background:#252525; padding:20px 0px 15px; line-height:1.5; font-size:16px; color:#fff;  border-bottom:1px solid #444; }
+.messageTable tbody td .ing { font-weight:bold; color:#ffe670;  }

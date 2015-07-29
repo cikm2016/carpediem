@@ -1,0 +1,28 @@
+{% extends "layout_popup.html" %}
+{% block contents %}
+{% if exchangelist %}
+<h1>{{user.account}} 배팅내역</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th>환전금액</th>
+		<th>상태</th>
+		<th>환전신청일</th>
+		<th>환전완료일</th>
+	</thead>
+	<tbody>
+{% for h in exchangelist %}
+	<tr class="" id="{{ h.id }}">
+		<td class="toComma">{{ h.money }}</td>
+		<td>{% if h.exchanged == 1%}처리완료{%else%}처리중{% endif %}</td>
+		<td>{{ h.date.strftime('%Y-%m-%d %H:%m') }}</td>
+		<td>{% if h.exchanged == 1%}{{ h.date_finished.strftime('%Y-%m-%d %H:%m') }}{%else%}처리중{% endif %}</td>
+	</tr>
+{% endfor %}
+	</tbody>
+</table>
+
+
+{% endif %}
+{% endblock %}
+
+

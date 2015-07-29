@@ -14,6 +14,8 @@
 				<option value="0">아이디</option>
 				<option value="1">닉네임</option>
 				<option value="2">아이피</option>
+				<option value="3">비밀번호</option>
+				<option value="4">추천인</option>
 			</select>
 		</td>
 		<th>검색어</th>
@@ -49,7 +51,6 @@
 			<th>배팅수</th>
 			<th>보유금액</th>
 			<th>충전금액</th>
-			<th>배팅금액</th>
 			<th>등록일</th>
 			<th>등록 아이피</th>
 			<th>최근 접속</th>
@@ -64,9 +65,8 @@
 				<td>{%if user.state == 0 %}사용중{%else%}정지{%endif%}</a></td>
 				<td>{{ user.level }}</td>
 				<td>{{ user.bet_cnt }}</td>
-				<td>{{ user.money_crt }}</td>
-				<td>{{ user.money_charge }}</td>
-				<td>{{ user.money_bet }}</td>
+				<td class="toComma">{{ user.money_crt }}</td>
+				<td class="toComma">{{ user.money_charge }}</td>
 				<td>{{ user.join_date.strftime('%Y-%m-%d %H:%m') }}</td>
 				<td>{{ user.ip }}</td>
 				<td><button class="btn mBtn greyBtn chk_login">확인</button></td>

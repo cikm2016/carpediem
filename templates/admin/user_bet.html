@@ -1,0 +1,30 @@
+{% extends "layout_popup.html" %}
+{% block contents %}
+{% if history %}
+{% for h in history %}
+<h1>{{user.account }} 배팅내역</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th>게임방식</th>
+		<th>배팅금액</th>
+		<th>배팅률</th>
+		<th>당첨금액</th>
+		<th>배팅시간</th>
+		<th>배팅상세보기</th>
+		</thead>
+		<tbody>
+			<tr class="" id="{{ h.id }}">
+				<td><strong>{% if h.game == 1%}승무패{% elif h.game ==2 %}핸디캡{% elif h.game ==3 %}스페셜{% else %}사다리{% endif %}</strong></td>
+				<td>{{ h.money_bet }}</td>
+				<td>{{ h.rate }}</td>
+				<td>{% if h.state == 1%}<span class="toComma">{{(h.rate*h.money_bet)|int}}원</span>{%else%}<span>0원</span>{% endif %}</a></td>
+				<td>{{ h.date.strftime('%Y-%m-%d %H:%m') }}</td>
+				<td><button class="btn mBtn">구현중</button></td>
+			</tr>
+		</tbody>
+	</table>
+
+{% endfor %}
+
+{% endif %}
+{% endblock %}

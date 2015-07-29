@@ -28,7 +28,7 @@
 					<p class="date">{{ v.game.date.strftime('%Y-%m-%d %H:%M') }}</p>
 					<p class="victory home {%if v.betting == 1 %}clicked{% endif %}"><span class="team">{{ v.game.home }}</span><span class="distribution rate">{{v.game.home_rate}}</span></p>
 					{% if v.game.draw_rate == 0 %}
-					<p class="draw">vs</p>
+					<p class="draw">{%if v.game.league_detail.menu == 2 %}{{v.game.handicap}}{%else%}vs{%endif%}</p>
 					{% else %}
 					<p class="draw {%if v.betting == 0 %}clicked{% endif %}"><span class="rate">{{ v.game.draw_rate }}</span></p>
 					{% endif %}	
@@ -38,8 +38,8 @@
 					{% if v.game.finish == 0%}
 					대기중
 					{% else %}
-					{% if v.game.win == 1 %}홈승{% elif v.game.win == 0 %}무{% else %}원정승{%endif%}
-					: {% if v.isSuccess == 1 %}적중{% else %}미적중{% endif %}
+					{%if v.game.league_detail.menu == 4 %}{%else%}{{v.game.home_score}}:{{v.game.away_score}}{%endif%}
+					- {% if v.isSuccess == 1 %}적중{% else %}미적중{% endif %}
 					{% endif %}
 					</p>
 

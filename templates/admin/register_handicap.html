@@ -17,11 +17,10 @@
 			<th width="15%">리그명</th>
 			<th width="10%">경기일자</th>
 			<th width="15%">승(홈팀)</th>
-			<th width="5%">핸디</th>
 			<th width="5%">승</th>
-			<th width="5%">무</th>
 			<th width="5%">패</th>
 			<th width="15%">패(원정팀)</th>
+			<th width="5%">핸디</th>
 			<th>상태</th>
 		</thead>
 		<tbody>
@@ -33,11 +32,10 @@
 				<td style="text-align:left;"> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
 				<td>{{ game.date.strftime('%Y-%m-%d %H:%M') }}</td>
 				<td style="text-align:left;">{{ game.home }} {{game.league_detail.name}}</td>
-				<td><input type="text" class="form-control" name="handicap_{{game.id}}" value="{{ game.handicap }}"/></td>
 				<td><input type="text" class="form-control" name="home_rate_{{game.id}}" value="{{ game.home_rate }}"/></td>
-				<td><input type="text" class="form-control" name="draw_rate_{{game.id}}" value="{{ game.draw_rate }}"/></td>
 				<td><input type="text" class="form-control" name="away_rate_{{game.id}}" value="{{ game.away_rate }}"/></td>
 				<td style="text-align:right;">{{game.league_detail.name}} {{ game.away }} </td>
+				<td><input type="text" class="form-control" name="handicap_{{game.id}}" value="{{ game.handicap }}"/></td>
 				<td>
 					<select class="form-control" name="state_{{game.id}}">
 						<option value="0" {% if game.state == 0%}selected{%endif%}>등록</option>

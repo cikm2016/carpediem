@@ -1,9 +1,9 @@
 {% extends "layout_main.html" %}
 {% block contents %}
-<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit12_1.gif') }}" alt="충전환전내역" /></p>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit12_2.gif') }}" alt="충전환전내역" /></p>
 
 <div class="chargeExchangeWrap">
-	<h1>충전내역</h1>
+	<h1>환전내역</h1>
 	<table class="chargeTable">
 		<colgroup>
 			<col width="100px" />
@@ -15,21 +15,21 @@
 		<thead>
 			<tr>
 				<th>선택</th>
-				<th>충전금액</th>
+				<th>환전금액</th>
 				<th>신청일</th>
 				<th>처리일</th>
 				<th>상태</th>
 			</tr>
 		</thead>
 		<tbody>
-		{% if history %}
-		{% for h in history %}
+		{% if history_ex %}
+		{% for h in history_ex %}
 		<tr class="select" id="{{ h.id }}">
 			<td> <input type="checkbox" name="select"></td>
 			<td class="money toComma">{{ h.money }}</td>
 			<td>{{ h.date.strftime('%Y-%m-%d %H:%M') }}</td>
 			<td>{%if h.date_finished %}{{ h.date_finished.strftime('%Y-%m-%d %H:%M') }}{%else%}처리중{%endif%}</td>
-			<td>{% if h.charged == 0 %}처리중{% else %}<span class="ing">충전완료</span>{% endif %}</td>
+			<td>{% if h.exchanged == 0 %}처리중{%elif h.exchanged ==1%}<span class="ing">환전완료</span>{% else %}<span class="ing">환전거절</span>{% endif %}</td>
 		</tr>
 		{% endfor %}
 		{% else %}
@@ -42,6 +42,7 @@
 <p>&nbsp;</p>
 
 {% endblock %}
+
 
 
 

@@ -4,13 +4,18 @@
 		<div class="topUtilWrap">
 			<p class="home"><a href="{{ url_for('user_main') }}"><img src="{{ url_for('static', filename='images/main/btn_home.gif') }}" alt="home"/></a></p>
 			<p class="user">{{ g.nick }} 님 방문을 환영 합니다. </p>
-			<ul class="topUtil">
-				<li class="first"><a href="{{ url_for('user_charge') }}">충전</a></li>
-				<li><a href="{{ url_for('user_exchange') }}">환전</a></li>
-				<li><a href="{{ url_for('user_charge_history') }}">충전/환전내역</a></li>
-				<li class="my"><a href="{{ url_for('user_mypage') }}">내정보/쪽지</a> <img src="{{ url_for('static', filename='images/main/icon_new.gif') }}"  alt="new" /></li>
-				<li><a href="{{ url_for('signout') }}">로그아웃</a></li>
-			</ul>
+			<div class="topUtilBg1">
+				<div class="topUtilBg2">
+					<ul class="topUtil">
+						<li class="first"><a href="{{ url_for('user_charge') }}">충전</a></li>
+						<li><a href="{{ url_for('user_exchange') }}">환전</a></li>
+						<li><a href="{{ url_for('user_charge_history') }}">충전내역</a></li>
+						<li><a href="{{ url_for('user_exchange_history') }}">환전내역</a></li>
+						<li class="my"><a href="{{ url_for('user_mypage') }}">내정보/쪽지</a> <img src="{{ url_for('static', filename='images/main/icon_new.gif') }}"  alt="new" /></li>
+						<li><a href="{{ url_for('signout') }}">로그아웃</a></li>
+					</ul>
+				</div>
+			</div><!-- topUtilBg -->
 		</div><!-- topUtilWrap -->
 		<ul id="uGnb">
 			<li {%if menu=="cross" %}class="hover"{% endif %}><a href="{{url_for('user_cross')}}">승무패</a></li>

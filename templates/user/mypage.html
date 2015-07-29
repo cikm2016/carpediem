@@ -1,107 +1,149 @@
 {% extends "layout_main.html" %}
 {% block contents %}
-<h1> 내정보</h1>
-<table class="dataTable tableStyle01">
-	<tr>
-		<th>아이디</th>
-		<td>{{user.account}}</td>
-		<th>닉네임</th>
-		<td>{{user.nickname}}</td>
-		<th>가입일</th>
-		<td>{{user.join_date}}</td>
-	</tr>
-	<tr>
-		<th>추천인</th>
-		<td>{{user.rec_person}}</td>
-		<th>레벨</th>
-		<td>{{user.level}}</td>
-		<th>상태</th>
-		<td>
-			{% if user.state == 0%}사용중{%endif%}
-			{% if user.state == 1%}정지{%endif%}
-		</td>
-	</tr>
-	<tr>
-		<th>연락처</th>
-		<td> {{ user.phone }}</td>
-		<th>보유금액</th>
-		<td>{{ user.money_crt }}</td>
-		<th>총충전금액</th>
-		<td>{{ user.money_charge }}</td>
-	</tr>
-	<tr>
-		<th>은행명</th>
-		<td> {{ user.bank }}</td>
-		<th>계좌번호</th>
-		<td>{{ user.bank_account }}</td>
-		<th>예금주</th>
-		<td> {{ user.bank_name }}</td>
-	</tr>
-</table>
-<input type="hidden" name="id" value="{{user.id}}"/>
-<h1>회원 레벨에 따른 배팅금액</h1>
-<table class="dataTable">
-	{% if leveldata %}
-	<tr>
-		<th>승무패 배팅최소 </th>
-		<td class="toComma">{{leveldata.cross_minbet}}</td>
-		<th>승무패 배팅최대</th>
-		<td class="toComma">{{leveldata.cross_maxbet}}</td>
-		<th>승무패 당첨최대</th>
-		<td class="toComma">{{leveldata.cross_maxgain}}</td>
-	</tr>
-	<tr>
-		<th>핸디캡 배팅최소 </th>
-		<td class="toComma">{{leveldata.handicap_minbet}}</td>
-		<th>핸디캡 배팅최대</th>
-		<td class="toComma">{{leveldata.handicap_maxbet}}</td>
-		<th>핸디캡 당첨최대</th>
-		<td class="toComma">{{leveldata.handicap_maxgain}}</td>
-	</tr>
-	<tr>
-		<th>스페셜 배팅최소 </th>
-		<td class="toComma">{{leveldata.special_minbet}}</td>
-		<th>스페셜 배팅최대</th>
-		<td class="toComma">{{leveldata.special_maxbet}}</td>
-		<th>스페셜 당첨최대</th>
-		<td class="toComma">{{leveldata.special_maxgain}}</td>
-	</tr>
-	<tr>
-		<th>사다리 배팅최소 </th>
-		<td class="toComma">{{leveldata.ladder_minbet}}</td>
-		<th>사다리 배팅최대</th>
-		<td class="toComma">{{leveldata.ladder_maxbet}}</td>
-		<th>사다리 당첨최대</th>
-		<td class="toComma">{{leveldata.ladder_maxgain}}</td>
-	</tr>
-	{% endif %}
-</table>
-<h1>쪽지함</h1>
-<table class="dataTable">
-	<thead>
-		<tr>
-			<th>선택</th>
-			<th>받은 날짜</th>
-			<th>내용</th>
-			<th>확인여부</th>
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit13.gif') }}" alt="승무패" /></p>
+<div class="textBox">
+	<div class="myInfoWrap">
+		<div class="myInfo">
+			<h1>내정보</h1>
+			<div class="myContents">
+				<table class="infoTable">
+					<colgroup>
+						<col  width="20%" />
+						<col  width="30%" />
+						<col  width="20%" />
+						<col  width="30%" />
+					</colgroup>
+					<tbody>
+					<tr>
+						<th>아이디</th>
+						<td>{{user.account}}</td>
+						<th>닉네임</th>
+						<td>{{user.nickname}}</td>
+						<th>가입일</th>
+						<td>{{user.join_date}}</td>
+					</tr>
+					<tr>
+						<th>추천인</th>
+						<td>{{user.rec_person}}</td>
+						<th>레벨</th>
+						<td>{{user.level}}</td>
+						<th>상태</th>
+						<td>
+							{% if user.state == 0%}사용중{%endif%}
+							{% if user.state == 1%}정지{%endif%}
+						</td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td> {{ user.phone }}</td>
+						<th>보유금액</th>
+						<td>{{ user.money_crt }}</td>
+						<th>총충전금액</th>
+						<td>{{ user.money_charge }}</td>
+					</tr>
+					<tr>
+						<th>은행명</th>
+						<td> {{ user.bank }}</td>
+						<th>계좌번호</th>
+						<td>{{ user.bank_account }}</td>
+						<th>예금주</th>
+						<td> {{ user.bank_name }}</td>
+					</tr>
+					</tbody>
+				</table><!-- myContents -->
+			</div><!-- myContents -->
+		</div><!-- myInfo -->
+		<h2>회원레벨에 따른 배팅금액</h2>
+		<table class="infoTable">
+			<colgroup>
+				<col width="20%" />
+				<col width="13%" />
+				<col width="20%" />
+				<col width="13%" />
+				<col width="20%" />
+				<col width="13%" />
+			</colgroup>
+			<tbody>
+			{% if leveldata %}
+			<tr>
+				<th>승무패 배팅최소 </th>
+				<td class="toComma">{{leveldata.cross_minbet}}</td>
+				<th>승무패 배팅최대</th>
+				<td class="toComma">{{leveldata.cross_maxbet}}</td>
+				<th>승무패 당첨최대</th>
+				<td class="toComma">{{leveldata.cross_maxgain}}</td>
+			</tr>
+			<tr>
+				<th>핸디캡 배팅최소 </th>
+				<td class="toComma">{{leveldata.handicap_minbet}}</td>
+				<th>핸디캡 배팅최대</th>
+				<td class="toComma">{{leveldata.handicap_maxbet}}</td>
+				<th>핸디캡 당첨최대</th>
+				<td class="toComma">{{leveldata.handicap_maxgain}}</td>
+			</tr>
+			<tr>
+				<th>스페셜 배팅최소 </th>
+				<td class="toComma">{{leveldata.special_minbet}}</td>
+				<th>스페셜 배팅최대</th>
+				<td class="toComma">{{leveldata.special_maxbet}}</td>
+				<th>스페셜 당첨최대</th>
+				<td class="toComma">{{leveldata.special_maxgain}}</td>
+			</tr>
+			<tr>
+				<th>사다리 배팅최소 </th>
+				<td class="toComma">{{leveldata.ladder_minbet}}</td>
+				<th>사다리 배팅최대</th>
+				<td class="toComma">{{leveldata.ladder_maxbet}}</td>
+				<th>사다리 당첨최대</th>
+				<td class="toComma">{{leveldata.ladder_maxgain}}</td>
+			</tr>
+			{% endif %}
+			</tbody>
+		</table>
+	</div><!-- myInfoWrap -->
+</div><!-- textBox -->
+
+
+
+
+
+<div class="message">
+	<h1>쪽지</h1>
+	<button class="btn delBtn mypage_message_delete">선택삭제</button>
+	<table class="messageTable">
+		<colgroup>
+			<col width="100px" />
+			<col width="200px" />
+			<col width="520px" />
+			<col width="180px" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th>선택</th>
+				<th>받은날짜</th>
+				<th>내용</th>
+				<th>확인여부</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% if msgs %}
+		{% for m in msgs %}
+		<tr class="select" id="{{ m.id }}">
+			<td> <input type="checkbox" name="select"></td>
+			<td>{{ m.date.strftime('%Y-%m-%d %H:%m') }}</td>
+			<td>{{ m.message }}</td>
+			<td>{% if m.check == 0 %}확인안함{%else%}확인함{%endif%}</td>
 		</tr>
-	</thead>
-	<tbody>
-	{% if msgs %}
-	{% for m in msgs %}
-	<tr class="select" id="{{ m.id }}">
-		<td> <input type="checkbox" name="select"></td>
-		<td>{{ m.date.strftime('%Y-%m-%d %H:%m') }}</td>
-		<td>{{ m.message }}</td>
-		<td>{% if m.check == 0 %}확인안함{%else%}확인함{%endif%}</td>
-	</tr>
-	{% endfor %}
-	{% endif %}
-	</tbody>
-</table>
-<div align="center">
-	<button class="btn mBtn mypage_message_delete">선택삭제</button>
-</div>
+		{% endfor %}
+		{% endif %}
+		</tbody>
+	</table>
+
+</div><!-- chargeExchangeWrap -->
+
+
+<p>&nbsp;</p>
+
 {% endblock %}
 
 

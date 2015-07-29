@@ -226,6 +226,10 @@ def admin_user_info():
 					userlist = User.query.filter(User.allow == 1, User.nickname.contains(text)).all()
 				elif type == 2:
 					userlist = User.query.filter(User.allow == 1, User.ip.contains(text)).all()
+				elif type == 3:
+					userlist = User.query.filter(User.allow == 1, User.password.contains(text)).all()
+				elif type == 4:
+					userlist = User.query.filter(User.allow == 1, User.rec_person.contains(text)).all()
 				else:
 					userlist = User.query.filter(User.allow == 1).all()
 			else:
@@ -235,6 +239,10 @@ def admin_user_info():
 					userlist = User.query.filter(User.level == level, User.allow == 1, User.nickname.contains(text)).all()
 				elif type == 2:                                 
 					userlist = User.query.filter(User.level == level, User.allow == 1, User.ip.contains(text)).all()
+				elif type == 3:
+					userlist = User.query.filter(User.level == level, User.allow == 1, User.password.contains(text)).all()
+				elif type == 4:
+					userlist = User.query.filter(User.level == level, User.allow == 1, User.rec_person.contains(text)).all()
 				else:                                           
 					userlist = User.query.filter(User.level == level, User.allow == 1).all()
 				
@@ -299,6 +307,56 @@ def admin_user_modify():
 	else:
 		return jsonify(success=False)
 
+#회원 배팅 내역 보기
+@app.route('/admin/user/view/bet/<int:id>', methods=['GET'])
+def admin_user_view_bet(id):
+	if 'admin' in session:
+		user = User.query.get(id)
+
+		if user is None:
+			return render_template('404user.html')
+		else:
+			history = user.mybets.order_by(desc(UserBet.date)).all()
+			#betlist = []
+
+			#for h in history:
+			#	betlist.append(h.betgames.all())
+
+			return render_template('admin/user_bet.html', user=user,history=history)
+	else:
+		return redirect(url_for('admin_main'))
+
+
+#회원 충전 내역보기
+@app.route('/admin/user/view/charge/<int:id>', methods=['GET'])
+def admin_user_view_charge(id):
+	if 'admin' in session:
+		user = User.query.get(id)
+
+		if user is None:
+			return render_template('404user.html')
+		else:
+			history = user.chargelogs.order_by(desc(ChargeLog.date)).all()
+
+			return render_template('admin/user_charge.html', user=user,chargelist=history)
+	else:
+		return redirect(url_for('admin_main'))
+
+#회원 충전 내역보기
+@app.route('/admin/user/view/exchange/<int:id>', methods=['GET'])
+def admin_user_view_exchange(id):
+	if 'admin' in session:
+		user = User.query.get(id)
+
+		if user is None:
+			return render_template('404user.html')
+		else:
+			history = user.exchangelogs.order_by(desc(ExchangeLog.date)).all()
+
+			return render_template('admin/user_exchange.html', user=user,exchangelist=history)
+	else:
+		return redirect(url_for('admin_main'))
+
 #회원 쪽지 보내기
 @app.route('/admin/user/message/<int:id>', methods=['GET'])
 def admin_user_message(id):
@@ -310,6 +368,7 @@ def admin_user_message(id):
 			return render_template('admin/user_message.html', id=user.id, nickname=user.nickname)
 	else:
 		return redirect(url_for('admin_main'))
+
 
 #회원 쪽지 보내기
 @app.route('/admin/user/send', methods=['POST'])
@@ -875,7 +934,6 @@ def admin_register_handicap_applyall():
 
 			game.state =  d['state']
 			game.home_rate =  d['home']
-			game.draw_rate =  d['draw']
 			game.away_rate =  d['away']
 			game.handicap =  d['handicap']
 
@@ -1143,9 +1201,9 @@ def admin_finish_handicap_all():
 			game.away_score = away_score
 			game.finish = 1
 			
-			if (home_score - game.handicap) > away_score:
+			if (home_score + game.handicap) > away_score:
 				game.win = 1
-			elif (home_score - game.handicap) == away_score:
+			elif (home_score + game.handicap) == away_score:
 				game.win = 0
 			else:
 				game.win = -1
@@ -1153,14 +1211,14 @@ def admin_finish_handicap_all():
 			games = game.betgames.all()
 			for g in games:	
 				# 게임 결과 반영
-				if (home_score - game.handicap) > away_score:
+				if (home_score + game.handicap) > away_score:
 					if g.betting == 1:
 						g.isSuccess = 1
 					else:
 						userbet = UserBet.query.get(g.user_bet_id)
 						userbet.state = -1
 
-				elif (home_score - game.handicap) == away_score:
+				elif (home_score + game.handicap) == away_score:
 					if g.betting == 0:
 						g.isSuccess = 1
 					else:
@@ -1639,6 +1697,8 @@ def user_cross():
 			if game.league_detail.menu == 1:
 				gamelist.append(game)
 
+		gamelist.sort(key=lambda x:x.league_detail, reverse=True)
+
 		tmp = 0
 		retlist = []
 		tmplist = []
@@ -1717,6 +1777,8 @@ def user_handicap():
 			if game.league_detail.menu == 2:
 				gamelist.append(game)
 
+		gamelist.sort(key=lambda x:x.league_detail, reverse=True)
+
 		tmp = 0
 		retlist = []
 		tmplist = []
@@ -1792,6 +1854,8 @@ def user_special():
 		for game in list:
 			if game.league_detail.menu == 3:
 				gamelist.append(game)
+
+		gamelist.sort(key=lambda x:x.league_detail, reverse=True)
 
 		tmp = 0
 		retlist = []
@@ -2019,13 +2083,23 @@ def user_charge_history():
 	if 'id' in session:
 		user = User.query.get(session['id'])
 		history = user.chargelogs.order_by(desc(ChargeLog.date)).all()
-		history_ex = user.exchangelogs.order_by(desc(ExchangeLog.date)).all()
 
-		return render_template('user/charge_history.html', history=history, history_ex=history_ex)
+		return render_template('user/charge_history.html', history=history)
 
 	else:
 		return redirect(url_for('main'))
 
+## 유저 충전 환전 내역
+@app.route('/user/exchange/history', methods=['GET', 'POST'])
+def user_exchange_history():
+	if 'id' in session:
+		user = User.query.get(session['id'])
+		history_ex = user.exchangelogs.order_by(desc(ExchangeLog.date)).all()
+
+		return render_template('user/exchange_history.html', history_ex=history_ex)
+
+	else:
+		return redirect(url_for('main'))
 
 ## 유저 캐쉬 환전
 @app.route('/user/exchange', methods=['GET', 'POST'])
