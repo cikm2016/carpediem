@@ -1,0 +1,37 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn pinkBtn select_all">전체선택</button>
+<button class="btn mBtn charge_all">선택충전</button>
+</p>
+<h1>일정산 관리</h1>
+<table class="dataTable tableStyle01">
+	<thead>
+		<th>날짜</th>
+		<th>충전금액</th>		
+		<th>환전금액</th>		
+		<th>입출손익</th>		
+		<th>베팅건수</th>		
+		<th>신규가입</th>		
+		<th>배팅금액</th>		
+		<th>당첨금액</th>		
+		<th>배팅손익</th>		
+		<th>미당첨수수료</th>		
+		<th>추천인수수료</th>		
+	</thead>
+	<tbody>
+		{% if adjust_today %}
+		<td>{{ adjust_today.date }}</td>
+		<td class="toComma">{{ adjust_today.charged }}</td>
+		<td class="toComma">{{ adjust_today.exchanged }}</td>
+		<td class="toComma">{{ adjust_today.charged - adjust_today.exchanged}}</td>
+		{% endif %}
+	</tbody>
+</table>
+</div>
+
+{% endblock %}
+
+
+

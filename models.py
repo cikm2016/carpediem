@@ -90,6 +90,30 @@ class BlockIp(db.Model):
 
 
 
+#############################################
+####    날짜 별 정산 데이터, 일별 월별   ####
+#############################################
+
+## 일정산 데이터 
+class AdjustDay(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date = db.Column(db.Date())
+
+	charged = db.Column(db.Integer, default=0)
+	exchanged = db.Column(db.Integer, default=0)
+	
+	bet_cnt = db.Column(db.Integer, default=0)
+	new_user = db.Column(db.Integer, default=0)
+
+	bet_money = db.Column(db.Integer, default=0)
+	success_money = db.Column(db.Integer, default=0)
+
+	fail_tax = db.Column(db.Integer, default=0)
+	rec_tax = db.Column(db.Integer, default=0)
+
+#	adjust_month_id = db.Column(db.Integer, db.ForeignKey('adjust_month.id'))
+#	adjust_month = db.relationship('AdjustMonth',backref=db.backref('days', cascade='all, delete-orphan', lazy='dynamic'))
+
 
 #############################################
 #### 국가, 종목, 리그, 세부리그 메타정보 ####

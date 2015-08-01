@@ -1803,6 +1803,33 @@ $(document).ready(function(){
 			});
 		}
 	});
+	/* 유저 배팅 취소 */
+	$('.betting_cancel').click(function(){
+		var id = $(this).closest('table').attr('id');
+		var check = confirm('배팅을 취소하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/user/betting/cancel',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : id
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('취소되었습니다.');
+						$('#'+id).remove();
+					}
+					else{
+						alert(resp.msg);
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
 	$('#levelsetting').submit(function(){
 		$('.toComma_input').each(function(){
 			$(this).val(parseInt($(this).val().replace(/\,/g,'')))

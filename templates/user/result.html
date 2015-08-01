@@ -28,7 +28,7 @@
 				<p class="date">{{ game.date.strftime('%Y-%m-%d %H:%M') }}</p>
 				<p class="clickbox victory home {%if game.win == 1%}clicked{%endif%}"><span class="team">{{game.home}}</span><span class="distribution rate">{{game.home_rate}}</span></p>
 				{% if game.draw_rate == 0 %}
-				<p class="draw">vs</p>
+				<p class="draw">{%if game.league_detail.menu == 2 %}{{game.handicap}}{%else%}vs{%endif%}</p>
 				{% else %}
 				<p class="clickbox draw {%if game.win == 0%}clicked{%endif%}"><span class="rate">{{ game.draw_rate }}</span></p>
 				{% endif %}	

@@ -45,11 +45,10 @@
 						<li><a href="{{ url_for('admin_bank_account') }}">입금계좌관리</a></li>
 					</ul>
 				</li>
-				<li><a href="#">정산관리</a>
+				<li {% if menu=='adjust'%}class="hover"{%endif%}><a href="#">정산관리</a>
 					<ul class="hiddenX">
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
+						<li><a href="{{ url_for('admin_adjust_day') }}">일정산관리</a></li>
+						<li><a href="#">월정산관리</a></li>
 					</ul>
 				</li>
 				<li><a href="#">배팅관리 </a>

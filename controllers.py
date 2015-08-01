@@ -6,7 +6,7 @@ from sqlalchemy import desc, or_
 
 from app import app, db
 from app.forms import ArticleForm,  JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit, Ladder, LadderGame
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit, Ladder, LadderGame, AdjustDay
 
 import re
 import json
@@ -1393,6 +1393,20 @@ def admin_bank_charge_allow():
 		charge.user.money_crt += charge.money
 		charge.user.money_charge += charge.money
 
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+			db.session.add(adjust_today)
+			db.session.commit()
+								
+		adjust_today.charged += charge.money
+
 		db.session.commit()
 			
 		#유저에게 쪽지?
@@ -1408,6 +1422,19 @@ def admin_bank_charge_allowall():
 	if 'admin' in session:
 		data = json.loads(request.form['data'])
 
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+			db.session.add(adjust_today)
+			db.session.commit()
+			
 		for d in data:
 			charge = ChargeLog.query.get(int(d['id']))
 			if charge is None:
@@ -1417,6 +1444,8 @@ def admin_bank_charge_allowall():
 			charge.date_finished = datetime.now()+timedelta(hours=9)
 			charge.user.money_crt += charge.money
 			charge.user.money_charge += charge.money
+
+			adjust_today.charged += charge.money
 
 		db.session.commit()
 			
@@ -1462,6 +1491,21 @@ def admin_bank_exchange_allow():
 		exchange.exchanged = 1
 		exchange.date_finished = datetime.now()+timedelta(hours=9)
 
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+								
+			db.session.add(adjust_today)
+			db.session.commit()
+
+		adjust_today.exchanged += exchange.money
 		db.session.commit()
 			
 		return jsonify(success=True)
@@ -1475,6 +1519,19 @@ def admin_bank_exchange_allowall():
 	if 'admin' in session:
 		data = json.loads(request.form['data'])
 
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+			db.session.add(adjust_today)
+			db.session.commit()
+								
 		for d in data:
 			exchange = ExchangeLog.query.get(int(d['id']))
 			if exchange is None:
@@ -1482,6 +1539,8 @@ def admin_bank_exchange_allowall():
 
 			exchange.exchanged = 1
 			exchange.date_finished = datetime.now()+timedelta(hours=9)
+
+			adjust_today.exchanged += exchange.money
 
 		db.session.commit()
 		
@@ -1511,7 +1570,7 @@ def admin_bank_exchange_deallow():
 		return jsonify(success=False) 
 
 
-#환전신청 모두 수락
+#환전신청 모두 거절 
 @app.route('/admin/bank/exchange/deallowall', methods=['POST'])
 def admin_bank_exchange_deallowall():
 	if 'admin' in session:
@@ -1617,6 +1676,23 @@ def admin_bank_account_modifyall():
 		
 	else:
 		return jsonify(success=False) 
+
+
+#정산 관리- 일 정산
+
+@app.route('/admin/adjust/day', methods=['GET'])
+def admin_adjust_day():
+	if 'admin' in session:
+		targetday = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == targetday).first()
+		except Exception, e:
+			print e
+
+		return render_template('admin/adjust_day.html',adjust_today=adjust_today, menu='adjust')
+	else:
+		return redirect(url_for('main_admin'))
+
 
 
 
@@ -1738,6 +1814,23 @@ def user_cross_betting():
 						game = 1, 
 						date = datetime.now()+timedelta(hours=9)
 					)
+
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+			db.session.add(adjust_today)
+			db.session.commit()
+								
+		adjust_today.bet_cnt += 1
+		adjust_today.bet_money += money
+
+
 		for d in data:
 			game = Game.query.get(int(d['id']))
 			try:
@@ -1817,6 +1910,22 @@ def user_handicap_betting():
 						game = 2, 
 						date = datetime.now()+timedelta(hours=9)
 					)
+
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+			db.session.add(adjust_today)
+			db.session.commit()
+								
+		adjust_today.bet_cnt += 1
+		adjust_today.bet_money += money
+
 		for d in data:
 			game = Game.query.get(int(d['id']))
 			try:
@@ -1895,6 +2004,22 @@ def user_special_betting():
 						game = 3, 
 						date = datetime.now()+timedelta(hours=9)
 					)
+
+		today = (datetime.now()+timedelta(hours=9)).date()
+		try:
+			adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+		except Exception, e:
+			print e
+		if adjust_today is None:
+			adjust_today = AdjustDay(
+								date = (datetime.now()+timedelta(hours=9)).date()
+								)
+			db.session.add(adjust_today)
+			db.session.commit()
+								
+		adjust_today.bet_cnt += 1
+		adjust_today.bet_money += money
+
 		for d in data:
 			game = Game.query.get(int(d['id']))
 			try:
@@ -1955,6 +2080,35 @@ def user_betting_history_delete():
 	else:
 		return jsonify(success=False)
 
+## 유저 배팅 취소
+@app.route('/user/betting/cancel', methods=['POST'])
+def user_betting_cancel():
+	if 'id' in session:
+		id = int(request.form['id'])
+		user_bet = UserBet.query.get(id)
+		
+		if user_bet is None:
+			return jsonify(success=False)
+
+		if (user_bet.date+timedelta(minutes=20)) < (datetime.now()+timedelta(hours=9)):
+			return jsonify(success=False, msg=u'배팅후 20분이내에만 취소가 가능합니다.')
+			
+		for bet in user_bet.betgames:
+			if bet.game.date < (datetime.now()+timedelta(hours=9)): 
+				return jsonify(success=False, msg=u'경기 시작후엔 취소할수 없습니다.')
+			
+		
+			
+		user = User.query.get(session['id'])
+		user.money_crt += user_bet.money_bet
+		
+		db.session.delete(user_bet)
+		db.session.commit()
+
+		return jsonify(success=True)
+
+	else:
+		return jsonify(success=False)
 
 
 ## 사다리
