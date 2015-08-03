@@ -11,9 +11,9 @@
 	</colgroup>
 	<thead>
 		<th>경기시간</th>
-		<th>승(홈팀)</th>
+		<th>승[홈]</th>
 		<th>무</th>
-		<th>패(원정팀)</th>
+		<th>패[원정]</th>
 		<th>경기결과</th>
 	</thead>
 	<tbody>
@@ -25,7 +25,7 @@
 	{% for game in ret %}
 				<div class="battingContents" id="{{game.id}}">
 
-				<p class="date">{{ game.date.strftime('%Y-%m-%d %H:%M') }}</p>
+				<p class="date">{{ game.date.strftime('%m/%d') }}[{% if  game.date.strftime('%A') == 'Monday'%}월{% elif  game.date.strftime('%A') == 'Tuesday'%}화{% elif  game.date.strftime('%A') == 'Wednesday'%}수{% elif  game.date.strftime('%A') == 'Thursday'%}목{% elif  game.date.strftime('%A') == 'Friday'%}금{% elif  game.date.strftime('%A') == 'Saturday'%}토{% elif  game.date.strftime('%A') == 'Sunday'%}일{%else%}{%endif%}] {{ game.date.strftime('%H:%M') }}</p>
 				<p class="clickbox victory home {%if game.win == 1%}clicked{%endif%}"><span class="team">{{game.home}}</span><span class="distribution rate">{{game.home_rate}}</span></p>
 				{% if game.draw_rate == 0 %}
 				<p class="draw">{%if game.league_detail.menu == 2 %}{{game.handicap}}{%else%}vs{%endif%}</p>

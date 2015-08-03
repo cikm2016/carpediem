@@ -589,6 +589,41 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('.register_all_apply').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var tmp_id = $(this).closest('tr').attr('id');
+			var tmp_state = $('#'+tmp_id).find('select').val();
+			var tmp_home= $('#'+tmp_id).find('input[name="home_rate_'+tmp_id+'"]').val();
+			var tmp_draw= $('#'+tmp_id).find('input[name="draw_rate_'+tmp_id+'"]').val();
+			var tmp_away= $('#'+tmp_id).find('input[name="away_rate_'+tmp_id+'"]').val();
+			data.push({id:tmp_id, state:tmp_state, home:tmp_home, draw:tmp_draw, away:tmp_away})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/register/game/applyall',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
 	$('.cross_apply').click(function(){
 		var id = $(this).closest('tr').attr('id');
 
@@ -1863,6 +1898,7 @@ $(document).ready(function(){
 			});
 		}
 	})
+	$('.gain').
 });
 function popupOpen(url, op){
 	var popUrl = url;

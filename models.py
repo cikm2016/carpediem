@@ -10,6 +10,7 @@ class User(db.Model):
 	bank = db.Column(db.String(255))
 	bank_account = db.Column(db.String(255))
 	bank_name = db.Column(db.String(255))
+	bank_password = db.Column(db.String(255))
 	ip = db.Column(db.String(255))
 	rec_person = db.Column(db.String(255))
 

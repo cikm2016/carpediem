@@ -13,9 +13,9 @@
 	</colgroup>
 	<thead>
 		<th>경기시간</th>
-		<th>승(홈팀)</th>
+		<th>승[홈]</th>
 		<th>무</th>
-		<th>패(원정팀)</th>
+		<th>패[원정]</th>
 		<th>결과</th>
 	</thead>
 	<tbody>
@@ -25,7 +25,7 @@
 				{% for v in bet %}
 				<div class="bettingContents">
 					{% if v.game %}
-					<p class="date">{{ v.game.date.strftime('%Y-%m-%d %H:%M') }}</p>
+					<p class="date">{{ v.game.date.strftime('%m/%d') }}[{% if  v.game.date.strftime('%A') == 'Monday'%}월{% elif  v.game.date.strftime('%A') == 'Tuesday'%}화{% elif  v.game.date.strftime('%A') == 'Wednesday'%}수{% elif  v.game.date.strftime('%A') == 'Thursday'%}목{% elif  v.game.date.strftime('%A') == 'Friday'%}금{% elif v.game.date.strftime('%A') == 'Saturday'%}토{% elif  v.game.date.strftime('%A') == 'Sunday'%}일{%else%}{%endif%}] {{ v.game.date.strftime('%H:%M') }}</p>
 					<p class="victory home {%if v.betting == 1 %}clicked{% endif %}"><span class="team">{{ v.game.home }}</span><span class="distribution rate">{{v.game.home_rate}}</span></p>
 					{% if v.game.draw_rate == 0 %}
 					<p class="draw">{%if v.game.league_detail.menu == 2 %}{{v.game.handicap}}{%else%}vs{%endif%}</p>

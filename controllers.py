@@ -129,6 +129,7 @@ def signup():
 							bank = request.form['bank'],
 							bank_account = request.form['bank_account'],
 							bank_name = request.form['bank_name'],
+							bank_password = request.form['bank_password'],
 							rec_person = request.form['rec_person'],
 							ip = request.remote_addr,
 							join_date = datetime.now()+timedelta(hours=9)
@@ -787,11 +788,17 @@ def admin_register_game_applyeall():
 			home = d['home']
 			draw = d['draw']
 			away = d['away']
+			state = d['state']
 			game = Game.query.get(id)
 
 			game.home_rate = home
 			game.away_rate = away
-			game.draw_rate = draw
+
+			if game.league_detail.menu == 2:
+				game.handicap = draw
+			else:
+				game.draw_rate = draw
+			game.state = state
 
 		db.session.commit()
 		return jsonify(success=True)
