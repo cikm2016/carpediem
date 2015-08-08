@@ -6,7 +6,7 @@ from sqlalchemy import desc, or_
 
 from app import app, db
 from app.forms import ArticleForm,  JoinForm, LoginForm, AdminForm
-from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit, Ladder, LadderGame, AdjustDay
+from app.models import Article, Comment, User, Game, LoginLog, ChargeLog, ExchangeLog, Message, BlockIp, SportandNation, League, LeagueDetail, Game, BankAccount, UserBet, UserBetGame, LevelLimit, Ladder, LadderGame, AdjustDay ,Pincode
 
 import re
 import json
@@ -59,24 +59,29 @@ def main():
 			elif user.password != password:
 				error = u'비밀번호가 틀렸습니다.'
 			else:
-				if user.allow == 0:
+				#	관리자 일때
+				if user.allow == 2:
+					return redirect(url_for('main_admin'))
+
+				elif user.allow == 0:
 					#가입 대기중
 					return render_template('main.html', error=u'가입승인 대기중인 아이디입니다.')
-				elif user.state == 1:
-					return render_template('main.html', error=u'정지된 아이디입니다.')
+				else:
+					if user.state == 1:
+						return render_template('main.html', error=u'정지된 아이디입니다.')
 
-				loginlog = LoginLog(
-								ip = request.remote_addr,
-								date = datetime.now()+timedelta(hours=9),
-								user = user
-								)
-				db.session.add(loginlog)
-				db.session.commit()
-				
-				session.permanent = True
-				session['id'] = user.id
-				session['nickname'] = user.nickname
-				return redirect(url_for('user_main'))
+					loginlog = LoginLog(
+									ip = request.remote_addr,
+									date = datetime.now()+timedelta(hours=9),
+									user = user
+									)
+					db.session.add(loginlog)
+					db.session.commit()
+					
+					session.permanent = True
+					session['id'] = user.id
+					session['nickname'] = user.nickname
+					return redirect(url_for('user_main'))
 
 			return render_template('main.html', error=error)
 		return render_template('main.html')
@@ -121,9 +126,13 @@ def signup():
 			nick = User.query.filter(User.nickname == request.form['nickname']).first()
 			if nick is None:
 				try:
+					# 일단은 무조건 만들어냄.. 용규형이랑 이야기 필요
+					pincode = Pincode.query.filter(Pincode.name == request.form['pincode']).first()
+					if pincode is None:
+						return render_template('signup.html', error=u'핀코드가 올바르지 않습니다')
 					user = User(
 							account = request.form['account'],
-							password = generate_password_hash(request.form['password']),
+							password = request.form['password'],
 							nickname = request.form['nickname'],
 							phone = request.form['phone'],
 							bank = request.form['bank'],
@@ -132,9 +141,25 @@ def signup():
 							bank_password = request.form['bank_password'],
 							rec_person = request.form['rec_person'],
 							ip = request.remote_addr,
-							join_date = datetime.now()+timedelta(hours=9)
+							join_date = datetime.now()+timedelta(hours=9),
+							pincode = pincode	
 							)
 					db.session.add(user)
+					
+					today = (datetime.now()+timedelta(hours=9)).date()
+					try:
+						adjust_today = AdjustDay.query.filter(AdjustDay.date == today).first()
+					except Exception, e:
+						print e
+					if adjust_today is None:
+						adjust_today = AdjustDay(
+											date = (datetime.now()+timedelta(hours=9)).date()
+											)
+						db.session.add(adjust_today)
+						db.session.commit()
+											
+					adjust_today.new_user += 1
+
 					db.session.commit()
 					return redirect(url_for('main'))
 				except:
@@ -1687,21 +1712,81 @@ def admin_bank_account_modifyall():
 
 #정산 관리- 일 정산
 
-@app.route('/admin/adjust/day', methods=['GET'])
+@app.route('/admin/adjust/day', methods=['GET', 'POST'])
 def admin_adjust_day():
 	if 'admin' in session:
-		targetday = (datetime.now()+timedelta(hours=9)).date()
-		try:
-			adjust_today = AdjustDay.query.filter(AdjustDay.date == targetday).first()
-		except Exception, e:
-			print e
+		if request.method == 'GET':
+			targetday = (datetime.now()+timedelta(hours=9)).date()
+			try:
+				adjust_list = AdjustDay.query.filter(AdjustDay.date == targetday).all()
+			except Exception, e:
+				print e
 
-		return render_template('admin/adjust_day.html',adjust_today=adjust_today, menu='adjust')
+			return render_template('admin/adjust_day.html',adjust_list=adjust_list, menu='adjust')
+		else:
+			start = request.form['date_start']
+			end = request.form['date_end']
+
+			date_start = datetime.strptime(start, '%Y-%m-%d')
+			date_end = datetime.strptime(end, '%Y-%m-%d')
+
+			try:
+				adjust_list = AdjustDay.query.filter(AdjustDay.date >= date_start, AdjustDay.date <= date_end).order_by(desc(AdjustDay.date)).all()
+			except Exception, e:
+				print e
+
+			return render_template('admin/adjust_day.html',adjust_list=adjust_list, menu='adjust')
+
 	else:
 		return redirect(url_for('main_admin'))
 
 
+#지점 지사 페이지
+@app.route('/admin/pincode', methods=['GET', 'POST'])
+def admin_pincode():
+	if 'admin' in session:
+		if request.method == 'GET':
+			list = Pincode.query.all()
+			return render_template('admin/pincode.html', list=list, menu='pincode')
+		else:
+			pincode = Pincode(name=request.form['pincode'])
+			db.session.add(pincode)
+			db.session.commit()
+			return redirect(url_for('admin_pincode'))
+	else:
+		return redirect(url_for('main_admin'))
 
+#핀코드 별 유저 보기
+@app.route('/admin/pincode/users/<int:id>', methods=['GET'])
+def admin_pincode_users(id):
+	if 'admin' in session:
+		pin = Pincode.query.get(id)
+		if pin is None:
+			return render_template('404user.html')
+		else:
+			users = pin.users.all()
+			return render_template('admin/pincode_users.html',pin=pin, users=users)
+	else:
+		return redirect(url_for('admin_main'))
+
+
+#핀코드 변경
+@app.route('/admin/pincode/modify', methods=['POST'])
+def admin_pincode_modify():
+	if 'admin' in session:
+		id = request.form['id']	
+		pincode = request.form['pincode']	
+
+		pin = Pincode.query.get(id)
+		if pin is None:
+			return jsonify(success=False)
+
+		pin.name = pincode
+		db.session.commit()
+
+		return jsonify(success=True, name=pincode)
+	else:
+		return jsonify(success=False)
 
 #관리자 설정 페이지
 @app.route('/admin/setting', methods=['GET', 'POST'])
@@ -2349,6 +2434,20 @@ def user_mypage_message_delete():
 
 
 ##############################
+#########  이벤트   ##########
+##############################
+
+@app.route('/event')
+def event_list():
+	if 'id' in session:
+		context = {}
+
+		context['article_list'] = Article.query.order_by(desc(Article.date_created)).all()
+		return render_template('event/list.html', context=context, menu='event')
+	else:
+		return redirect(url_for('main'))
+
+##############################
 #########  게시판   ##########
 ##############################
 
@@ -2359,6 +2458,7 @@ def article_list():
 		context = {}
 
 		context['article_list'] = Article.query.order_by(desc(Article.date_created)).all()
+		context['article_number'] = Article.query.count()
 		return render_template('article/list.html', context=context, menu='article')
 	else:
 		return redirect(url_for('main'))
@@ -2538,14 +2638,17 @@ def before_request():
 # Handle 404 errors
 @app.errorhandler(404)
 def page_not_found(e):
+	print e
 	return render_template('404.html'), 404
 	
 # Handle 405 errors
 @app.errorhandler(405)
 def method_not_found(e):
+	print e
 	return render_template('405.html'), 405
 
 # Handle 500 errors
 @app.errorhandler(500)
 def server_error(e):
+	print e
 	return render_template('500.html'), 500

@@ -48,7 +48,6 @@
 				<li {% if menu=='adjust'%}class="hover"{%endif%}><a href="#">정산관리</a>
 					<ul class="hiddenX">
 						<li><a href="{{ url_for('admin_adjust_day') }}">일정산관리</a></li>
-						<li><a href="#">월정산관리</a></li>
 					</ul>
 				</li>
 				<li><a href="#">배팅관리 </a>
@@ -58,11 +57,9 @@
 						<li><a href="#"></a></li>
 					</ul>
 				</li>
-				<li><a href="#">지점/지사관리</a>
+				<li {% if menu=='pincode'%}class="hover"{%endif%}><a href="#">지점/지사관리</a>
 					<ul class="hiddenX">
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
-						<li><a href="#"></a></li>
+						<li><a href="{{url_for('admin_pincode')}}">핀코드 관리</a></li>
 					</ul>
 				</li>
 				<li><a href="#">고객센터</a>

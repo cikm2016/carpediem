@@ -1,0 +1,66 @@
+{% extends "layout_main.html" %}
+
+{% block contents %}
+<p class="subTitle"><img src="{{url_for('static', filename='images/sub_common/tit09.gif') }}" alt="게시판" /></p>
+<table class="boardTable">
+	<thead>
+		<tr>
+			<th>글번호</th>
+			<th width="45%">제목</th>
+			<th>작성자</th>
+			<th>조회수</th>
+			<th>작성일</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% if context.article_list %}
+	{% for article in context.article_list %}
+	<tr class="" id="article_{{ article.id }}">
+		<td>{{ article.id }}</td>
+		<td style="text-align:left;"><a class="title" href="{{ url_for('article_detail', id=article.id) }}"><strong>{{ article.title }}</strong></a></td>
+		<td>{{ article.user.nickname }}</td>
+		<td>{{ article.nofc }}</td>
+		<td><small>{{ article.date_created.strftime('%Y-%m-%d %H:%M') }}</small></td>
+	</tr>
+	{% endfor %}
+	{% endif %}
+
+	</tbody>
+</table><!-- boardTable -->
+<div class="pagingSearchForm">
+	<div class="pull-left width50">
+		<div class="paging">
+			<a class="img" href="#"><img src="{{url_for('static', filename='images/board/prev.gif') }}"  alt="이전 페이지 이동" /></a>
+			<a class="num hover" href="#">1</a>
+			<a class="num" href="#">2</a>
+			<a class="num" href="#">3</a>
+			<a class="num" href="#">4</a>
+			<a class="num" href="#">5</a>
+			<a class="num" href="#">6</a>
+			<a class="num" href="#">7</a>
+			<a class="num" href="#">8</a>
+			<a class="num" href="#">9</a>
+			<a class="num" href="#">10</a>
+			<a class="img" href="#"><img src="{{url_for('static', filename='images/board/next.gif') }}"  alt="다음 페이지 이동" /></a>
+		</div><!-- paging -->
+	</div><!-- pull-left -->
+	<div class="pull-right">
+		<div class="rightForm">
+			<p class="write"><a href="{{ url_for('article_create') }}">글쓰기</a></p>
+			<form role="form" method="get" action="{{ url_for('article_search') }}">	
+				<fieldset>
+					<div class="formBg">
+						<select>
+							<option value="#">제목</option>
+						</select>
+						<input type="text" name="search" placeholder="검색어"/>
+					</div>
+					<input type="submit" value="go" />
+				</fieldset>
+			</form>
+		</div>
+	</div><!-- pull-right -->
+</div><!-- pagingSearchForm -->
+{% endblock %}
+
+

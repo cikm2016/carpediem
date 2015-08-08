@@ -12,7 +12,6 @@ class User(db.Model):
 	bank_name = db.Column(db.String(255))
 	bank_password = db.Column(db.String(255))
 	ip = db.Column(db.String(255))
-	rec_person = db.Column(db.String(255))
 
 	state = db.Column(db.Integer, default=0)
 	danger = db.Column(db.Integer, default=2)
@@ -30,6 +29,15 @@ class User(db.Model):
 	allow = db.Column(db.Integer, default=0)
 
 	join_date = db.Column(db.DateTime())
+
+	pincode_id = db.Column(db.Integer, db.ForeignKey('pincode.id'))
+	pincode = db.relationship('Pincode',backref=db.backref('users', cascade='all, delete-orphan', lazy='dynamic'))
+	rec_person = db.Column(db.String(255))
+
+## PIN 코드
+class Pincode(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(255))
 
 
 #############################################

@@ -79,7 +79,7 @@
 			<th width="5%">무/핸디</th>
 			<th width="5%">패</th>
 			<th width="15%">패[원정]</th>
-			<th width="5%">환수</th>
+			<th width="5%">환수율</th>
 			<th>상태</th>
 		</thead>
 		<tbody>
@@ -91,9 +91,9 @@
 			<td>{{ game.date.strftime('%m/%d %H:%M') }}</td>
 			<td>{% if game.league_detail.menu == 1%}승무패{% elif game.league_detail.menu == 2 %}핸디캡{% else %}스페셜{% endif %}</td>
 			<td style="text-align:left;">{{ game.home }} {{game.league_detail.home}}</td>
-			<td> <input class="form-control" type="text" name="home_rate_{{game.id}}" value="0.0"/></td>
-			<td> <input class="form-control" type="text" name="draw_rate_{{game.id}}" value="0.0"/></td>
-			<td> <input class="form-control" type="text" name="away_rate_{{game.id}}" value="0.0"/></td>
+			<td> <input class="form-control forGain" type="text" name="home_rate_{{game.id}}" value="{{game.home_rate}}"/></td>
+			<td> <input class="form-control {%if game.league_detail.menu != 2%}forGain{%endif%}" type="text" name="draw_rate_{{game.id}}" value="{%if game.league_detail.menu == 2%}{{game.handicap}}{%else%}{{game.draw_rate}}{%endif%}"/></td>
+			<td> <input class="form-control forGain" type="text" name="away_rate_{{game.id}}" value="{{game.away_rate}}"/></td>
 			<td style="text-align:right;">{{game.league_detail.away}} {{ game.away }}</td>
 			<td class="gain"></td>
 			<td>

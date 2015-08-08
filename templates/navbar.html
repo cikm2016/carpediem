@@ -25,7 +25,7 @@
 			<li><a href="#">달팽이</a></li>
 			<li {%if menu=="result" %}class="hover"{% endif %}><a href="{{ url_for('user_result') }}">경기결과</a></li>
 			<li {%if menu=="bet_history" %}class="hover"{% endif %}><a href="{{ url_for('user_betting_history') }}">배팅내역</a></li>
-			<li><a href="#">고객센터</a></li>
+			<li {%if menu=="event" %}class="hover"{% endif %}><a href="{{ url_for('event_list') }}">이벤트</a></li>
 			<li {%if menu=="article" %}class="hover"{% endif %}><a href="{{ url_for('article_list') }}">게시판</a></li>
 		</ul><!-- uGnb -->
 	</div><!-- header -->

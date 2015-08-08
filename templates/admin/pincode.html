@@ -1,0 +1,47 @@
+{% extends "layout_admin.html" %}
+{% block contents %}
+<div class="relativeWrap">
+	<p class="topBtnWrap">
+	<button class="btn mBtn pinkBtn reload">새로고침</button>
+	<h1>핀코드 관리</h1> 
+	</p>
+	<form method="post" role="form">
+		<table class="dataTable tableStyle01">
+			<tr class="">
+				<th>추가할 핀코드</th>
+				<td class="input_space"><input type="text" name="pincode" class="form-control"></td>
+				<td><button type="submit" class="btn mBtn">생성</button></td>
+			</tr>
+		</table>
+	</form>
+	<h1>핀코드 관리</h1> 
+	</p>
+	<table class="dataTable tableStyle01">
+		<thead>
+			<th>핀코드</th>
+			<th>유저리스트</th>
+			<th>수정할 핀코드</th>
+			<th>수정</th>
+		</thead>
+		<tbody>
+		{% if list %}
+		{% for pin in list %}
+		<tr class="" id="{{ pin.id }}">
+			<td id="name_{{pin.id}}">{{ pin.name }}</td>
+			<td><button class="btn mBtn pinkBtn pincode_users">유저보기</button></td>
+			<td class="input_space"><input type="text" name="pincode_{{pin.id}}" class="form-control"></td>
+			<td><button class="btn mBtn pincode_modify">수정</button></td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		회원이 없습니다.
+		{% endif %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+
+
+
+

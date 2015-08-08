@@ -54,6 +54,38 @@ $(document).ready(function(){
 			});
 		}
 	});
+	/* 유저가 자기 정보 수정 */
+	$('.pincode_modify').click(function(){
+		var id = $(this).closest('tr').attr('id');
+		var check = confirm('수정 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/pincode/modify',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : id,
+					pincode : $("input[name='pincode_"+id+"']").val()
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('수정 되었습니다.');
+						$('#name_'+id).text(resp.name);
+					}
+					else{
+						alert('잘못된 아이디값입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.pincode_users').click(function(){
+		var id = $(this).closest('tr').attr('id');
+		popupOpen('/admin/pincode/users/'+id, 'width=800, height=1000, resizable=yes,scrollbars=yes;');
+	});
 	$('.chk_login').click(function(){
 		var id = $(this).closest('tr').attr('id');
 		popupOpen('/admin/user/loginlog/'+id, 'width=800, height=1000, resizable=yes,scrollbars=yes;');
@@ -400,6 +432,30 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('input[name="date_start"]').val(moment().year()+'-'+(moment().month()+1)+'-');
+	$('input[name="date_end"]').val(moment().year()+'-'+(moment().month()+1)+'-');
+	$('#searchadjust').submit(function(){
+		var date_start = $('input[name="date_start"]').val();
+		var date_end = $('input[name="date_end"]').val();
+
+		if (date_start == "" || date_end == ""){
+			alert('경기날짜와 시간을 입력하세요.');
+			return false;
+		}	
+		else if (!moment(date_start, 'YYYY-M-D', true).isValid()){
+			alert('날짜, 시간 형식이 잘못되었습니다.');
+			return false;
+		}	
+		else if (!moment(date_end, 'YYYY-M-D', true).isValid()){
+			alert('날짜, 시간 형식이 잘못되었습니다.');
+			return false;
+		}	
+		else{
+			return true;
+		}
+		
+	});
+
 	$('input[name="date_first"]').val(moment().year()+'-'+(moment().month()+1)+'-');
 	$('input[name="date"]').val(moment().year()+'-'+(moment().month()+1)+'-');
 	$('#waitgamebtn').click(function(){
@@ -1898,7 +1954,36 @@ $(document).ready(function(){
 			});
 		}
 	})
-	$('.gain').
+	$('.forGain').on('input',function(){
+		var id = $(this).closest('tr').attr('id');
+		
+		var home = parseFloat($('input[name="home_rate_'+id+'"]').val());
+		var away = parseFloat($('input[name="away_rate_'+id+'"]').val());
+		// 무승부도 배팅가능할때
+		if ($('input[name="draw_rate_'+id+'"]').hasClass('forGain')){
+			var draw = parseFloat($('input[name="draw_rate_'+id+'"]').val());
+			$('#'+id).find('td.gain').text(Math.round((home+away+draw)/9*100)+'%');	
+		}
+		// 무승부는 배팅 불가능할때
+		else{
+			$('#'+id).find('td.gain').text(((home+away)/4)*100+'%');	
+		}
+	});	
+	$('.select').each(function(){
+		var id = $(this).closest('tr').attr('id');
+		
+		var home = parseFloat($('input[name="home_rate_'+id+'"]').val());
+		var away = parseFloat($('input[name="away_rate_'+id+'"]').val());
+		// 무승부도 배팅가능할때
+		if ($('input[name="draw_rate_'+id+'"]').hasClass('forGain')){
+			var draw = parseFloat($('input[name="draw_rate_'+id+'"]').val());
+			$('#'+id).find('td.gain').text(Math.round((home+away+draw)/9*100)+'%');	
+		}
+		// 무승부는 배팅 불가능할때
+		else{
+			$('#'+id).find('td.gain').text(((home+away)/4)*100+'%');	
+		}
+	});	
 });
 function popupOpen(url, op){
 	var popUrl = url;

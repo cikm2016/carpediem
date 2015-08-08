@@ -5,7 +5,21 @@
 <button class="btn mBtn pinkBtn select_all">전체선택</button>
 <button class="btn mBtn charge_all">선택충전</button>
 </p>
-<h1>일정산 관리</h1>
+<h1>날짜 검색</h1>
+<form method="post" role="form" name="" id="searchadjust" >
+	<table class="dataTable tableStyle01">
+		<tr>
+			<th>검색일자</th>
+			<td><input type="text" name="date_start" class="form-control" placeholder="ex)15-07-05"></td>
+			<td><input type="text" name="date_end" class="form-control" placeholder="ex)15-07-05"></td>
+			<th>검색</th>
+			<td>
+				<button type="submit" class="btn mBtn">검색</button>
+			</td>
+		</tr>
+	</table>
+</form>
+<h1>일별 관리</h1>
 <table class="dataTable tableStyle01">
 	<thead>
 		<th>날짜</th>
@@ -17,15 +31,22 @@
 		<th>배팅금액</th>		
 		<th>당첨금액</th>		
 		<th>배팅손익</th>		
-		<th>미당첨수수료</th>		
-		<th>추천인수수료</th>		
 	</thead>
 	<tbody>
-		{% if adjust_today %}
-		<td>{{ adjust_today.date }}</td>
-		<td class="toComma">{{ adjust_today.charged }}</td>
-		<td class="toComma">{{ adjust_today.exchanged }}</td>
-		<td class="toComma">{{ adjust_today.charged - adjust_today.exchanged}}</td>
+		{% if adjust_list %}
+		{% for adjust_today in adjust_list %}
+			<tr>
+			<td>{{ adjust_today.date }}</td>
+			<td class="toComma">{{ adjust_today.charged }}</td>
+			<td class="toComma">{{ adjust_today.exchanged }}</td>
+			<td class="toComma">{{ adjust_today.charged - adjust_today.exchanged}}</td>
+			<td class="toComma">{{ adjust_today.bet_cnt }}</td>
+			<td class="toComma">{{ adjust_today.new_user }}</td>
+			<td class="toComma">{{ adjust_today.bet_money }}</td>
+			<td class="toComma">{{ adjust_today.success_money }}</td>
+			<td class="toComma">{{ adjust_today.bet_money - adjust_today.success_money }}</td>
+			</tr>
+		{% endfor %}
 		{% endif %}
 	</tbody>
 </table>
