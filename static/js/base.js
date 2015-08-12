@@ -214,7 +214,8 @@ $(document).ready(function(){
 	// 리그 종목 수정, 삭제
 	$('.sport_modify').click(function(){
 		var id = $(this).closest('tr').attr('id');
-		var name = $('input[name="'+id+'"]').val();
+		var name = $('input[name="sport_'+id+'"]').val();
+		var sort = $('input[name="sort_'+id+'"]').val();
 		var check = confirm('수정 하시겠습니까?');
 		if (check){
 			$.ajax({
@@ -223,11 +224,45 @@ $(document).ready(function(){
 				dataType: 'json',
 				data: { 
 					id : id,
-					name : name 
+					name : name,
+					sort : sort
 				},
 				success : function(resp){
 					if(resp.success){
 						alert('수정 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.sport_all_modify').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			var name = $('input[name="sport_'+id+'"]').val();
+			var sort = $('input[name="sort_'+id+'"]').val();
+			data.push({id:id, name:name, sort:sort})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/sport/allmodify',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -268,7 +303,8 @@ $(document).ready(function(){
 	// 리그 국가 수정, 삭제
 	$('.nation_modify').click(function(){
 		var id = $(this).closest('tr').attr('id');
-		var name = $('input[name="'+id+'"]').val();
+		var name = $('input[name="nation_'+id+'"]').val();
+		var sort = $('input[name="sort_'+id+'"]').val();
 		var check = confirm('수정 하시겠습니까?');
 		if (check){
 			$.ajax({
@@ -277,11 +313,45 @@ $(document).ready(function(){
 				dataType: 'json',
 				data: { 
 					id : id,
-					name : name 
+					name : name,
+					sort : sort
 				},
 				success : function(resp){
 					if(resp.success){
 						alert('수정 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.nation_all_modify').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			var name = $('input[name="nation_'+id+'"]').val();
+			var sort = $('input[name="sort_'+id+'"]').val();
+			data.push({id:id, name:name, sort:sort})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/nation/allmodify',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -319,10 +389,46 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('.sp_na_deleteall').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			data.push({id:id})
+		});	
+
+		var check = confirm('삭제 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/nation/alldelete',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('삭제 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var id = $(this).closest('tr').attr('id');
+							$('#'+id).remove();
+						});	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
 	// 리그 수정, 삭제
 	$('.league_modify').click(function(){
 		var id = $(this).closest('tr').attr('id');
-		var name = $('input[name="'+id+'"]').val();
+		var name = $('input[name="league_'+id+'"]').val();
+		var sort = $('input[name="sort_'+id+'"]').val();
 		var state = $('select[name="state_'+id+'"]').val();
 
 		var check = confirm('수정 하시겠습니까?');
@@ -334,11 +440,46 @@ $(document).ready(function(){
 				data: { 
 					id : id,
 					name : name,
+					sort : sort,
 					state : state
 				},
 				success : function(resp){
 					if(resp.success){
 						alert('수정 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.league_all_modify').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			var name = $('input[name="league_'+id+'"]').val();
+			var state = $('select[name="state_'+id+'"]').val();
+			var sort = $('input[name="sort_'+id+'"]').val();
+			data.push({id:id, name:name, sort:sort, state:state})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/league/allmodify',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
 					}
 					else{
 						alert('잘못된 접근입니다.');
@@ -1997,8 +2138,35 @@ function validateForm(){
 		return false;
 	}
 }
+function validateFormsearchLeague(){
+	var x = document.forms["searchleague"]["league"].value;
+	var y = document.forms["searchleague"]["sport"].value;
+	var z = document.forms["searchleague"]["nation"].value;
+	if (y == 0){
+		alert("종목을 입력하세요.");
+		return false;
+	}
+	if (z == 0){
+		alert("국가를 입력하세요.");
+		return false;
+	}
+	if (x == null || x == ""){
+		alert("리그명을 입력하세요.");
+		return false;
+	}
+}
 function validateFormLeague(){
 	var x = document.forms["addleague"]["league"].value;
+	var y = document.forms["addleague"]["sport"].value;
+	var z = document.forms["addleague"]["nation"].value;
+	if (y == 0){
+		alert("종목을 입력하세요.");
+		return false;
+	}
+	if (z == 0){
+		alert("국가를 입력하세요.");
+		return false;
+	}
 	if (x == null || x == ""){
 		alert("리그명을 입력하세요.");
 		return false;

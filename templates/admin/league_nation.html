@@ -11,9 +11,17 @@
 	</tr>
 	</form>	
 </table>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn nation_all_modify">선택수정</button>
+<button class="btn mBtn greyBtn sp_na_deleteall">선택삭제</button>
+</p>
+<h1>국가 리스트</h1>
 <table class="dataTable">
 	<thead>
+		<th width="1%">선택</th>
 		<th>국가명</th>
+		<th width="10%">정렬</th>
 		<th>수정</th>
 		<th>삭제</th>
 	</tr>
@@ -21,8 +29,10 @@
 	<tbody>
 		{% if nationlist %}
 		{% for nation in nationlist %}
-		<tr class="" id="{{ nation.id }}">
-			<td><input type="text" name="{{nation.id}}" class="form-control" value="{{ nation.name }}"></td>
+		<tr class="select" id="{{ nation.id }}">
+			<td> <input type="checkbox" name="select"></td>
+			<td><input type="text" name="nation_{{nation.id}}" class="form-control" value="{{ nation.name }}"></td>
+			<td><input type="text" name="sort_{{nation.id}}" class="form-control" value="{{ nation.sort }}"></td>
 			<td><button class="btn mBtn nation_modify">수정</button></td>
 			<td><button class="btn mBtn greyBtn nation_delete">삭제</button></td>
 		</tr>
@@ -32,7 +42,7 @@
 		{% endif %}
 	</tbody>
 </table>
-
+</div>
 {% endblock %}
 
 

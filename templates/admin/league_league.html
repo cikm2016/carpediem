@@ -1,12 +1,13 @@
 {% extends "layout_admin.html" %}
 {% block contents %}
-<h1>리그 추가</h1>
+<h1>리그 검색</h1>
 <table class="dataTable tableStyle01">
-	<form method="post" role="form" name="addleague" onsubmit="return validateFormLeague()">
+	<form method="get" role="form" name="searchleague" onsubmit="return validateFormsearchLeague()">
 	<tr>
 		<th>종목 </th>
 		<td>
 			<select class="form-control"  name="sport">
+				<option value="0">종목선택</option>
 				{% if sportlist %}
 				{% for sport in sportlist %}
 				<option value="{{sport.name}}">{{sport.name}} </option>
@@ -17,6 +18,39 @@
 		<th>국가</th>
 		<td>
 			<select class="form-control" name="nation">
+				<option value="0">국가선택</option>
+				{% if nationlist %}
+				{% for nation in nationlist %}
+				<option value="{{nation.name}}">{{nation.name}} </option>
+				{% endfor %}
+				{% endif %}
+			</select>
+		</td>
+		<th>리그명</th>
+		<td><input type="text" name="league" class="form-control"></td>
+		<td><button type="submit" class="btn mBtn">검색</button></td>
+	</tr>
+	</form>	
+</table>
+<h1>리그 추가</h1>
+<table class="dataTable tableStyle01">
+	<form method="post" role="form" name="addleague" onsubmit="return validateFormLeague()">
+	<tr>
+		<th>종목 </th>
+		<td>
+			<select class="form-control"  name="sport">
+				<option value="0">종목선택</option>
+				{% if sportlist %}
+				{% for sport in sportlist %}
+				<option value="{{sport.name}}">{{sport.name}} </option>
+				{% endfor %}
+				{% endif %}
+			</select>
+		</td>
+		<th>국가</th>
+		<td>
+			<select class="form-control" name="nation">
+				<option value="0">국가선택</option>
 				{% if nationlist %}
 				{% for nation in nationlist %}
 				<option value="{{nation.name}}">{{nation.name}} </option>
@@ -31,29 +65,39 @@
 	</tr>
 	</form>	
 </table>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn league_all_modify">선택수정</button>
+<button class="btn mBtn greyBtn sp_na_deleteall">선택삭제</button>
+</p>
+<h1>리그 리스트</h1>
 <table class="dataTable">
 	<thead>
-		<th>종목명</th>
-		<th>국가명</th>
+		<th width="1%">선택</th>
+		<th width="10%">종목명</th>
+		<th width="10%">국가명</th>
 		<th>리그명</th>
-		<th>리그상태</th>
-		<th>수정</th>
-		<th>삭제</th>
+		<th width="10%">리그상태</th>
+		<th width="10%">정렬</th>
+		<th width="10%">수정</th>
+		<th width="10%">삭제</th>
 	</tr>
 </thead>
 <tbody>
 {% if leaguelist %}
 {% for league in leaguelist %}
-<tr class="" id="{{ league.id }}">
+<tr class="select" id="{{ league.id }}">
+	<td> <input type="checkbox" name="select"></td>
 	<td>{{league.sport}}</td>
 	<td>{{league.nation}}</td>
-	<td><input type="text" name="{{league.id}}" class="form-control" value="{{ league.name }}"></td>
+	<td><input type="text" name="league_{{league.id}}" class="form-control" value="{{ league.name }}"></td>
 	<td>
 		<select class="form-control" name="state_{{league.id}}">
 			<option value="0" {% if league.state == 0%}selected{%endif%}>리그종료</option>
 			<option value="1" {% if league.state == 1%}selected{%endif%}>리그중</option>
 		</select>
 	</td>
+	<td><input type="text" name="sort_{{league.id}}" class="form-control" value="{{ league.sort }}"></td>
 	<td><button class="btn mBtn league_modify">수정</button></td>
 	<td><button class="btn mBtn greyBtn league_delete">삭제</button></td>
 </tr>

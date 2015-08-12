@@ -500,7 +500,7 @@ def admin_user_admin():
 def admin_league_sport():
 	if 'admin' in session:
 		if request.method == 'GET':
-			sportlist = SportandNation.query.filter(SportandNation.type == 0).all()
+			sportlist = SportandNation.query.filter(SportandNation.type == 0).order_by(SportandNation.sort).all()
 			return render_template('admin/league_sport.html', sportlist=sportlist, menu='league')
 		else:
 			sport = request.form['sport']
@@ -521,18 +521,42 @@ def admin_league_sport_modify():
 	if 'admin' in session:
 		id = int(request.form['id'])
 		name = request.form['name']
+		sort = request.form['sort']
 
 		sport = SportandNation.query.get(id)
 		if sport is None:
 			return jsonify(success=False)
 
 		sport.name = name
+		sport.sort = sort
 		db.session.commit()
 		return jsonify(success=True)
 		
 	else:
 		return jsonify(success=False) 
 
+#종목 수정 - 선택 사항
+@app.route('/admin/league/sport/allmodify', methods=['POST'])
+def admin_league_sport_allmodify():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			name = d['name']
+			sort = d['sort']
+
+			sport = SportandNation.query.get(id)
+			if sport is None:
+				return jsonify(success=False)
+
+			sport.name = name
+			sport.sort = sort
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
 #종목 삭제
 @app.route('/admin/league/sport/delete', methods=['POST'])
 def admin_league_sport_delete():
@@ -555,7 +579,7 @@ def admin_league_sport_delete():
 def admin_league_nation():
 	if 'admin' in session:
 		if request.method == 'GET':
-			nationlist = SportandNation.query.filter(SportandNation.type == 1).all()
+			nationlist = SportandNation.query.filter(SportandNation.type == 1).order_by(SportandNation.sort).all()
 			return render_template('admin/league_nation.html', nationlist=nationlist, menu='league')
 		else:
 			nation = request.form['nation']
@@ -576,18 +600,42 @@ def admin_league_nation_modify():
 	if 'admin' in session:
 		id = int(request.form['id'])
 		name = request.form['name']
+		sort = request.form['sort']
 
 		sport = SportandNation.query.get(id)
 		if sport is None:
 			return jsonify(success=False)
 
 		sport.name = name
+		sport.sort = sort
 		db.session.commit()
 		return jsonify(success=True)
 		
 	else:
 		return jsonify(success=False) 
 
+#국가 수정 - 선택 사항
+@app.route('/admin/league/nation/allmodify', methods=['POST'])
+def admin_league_nation_allmodify():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			name = d['name']
+			sort = d['sort']
+
+			sport = SportandNation.query.get(id)
+			if sport is None:
+				return jsonify(success=False)
+
+			sport.name = name
+			sport.sort = sort
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
 #국가 삭제
 @app.route('/admin/league/nation/delete', methods=['POST'])
 def admin_league_nation_delete():
@@ -605,14 +653,34 @@ def admin_league_nation_delete():
 	else:
 		return jsonify(success=False) 
 
+#국가 삭제
+@app.route('/admin/league/nation/alldelete', methods=['POST'])
+def admin_league_nation_alldelete():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+
+			nation = SportandNation.query.get(id)
+			if nation is None:
+				return jsonify(success=False)
+
+			db.session.delete(nation)
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
 #리그 추가
 @app.route('/admin/league/league', methods=['GET', 'POST'])
 def admin_league_league():
 	if 'admin' in session:
 		if request.method == 'GET':
-			nationlist = SportandNation.query.filter(SportandNation.type == 1)
-			sportlist = SportandNation.query.filter(SportandNation.type == 0)
-			leaguelist = League.query.all()
+			nationlist = SportandNation.query.filter(SportandNation.type == 1).order_by(SportandNation.sort).all()
+			sportlist = SportandNation.query.filter(SportandNation.type == 0).order_by(SportandNation.sort).all()
+			leaguelist = League.query.order_by(League.sort).all()
 			return render_template('admin/league_league.html', leaguelist=leaguelist, nationlist=nationlist, sportlist=sportlist, menu='league')
 		else:
 			nation = request.form['nation']
@@ -637,6 +705,7 @@ def admin_league_league_modify():
 	if 'admin' in session:
 		id = int(request.form['id'])
 		name = request.form['name']
+		sort = request.form['sort']
 		state = int(request.form['state'])
 
 		league = League.query.get(id)
@@ -644,6 +713,7 @@ def admin_league_league_modify():
 			return jsonify(success=False)
 
 		league.name = name
+		league.sort = sort
 		league.state = state
 		db.session.commit()
 		return jsonify(success=True)
@@ -651,6 +721,30 @@ def admin_league_league_modify():
 	else:
 		return jsonify(success=False) 
 
+#리그 수정 - 선택 사항
+@app.route('/admin/league/league/allmodify', methods=['POST'])
+def admin_league_league_allmodify():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			name = d['name']
+			state = d['state']
+			sort = d['sort']
+
+			league = League.query.get(id)
+			if league is None:
+				return jsonify(success=False)
+
+			league.name = name
+			league.state = state
+			league.sort = sort
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
 #리그 삭제
 @app.route('/admin/league/league/delete', methods=['POST'])
 def admin_league_league_delete():
@@ -674,7 +768,7 @@ def admin_league_league_delete():
 def admin_league_detail():
 	if 'admin' in session:
 		if request.method == 'GET':
-			leaguelist = League.query.all()
+			leaguelist = League.query.filter(League.state==1).all()
 			detaillist = LeagueDetail.query.all()
 			return render_template('admin/league_detail.html', leaguelist=leaguelist,detaillist=detaillist, menu='league')
 		else:

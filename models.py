@@ -130,6 +130,7 @@ class AdjustDay(db.Model):
 
 class SportandNation(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	sort = db.Column(db.Integer, default=0)
 	#0: sport, 1: nation
 	type = db.Column(db.Integer)
 	name = db.Column(db.String(255))
@@ -137,6 +138,7 @@ class SportandNation(db.Model):
 class League(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(255))
+	sort = db.Column(db.Integer, default=0)
 	nation = db.Column(db.String(255)) 
 	sport = db.Column(db.String(255)) 
 	# 0: end, 1: on

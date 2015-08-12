@@ -11,17 +11,27 @@
 		</tr>
 	</form>	
 </table>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn sport_all_modify">선택수정</button>
+<button class="btn mBtn greyBtn sp_na_deleteall">선택삭제</button>
+</p>
+<h1>종목 리스트</h1>
 <table class="dataTable">
 	<thead>
+		<th width="1%">선택</th>
 		<th>종목명</th>
+		<th width="10%">정렬</th>
 		<th>수정</th>
 		<th>삭제</th>
 	</thead>
 	<tbody>
 	{% if sportlist %}
 	{% for sport in sportlist %}
-	<tr class="" id="{{ sport.id }}">
-		<td><input type="text" name="{{sport.id}}" class="form-control" value="{{ sport.name }}"></td>
+	<tr class="select" id="{{ sport.id }}">
+		<td> <input type="checkbox" name="select"></td>
+		<td><input type="text" name="sport_{{sport.id}}" class="form-control" value="{{ sport.name }}"></td>
+		<td><input type="text" name="sort_{{sport.id}}" class="form-control" value="{{ sport.sort }}"></td>
 		<td><button class="btn mBtn sport_modify">수정</button></td>
 		<td><button class="btn mBtn greyBtn sport_delete">삭제</button></td>
 	</tr>
@@ -32,6 +42,7 @@
 	</tbody>
 </table>
 
+</div>
 {% endblock %}
 
 
