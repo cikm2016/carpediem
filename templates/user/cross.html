@@ -29,13 +29,15 @@
 				<div class="battingContents" id="{{game.id}}">
 
 				<p class="date">{{ game.date.strftime('%m/%d') }}[{% if  game.date.strftime('%A') == 'Monday'%}월{% elif  game.date.strftime('%A') == 'Tuesday'%}화{% elif  game.date.strftime('%A') == 'Wednesday'%}수{% elif  game.date.strftime('%A') == 'Thursday'%}목{% elif  game.date.strftime('%A') == 'Friday'%}금{% elif  game.date.strftime('%A') == 'Saturday'%}토{% elif  game.date.strftime('%A') == 'Sunday'%}일{%else%}{%endif%}] {{ game.date.strftime('%H:%M') }}</p>
-				<p class="clickbox victory home {%if game.win == 1%}clicked{%endif%}"><span class="team">{{game.home}}</span><span class="distribution rate">{{game.home_rate}}</span></p>
-				{% if game.draw_rate == 0 %}
-				<p class="draw">vs</p>
+				<p class="clickbox victory home"><span class="team">{{game.home}} {{game.league_detail.home}}</span><span class="distribution rate">{{game.home_rate}}</span></p>
+				{% if game.league_detail.game == 1 %}
+				<p class="clickbox draw"><span class="rate">{{ game.draw_rate }}</span></p>
+				{% elif game.league_detail.game == 2 %}
+				<p class="draw">{{game.handicap}}</p>
 				{% else %}
-				<p class="clickbox draw {%if game.win == 0%}clicked{%endif%}"><span class="rate">{{ game.draw_rate }}</span></p>
+				<p class="draw">{{game.standard}}</p>
 				{% endif %}	
-				<p class="clickbox lose away {%if game.win == -1%}clicked{%endif%}"><span class="distribution rate">{{game.away_rate}}</span><span class="team">{{game.away}}</span></p>
+				<p class="clickbox lose away"><span class="distribution rate">{{game.away_rate}}</span><span class="team">{{game.league_detail.away}} {{game.away}}</span></p>
 				<p class="state">
 				{% if game.state == 0%}{%endif%}
 				{% if game.state == 1%}배팅가능{%endif%}

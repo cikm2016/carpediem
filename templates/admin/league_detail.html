@@ -2,18 +2,19 @@
 {% block contents %}
 <h1>세부 리그 추가</h1>
 <table class="dataTable tableStyle01">
-	<form method="post" role="form" name="adddetail" onsubmit="return validateFormDetail()">
 		<tr>
 			<th width="25%">리그명</th>
 			<th width="15%">세부리그명</th>
 			<th width="15%">홈팀 세부 리그명</th>
 			<th width="15%">원정팀 세부리그명</th>
-			<th>메뉴</th>
+			<th>메뉴종류</th>
+			<th>게임종류</th>
 			<th>등록</th>
 		</tr>
-		<tr>
+		<tr class="select" id="">
 			<td>
 				<select class="form-control"  name="league">
+					<option value="0">리그선택</option>
 					{% if leaguelist %}
 					{% for league in leaguelist %}
 					<option value="{{league.id}}">{{league.name}} </option>
@@ -26,51 +27,44 @@
 			<td><input type="text" name="away" class="form-control"></td>
 			<td>
 			<select class="form-control"  name="menu">
-				<option value="0">메뉴</option>
+				<option value="0">메뉴종류</option>
 				<option value="1">승무패</option>
 				<option value="2">핸디캡</option>
 				<option value="3">스페셜</option>
 			</select>
 			</td>
-			<td><button type="submit" class="btn sBtn">등록</button></td>
+			<td>
+			<select class="form-control"  name="game">
+				<option value="0">게임종류</option>
+				<option value="1">승무패</option>
+				<option value="2">핸디캡</option>
+				<option value="3">언더오버</option>
+			</select>
+			</td>
+			<td><button type="button" id="detail_add" class="btn sBtn">등록</button></td>
 		</tr>
-	</form>	
 </table>
+<div class="relativeWrap">
+<p class="topBtnWrap">
+<button class="btn mBtn detail_all_modify">선택수정</button>
+<button class="btn mBtn greyBtn detail_deleteall">선택삭제</button>
+</p>
+<h1>세부리그 리스트</h1>
 <table class="dataTable">
 	<thead>
+		<th width="1%">선택</th>
 		<th width="25%">리그명</th>
 		<th width="12%">세부 리그명</th>
 		<th width="12%">홈팀 세부 리그명</th>
 		<th width="12%">원정팀 세부 리그명</th>
-		<th>메뉴</th>
+		<th>메뉴종류</th>
+		<th>게임종류</th>
 		<th>수정/삭제</th>
 	</thead>
-	<tbody>
-	{% if detaillist %}
-	{% for detail in detaillist|sort(reverse=True,attribute='league.name') %}
-	<tr class="" id="{{ detail.id }}">
-		<td style="text-align:left;">{{detail.league.name}} {{detail.name}}</td>
-		<td><input type="text" name="name_{{detail.id}}" class="form-control" value="{{ detail.name }}"></td>
-		<td><input type="text" name="home_{{detail.id}}" class="form-control" value="{{ detail.home }}"></td>
-		<td><input type="text" name="away_{{detail.id}}" class="form-control" value="{{ detail.away }}"></td>
-		<td>
-			<select class="form-control"  name="menu">
-				<option value="0" {% if detail.menu == 0%}selected{%endif%}>메뉴</option>
-				<option value="1" {% if detail.menu == 1%}selected{%endif%}>승무패</option>
-				<option value="2" {% if detail.menu == 2%}selected{%endif%}>핸디캡</option>
-				<option value="3" {% if detail.menu == 3%}selected{%endif%}>스페셜</option>
-			</select>
-		</td>
-		<td>
-			<button class="btn sBtn detail_modify">수정</button>/<button class="btn sBtn greyBtn detail_delete">삭제</button>
-		</td>
-	</tr>
-	{% endfor %}
-	{% else %}
-	{% endif %}
+	<tbody id="detail_table">
 	</tbody>
 </table>
-
+</div>
 {% endblock %}
 
 

@@ -2,7 +2,7 @@
 {% block contents %}
 <h1>리그 검색</h1>
 <table class="dataTable tableStyle01">
-	<form method="get" role="form" name="searchleague" onsubmit="return validateFormsearchLeague()">
+	<form method="post" role="form" name="searchleague" onsubmit="return validateFormsearchLeague()">
 	<tr>
 		<th>종목 </th>
 		<td>
@@ -28,6 +28,7 @@
 		</td>
 		<th>리그명</th>
 		<td><input type="text" name="league" class="form-control"></td>
+		<input type="hidden" name="check" value="1">
 		<td><button type="submit" class="btn mBtn">검색</button></td>
 	</tr>
 	</form>	
@@ -37,6 +38,12 @@
 	<form method="post" role="form" name="addleague" onsubmit="return validateFormLeague()">
 	<tr>
 		<th>종목 </th>
+		<th>국가</th>
+		<th>리그명</th>
+		<th width="20%">리그이미지</th>
+		<th>등록</th>
+	</tr>
+	<tr>
 		<td>
 			<select class="form-control"  name="sport">
 				<option value="0">종목선택</option>
@@ -47,7 +54,6 @@
 				{% endif %}
 			</select>
 		</td>
-		<th>국가</th>
 		<td>
 			<select class="form-control" name="nation">
 				<option value="0">국가선택</option>
@@ -58,9 +64,9 @@
 				{% endif %}
 			</select>
 		</td>
-		<th>리그명</th>
 		<td><input type="text" name="league" class="form-control"></td>
-		<th>등록</th>
+		<td><input type="file" name="image" class="frm-control"></td>
+		<input type="hidden" name="check" value="0">
 		<td><button type="submit" class="btn mBtn">등록</button></td>
 	</tr>
 	</form>	
@@ -68,7 +74,7 @@
 <div class="relativeWrap">
 <p class="topBtnWrap">
 <button class="btn mBtn league_all_modify">선택수정</button>
-<button class="btn mBtn greyBtn sp_na_deleteall">선택삭제</button>
+<button class="btn mBtn greyBtn league_deleteall">선택삭제</button>
 </p>
 <h1>리그 리스트</h1>
 <table class="dataTable">
@@ -77,8 +83,8 @@
 		<th width="10%">종목명</th>
 		<th width="10%">국가명</th>
 		<th>리그명</th>
-		<th width="10%">리그상태</th>
-		<th width="10%">정렬</th>
+		<th width="12%">리그상태</th>
+		<th width="7%">정렬</th>
 		<th width="10%">수정</th>
 		<th width="10%">삭제</th>
 	</tr>

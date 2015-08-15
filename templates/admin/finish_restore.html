@@ -6,15 +6,16 @@
 		<th width="15%">리그명</th>
 		<th >게임종류</th>
 		<th width="10%">경기일자</th>
-		<th width="15%">승(홈팀)</th>
+		<th width="15%">승[홈]</th>
 		<th width="5%">승</th>
-		<th width="5%">무</th>
+		<th width="5%">무/기준/핸디</th>
 		<th width="5%">패</th>
-		<th width="15%">패(원정팀)</th>
+		<th width="15%">패[원정]</th>
 		<th>홈</th>
 		<th>VS</th>
 		<th>원정</th>
-		<th>마감</th>
+		<th>결과</th>
+		<th>복원</th>
 	</thead>
 	<tbody>
 	{% if gamelist %}
@@ -33,15 +34,16 @@
 			{% else %}
 			{% endif %}	
 			</td>
-		<td>{{ game.date.strftime('%Y-%m-%d %H:%M') }}</td>
+		<td>{{ game.date.strftime('%m/%d %H:%M') }}</td>
 		<td>{{ game.home }} {{game.league_detail.name}}</td>
 		<td>{{ game.home_rate }}</td>
-		<td>{{ game.draw_rate }}</td>
+		<td>{%if game.league_detail.game==1%}{{ game.draw_rate }}{%elif game.league_detail.game==2%}{{ game.handicap }}{%else%}{{ game.standard }}{%endif%}</td>
 		<td>{{ game.away_rate }}</td>
 		<td>{{ game.away }} {{game.league_detail.name}}</td>
 		<td>{{game.home_score}}</td>
 		<td>VS</td>
 		<td>{{game.away_score}}</td>
+		<td>{% if game.win == 1%}홈승{%elif game.win==0 %}무승부{%else%}원정승{%endif%}</td>
 		<td>
 			<button class="btn mBtn btn-xs cross_restore">복원 </button>
 		</td>

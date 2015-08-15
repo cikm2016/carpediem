@@ -680,22 +680,35 @@ def admin_league_league():
 		if request.method == 'GET':
 			nationlist = SportandNation.query.filter(SportandNation.type == 1).order_by(SportandNation.sort).all()
 			sportlist = SportandNation.query.filter(SportandNation.type == 0).order_by(SportandNation.sort).all()
+
 			leaguelist = League.query.order_by(League.sort).all()
 			return render_template('admin/league_league.html', leaguelist=leaguelist, nationlist=nationlist, sportlist=sportlist, menu='league')
 		else:
-			nation = request.form['nation']
-			sport = request.form['sport']
-			leaguename = request.form['league']
-			league = League(
-						name = leaguename,
-						nation = nation,
-						sport = sport
-						)
+			check = request.form['check']
+			if check == '1':
+				nationlist = SportandNation.query.filter(SportandNation.type == 1).order_by(SportandNation.sort).all()
+				sportlist = SportandNation.query.filter(SportandNation.type == 0).order_by(SportandNation.sort).all()
 
-			db.session.add(league)
-			db.session.commit()
-			
-			return redirect(url_for('admin_league_league'))
+				sport = request.form['sport']
+				nation = request.form['nation']
+				name = request.form['league']
+
+				leaguelist = League.query.filter(League.nation==nation, League.sport==sport, League.name.contains(name)).order_by(League.sort).all()
+				return render_template('admin/league_league.html', leaguelist=leaguelist, nationlist=nationlist, sportlist=sportlist, menu='league')
+			else:
+				nation = request.form['nation']
+				sport = request.form['sport']
+				name = request.form['league']
+				league = League(
+							name = name,
+							nation = nation,
+							sport = sport
+							)
+
+				db.session.add(league)
+				db.session.commit()
+				
+				return redirect(url_for('admin_league_league'))
 	else:
 		return redirect(url_for('main_admin'))
 
@@ -762,6 +775,23 @@ def admin_league_league_delete():
 	else:
 		return jsonify(success=False) 
 
+@app.route('/admin/league/league/alldelete', methods=['POST'])
+def admin_league_league_alldelete():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = d['id']
+			league = League.query.get(id)
+			if league is None:
+				return jsonify(success=False)
+
+			db.session.delete(league)
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
 
 #세부 리그 추가
 @app.route('/admin/league/detail', methods=['GET', 'POST'])
@@ -769,31 +799,61 @@ def admin_league_detail():
 	if 'admin' in session:
 		if request.method == 'GET':
 			leaguelist = League.query.filter(League.state==1).all()
-			detaillist = LeagueDetail.query.all()
-			return render_template('admin/league_detail.html', leaguelist=leaguelist,detaillist=detaillist, menu='league')
+			#detaillist = LeagueDetail.query.all()
+			#return render_template('admin/league_detail.html', leaguelist=leaguelist,detaillist=detaillist, menu='league')
+			return render_template('admin/league_detail.html', leaguelist=leaguelist, menu='league')
 		else:
 			leagueid = int(request.form['league'])
 			name = request.form['name']
 			home = request.form['home']
 			away = request.form['away']
 			menu = request.form['menu']
+			game = request.form['game']
 
 			league = League.query.get(leagueid)
-
+			id = 0
 			if league is not None:
 				detail = LeagueDetail(
 							name = name,
 							home = home,
 							away = away,
 							menu = int(menu),
+							game = int(game),
 							league = league
 							)
-				db.session.add(league)
+				db.session.add(detail)
 				db.session.commit()
+				id = detail.id
 			
-			return redirect(url_for('admin_league_detail'))
+			return jsonify(success=True, id=id, name=name, home=home, away=away,menu=menu, game=game, league=league.name)
 	else:
 		return redirect(url_for('main_admin'))
+
+#세부 리그 리스트
+@app.route('/admin/league/detail/list', methods=['POST'])
+def admin_league_detail_list():
+	if 'admin' in session:
+		# league id
+		id = int(request.form['id'])
+
+		league = League.query.get(id)
+		detail = league.details.all()
+
+		list = []
+		for d in detail:
+			tmp = {}
+			tmp['id'] = d.id
+			tmp['league'] = league.name
+			tmp['name'] = d.name
+			tmp['home'] = d.home
+			tmp['away'] = d.away
+			tmp['menu'] = d.menu
+			tmp['game'] = d.game
+			list.append(tmp)
+		
+		return jsonify(success=True, list=list)
+	else:
+		return jsonify(success=False) 
 
 #세부 리그명, 상태 수정
 @app.route('/admin/league/detail/modify', methods=['POST'])
@@ -803,6 +863,8 @@ def admin_league_detail_modify():
 		name = request.form['name']
 		home = request.form['home']
 		away = request.form['away']
+		menu = request.form['menu']
+		game = request.form['game']
 
 		detail = LeagueDetail.query.get(id)
 		if detail is None:
@@ -811,6 +873,36 @@ def admin_league_detail_modify():
 		detail.name = name
 		detail.home = home
 		detail.away = away 
+		detail.menu = menu
+		detail.game = game
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+#세부 리그명, 상태 수정
+@app.route('/admin/league/detail/allmodify', methods=['POST'])
+def admin_league_detail_allmodify():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+			name = d['name']
+			home = d['home']
+			away = d['away']
+			menu = d['menu']
+			game = d['game']
+
+			detail = LeagueDetail.query.get(id)
+			if detail is None:
+				return jsonify(success=False)
+
+			detail.name = name
+			detail.home = home
+			detail.away = away 
+			detail.menu = menu
+			detail.game = game
 		db.session.commit()
 		return jsonify(success=True)
 		
@@ -828,6 +920,26 @@ def admin_league_detail_delete():
 			return jsonify(success=False)
 
 		db.session.delete(league)
+		db.session.commit()
+		return jsonify(success=True)
+		
+	else:
+		return jsonify(success=False) 
+
+#세부 리그 삭제
+@app.route('/admin/league/detail/alldelete', methods=['POST'])
+def admin_league_detail_alldelete():
+	if 'admin' in session:
+		data = json.loads(request.form['data'])
+		
+		for d in data:
+			id = int(d['id'])
+
+			league = LeagueDetail.query.get(id)
+			if league is None:
+				return jsonify(success=False)
+
+			db.session.delete(league)
 		db.session.commit()
 		return jsonify(success=True)
 		
@@ -852,12 +964,12 @@ def admin_register_game():
 			league_id = int(request.form['league'])
 			date1 = request.form['date_first']
 			date2 =  request.form['date_second']
-			league = League.query.get(league_id)
-			details = league.details.all()
 
-			#이 부분 수정 필요
+			checked =  request.form.getlist('checked')
+
 			for i in range(int(game)):
-				for detail in details:
+				for c in checked:
+					detail = LeagueDetail.query.get(int(c))
 					date = datetime.strptime(date1+' '+date2, '%Y-%m-%d %H:%M')
 
 					game = Game(
@@ -872,6 +984,33 @@ def admin_register_game():
 			return redirect(url_for('admin_register_game'))
 	else:
 		return redirect(url_for('main_admin'))
+
+@app.route('/admin/register/game/getdetail', methods=['POST'])
+def admin_register_game_getdetail():
+	if 'admin' in session:
+		id = int(request.form['id'])
+
+		league = League.query.get(id)
+		if league is None:
+			return jsonify(success=False)
+
+		detail = league.details.all()
+
+		list = []
+		for d in detail:
+			tmp = {}
+			tmp['id'] = d.id
+			tmp['league'] = league.name
+			tmp['name'] = d.name
+			tmp['menu'] = d.menu
+			list.append(tmp)
+
+		db.session.commit()
+		
+		return jsonify(success=True, list=list)
+	else:
+		return jsonify(success=False) 
+	
 
 #등록 경기 수정
 @app.route('/admin/register/game/modify', methods=['POST'])
@@ -1019,9 +1158,15 @@ def admin_register_cross_applyall():
 			id = int(d['id'])
 			game = Game.query.get(id)
 
+			if game.league_detail.game == 1:
+				game.draw_rate =  d['draw']
+			elif game.league_detail.game == 2:
+				game.handicap =  d['draw']
+			else:
+				game.standard =  d['draw']
+				
 			game.state =  d['state']
 			game.home_rate =  d['home']
-			game.draw_rate =  d['draw']
 			game.away_rate =  d['away']
 
 		db.session.commit()
@@ -1227,24 +1372,39 @@ def admin_finish_cross_all():
 			game.away_score = away_score
 			game.finish = 1
 			
-			if home_score > away_score:
-				game.win = 1
-			elif home_score == away_score:
-				game.win = 0
+			if game.league_detail.game == 1:
+				if home_score > away_score:
+					game.win = 1
+				elif home_score == away_score:
+					game.win = 0
+				else:
+					game.win = -1
+			elif game.league_detail.game == 2:
+				if home_score + game.handicap > away_score:
+					game.win = 1
+				elif home_score + game.handicap == away_score:
+					game.win = 0
+				else:
+					game.win = -1
 			else:
-				game.win = -1
+				if home_score + away_score > game.standard:
+					game.win = 1
+				elif home_score + away_score == game.standard: 
+					game.win = 0
+				else:
+					game.win = -1
 
 			games = game.betgames.all()
 			for g in games:	
 				# 게임 결과 반영
-				if home_score > away_score:
+				if game.win == 1:
 					if g.betting == 1:
 						g.isSuccess = 1
 					else:
 						userbet = UserBet.query.get(g.user_bet_id)
 						userbet.state = -1
 
-				elif home_score == away_score:
+				elif game.win == 0:
 					if g.betting == 0:
 						g.isSuccess = 1
 					else:

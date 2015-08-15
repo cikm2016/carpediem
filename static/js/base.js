@@ -517,8 +517,92 @@ $(document).ready(function(){
 			});
 		}
 	});
+	$('.league_deleteall').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			data.push({id:id})
+		});	
+
+		var check = confirm('삭제 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/league/alldelete',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('삭제 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var id = $(this).closest('tr').attr('id');
+							$('#'+id).remove();
+						});	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('select[name="league"]').change(function(){
+		var league_id = $(this).val();
+		if (league_id == 0){
+			$('#detail_table').empty();
+		}
+		else{
+			$.ajax({
+				url : '/admin/league/detail/list',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : league_id
+				},
+				success : function(resp){
+					if(resp.success){
+						var list = resp.list
+						for(var i=0; i<list.length; i++){
+							if (list[i].menu == 1){
+var menu = '<option value="1" selected>승무패</option> <option value="2">핸디캡</option> <option value="3">스페셜</option>';
+							}
+							else if (list[i].menu == 2){
+var menu = '<option value="1">승무패</option> <option value="2" selected>핸디캡</option> <option value="3">스페셜</option>';
+							}
+							else{
+var menu = '<option value="1">승무패</option> <option value="2">핸디캡</option> <option value="3" selected>스페셜</option>';
+							}
+							if (list[i].game == 1){
+var game = '<option value="1" selected>승무패</option> <option value="2">핸디캡</option> <option value="3">언더오버</option>';
+						}
+						else if (list[i].game == 2){
+var game = '<option value="1">승무패</option> <option value="2" selected>핸디캡</option> <option value="3">언더오버</option>';
+						}
+						else{
+var game = '<option value="1">승무패</option> <option value="2">핸디캡</option> <option value="3" selected>언더오버</option>';
+							}
+							var tr = '<tr class="select" id="'+list[i].id +'"> <td> <input type="checkbox" name="select"></td> <td style="text-align:left;">'+list[i].league + list[i].name +'</td> <td><input type="text" name="name_'+list[i].id+'" class="form-control" value="'+list[i].name +'"></td> <td><input type="text" name="home_'+list[i].id+'" class="form-control" value="'+list[i].home +'"></td> <td><input type="text" name="away_'+list[i].id+'" class="form-control" value="'+ list[i].away +'"></td> <td> <select class="form-control"  name="menu_'+list[i].id+'">'+menu+' </select> </td> <td> <select class="form-control"  name="game_'+list[i].id+'">'+game+' </select> </td> <td> <button class="btn sBtn detail_modify">수정</button>/<button class="btn sBtn greyBtn detail_delete">삭제</button> </td> </tr>';
+							$('#detail_table').append(tr);
+						}	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
 	// 세부 리그 수정, 삭제
-	$('.detail_modify').click(function(){
+	$('#detail_table').on("click",".detail_modify",function(){
 		var id = $(this).closest('tr').attr('id');
 
 		var check = confirm('수정 하시겠습니까?');
@@ -531,7 +615,9 @@ $(document).ready(function(){
 					id : id,
 					name : $('input[name="name_'+id+'"]').val(),
 					home : $('input[name="home_'+id+'"]').val(),
-					away : $('input[name="away_'+id+'"]').val()
+					away : $('input[name="away_'+id+'"]').val(),
+					game : $('select[name="game_'+id+'"]').val(),
+					menu : $('select[name="menu_'+id+'"]').val()
 				},
 				success : function(resp){
 					if(resp.success){
@@ -547,7 +633,77 @@ $(document).ready(function(){
 			});
 		}
 	});
-	$('.detail_delete').click(function(){
+	$('.detail_all_modify').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			var name = $('input[name="name_'+id+'"]').val();
+			var home = $('input[name="home_'+id+'"]').val();
+			var away = $('input[name="away_'+id+'"]').val();
+			var menu = $('select[name="menu_'+id+'"]').val();
+			var game = $('select[name="game_'+id+'"]').val();
+			data.push({id:id, name:name, home:home, away:away, menu:menu, game:game})
+		});	
+
+		var check = confirm('적용 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/detail/allmodify',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('적용 되었습니다.');
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('.detail_deleteall').click(function(){
+		var data = []
+		$("input:checkbox[name=select]:checked").each(function(){
+			var id = $(this).closest('tr').attr('id');
+			data.push({id:id})
+		});	
+
+		var check = confirm('삭제 하시겠습니까?');
+		if (check){
+			$.ajax({
+				url : '/admin/league/detail/alldelete',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					data: JSON.stringify(data)
+				},
+				success : function(resp){
+					if(resp.success){
+						alert('삭제 되었습니다.');
+						$("input:checkbox[name=select]:checked").each(function(){
+							var id = $(this).closest('tr').attr('id');
+							$('#'+id).remove();
+						});	
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
+		}
+	});
+	$('#detail_table').on("click",".detail_delete",function(){
 		var id = $(this).closest('tr').attr('id');
 		var check = confirm('삭제 하시겠습니까?');
 		if (check){
@@ -572,6 +728,63 @@ $(document).ready(function(){
 				}	
 			});
 		}
+	});
+	$('#detail_add').click(function(){
+		var l = $('select[name="league"]').val();
+		var m = $('select[name="menu"]').val();
+		var g = $('select[name="game"]').val();
+		if (l == 0){
+			alert('리그를 선택하세요.');
+			return false;
+		}
+		if (m == 0 || g == 0){
+			alert('메뉴와 게임종류를 선택하세요.');
+			return false;
+		}
+		$.ajax({
+			url : '/admin/league/detail',
+			type: 'POST',
+			dataType: 'json',
+			data: { 
+				league : $('select[name="league"]').val(),
+				name : $('input[name="name"]').val(),
+				home : $('input[name="home"]').val(),
+				away : $('input[name="away"]').val(),
+				menu : $('select[name="menu"]').val(),
+				game : $('select[name="game"]').val()
+			},
+			success : function(resp){
+				if(resp.success){
+					if (parseInt(resp.menu) == 1){
+						var menu = '<option value="1" selected>승무패</option> <option value="2">핸디캡</option> <option value="3">스페셜</option>';
+					}
+					else if (parseInt(resp.menu) == 2){
+						var menu = '<option value="1">승무패</option> <option value="2" selected>핸디캡</option> <option value="3">스페셜</option>';
+					}
+					else{
+						var menu = '<option value="1">승무패</option> <option value="2">핸디캡</option> <option value="3" selected>스페셜</option>';
+					}
+					if (parseInt(resp.game) == 1){
+						var game = '<option value="1" selected>승무패</option> <option value="2">핸디캡</option> <option value="3">언더오버</option>';
+					}
+					else if (parseInt(resp.game) == 2){
+						var game = '<option value="1">승무패</option> <option value="2" selected>핸디캡</option> <option value="3">언더오버</option>';
+					}
+					else{
+						var game = '<option value="1">승무패</option> <option value="2">핸디캡</option> <option value="3" selected>언더오버</option>';
+					}
+					var tr = '<tr class="select" id="'+resp.id +'"> <td> <input type="checkbox" name="select"></td> <td style="text-align:left;">'+resp.league + resp.name +'</td> <td><input type="text" name="name_'+resp.id+'" class="form-control" value="'+resp.name +'"></td> <td><input type="text" name="home_'+resp.id+'" class="form-control" value="'+resp.home +'"></td> <td><input type="text" name="away_'+resp.id+'" class="form-control" value="'+ resp.away +'"></td> <td> <select class="form-control"  name="menu">'+menu+' </select> </td> <td> <select class="form-control"  name="game">'+game+' </select> </td> <td> <button class="btn sBtn detail_modify">수정</button>/<button class="btn sBtn greyBtn detail_delete">삭제</button> </td> </tr>';
+					$('#detail_table').append(tr);
+				}
+				else{
+					alert('잘못된 접근입니다.');
+				}
+			},
+			error : function(resp){
+				console.log('server error');
+			}	
+		});
+
 	});
 	$('input[name="date_start"]').val(moment().year()+'-'+(moment().month()+1)+'-');
 	$('input[name="date_end"]').val(moment().year()+'-'+(moment().month()+1)+'-');
@@ -615,6 +828,36 @@ $(document).ready(function(){
 			return false;
 		}	
 		else{
+			$.ajax({
+				url : '/admin/register/game/getdetail',
+				type: 'POST',
+				dataType: 'json',
+				data: { 
+					id : $('select[name="league"] option:selected').val()
+				},
+				success : function(resp){
+					var list = resp.list
+					if(resp.success){
+						for (var i = 0;i<list.length; i++){
+							if (parseInt(list[i].menu) == 1){
+								$('.odd').append('<li><input type="checkbox" name="checked" value="'+list[i].id+'" checked>'+list[i].league+' '+list[i].name+'</li>');
+							}
+							else if (parseInt(list[i].menu) == 2){
+								$('.handi').append('<li><input type="checkbox" name="checked" value="'+list[i].id+'" checked>'+list[i].league+' '+list[i].name+'</li>');
+							}
+							else{
+								$('.spe').append('<li><input type="checkbox" name="checked" value="'+list[i].id+'" checked>'+list[i].league+' '+list[i].name+'</li>');
+							}
+						}
+					}
+					else{
+						alert('잘못된 접근입니다.');
+					}
+				},
+				error : function(resp){
+					console.log('server error');
+				}	
+			});
 			$('.addlist').empty();
 			for (i=0;i<game;i++){
 				var str = '<tr> <td><input type="text" class="form-control" name="date_first_'+i+'" value="'+date_first+'" disabled></td> <td><input type="text" class="form-control" name="date_second_'+i+'" value="'+date_second+'" disabled></td> <td><input type="text" class="form-control" name="league_'+i+'" value="'+league_name+'" disabled></td> <td><input type="text" class="form-control home" name="home_'+i+'"></td> <td><input type="text" class="form-control away" name="away_'+i+'"></td> </tr>'
@@ -1303,7 +1546,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-	$('.select').click(function(){
+	$('.container').on("click", ".select",function(){
 		var check = $(this).hasClass('clicked')
 		
 		if (check){
@@ -2150,10 +2393,6 @@ function validateFormsearchLeague(){
 		alert("국가를 입력하세요.");
 		return false;
 	}
-	if (x == null || x == ""){
-		alert("리그명을 입력하세요.");
-		return false;
-	}
 }
 function validateFormLeague(){
 	var x = document.forms["addleague"]["league"].value;
@@ -2173,9 +2412,15 @@ function validateFormLeague(){
 	}
 }
 function validateFormDetail(){
+	var l = document.forms["adddetail"]["league"].value;
 	var t = document.forms["adddetail"]["menu"].value;
-	if (t == 0){
-		alert('메뉴를 선택하세요');
+	var s = document.forms["adddetail"]["game"].value;
+	if (l == 0){
+		alert('리그를 선택하세요');
+		return false;
+	}
+	if (t == 0 || s==0){
+		alert('메뉴와 게임종류를 선택하세요');
 		return false;
 	}
 }

@@ -141,6 +141,7 @@ class League(db.Model):
 	sort = db.Column(db.Integer, default=0)
 	nation = db.Column(db.String(255)) 
 	sport = db.Column(db.String(255)) 
+	image = db.Column(db.BLOB)
 	# 0: end, 1: on
 	state = db.Column(db.Integer, default=1)
 
@@ -153,11 +154,14 @@ class LeagueDetail(db.Model):
 
 	#1:승무패, 2:핸디캡, 3:스페셜
 	menu = db.Column(db.Integer, default=0)
+	#1:승무패, 2:핸디캡, 3:언더오버
+	game = db.Column(db.Integer, default=0)
 
 	league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
 	league = db.relationship('League',
 			backref=db.backref('details', cascade='all, delete-orphan', lazy='dynamic'))
 
+			
 class Game(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 
@@ -176,6 +180,7 @@ class Game(db.Model):
 
 	win = db.Column(db.Integer) 
 	handicap = db.Column(db.Float, default=0.0)
+	standard = db.Column(db.Float, default=0.0)
 
 	date = db.Column(db.DateTime())
 
