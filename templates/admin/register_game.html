@@ -73,47 +73,6 @@
 	</table>
 </div>
 </form>
-<div class="relativeWrap">
-	<h1>경기 목록</h1>
-	<p class="topBtnWrap">
-	<button class="btn sBtn pinkBtn select_all">전체선택</button>
-	<button class="btn sBtn pinkBtn start_all">전체개시</button>
-	<button class="btn sBtn register_all_apply">선택적용</button>
-	<button class="btn sBtn greyBtn game_deleteall">선택삭제</button>
-	</p>
-
-	<table class="dataTable tableStyle01">
-		<thead>
-			<th width="1%">선택</th>
-			<th width="15%">리그명</th>
-			<th width="10%">경기날짜</th>
-			<th width="10%">경기시간</th>
-			<th>승[홈]</th>
-			<th>패[원정]</th>
-			<th width="15%">수정/삭제</th>
-		</thead>
-		<tbody>
-		{% if gamelist %}
-		{% for game in gamelist %}
-		<tr class="select" id="{{ game.id }}">
-			<td> <input type="checkbox" name="select"></td>
-			<td style="text-align:left;"> {{game.league_detail.league.name}} {{game.league_detail.name}}</td>
-			<td>{{ game.date.strftime('%Y/%m/%d') }}</td>
-			<td>{{ game.date.strftime('%H:%M') }}</td>
-			<td>{{ game.home }} {{game.league_detail.home}}</td>
-			<td>{{game.league_detail.away}} {{ game.away }}</td>
-			<td>
-				<button type="button" id="addgamebtn" class="btn sBtn">수정</button>
-				<button type="button" id="emptygamebtn" class="btn sBtn greyBtn">삭제</button>
-			</td>
-		</tr>
-		{% endfor %}
-		{% else %}
-		{% endif %}
-		</tbody>
-	</table>
-
-</div>
 {% endblock %}
 
 
