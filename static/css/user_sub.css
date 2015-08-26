@@ -87,14 +87,14 @@ a.sBtn { width:60px; height:24px; font-size: 12px; padding-top:5px;}
 .userDataTable thead th { height:50px; background:url(../images/board/bar_line.gif) no-repeat left top; color:#000; font-size:16px; }
 .userDataTable thead th:first-child { background:none;  }
 .userDataTable tbody td {background:#252525; padding:10px 0px 5px; line-height:1.5; font-size:14px; color:#888;  border-bottom:2px solid #000; }
-.userDataTable tbody .kind { text-align:left;   padding-bottom:10px;padding-left:20px; padding-right:20px;  border-bottom:1px solid #ffe670; color:#ffe670;font-size:18px;   } 
+.userDataTable tbody .kind { text-align:left;   padding-bottom:10px;padding-left:20px; padding-right:20px;  border-bottom:1px solid #ffe670; color:#ffe670;font-size:14px;   } 
 .userDataTable tbody .bettingContents { width:100%; float:left;  }
-.userDataTable tbody .date {color:#fff;font-size:14px;float:left; margin:10px 0px 10px;   text-align:center; width:120px; padding:10px 20px;  } 
-.userDataTable tbody .victory {float:left; width:230px;margin:2.5px 0px 2.5px; padding:2.5px 10px; border:1px solid #6b5a12;   color:#ffe670;font-size:14px;background:#000;   } 
+.userDataTable tbody .date {color:#fff;font-size:14px;float:left; margin:2.5px 0px 2.5px;   text-align:center; width:140px; padding:2.5px 10px;color:#ffe670;  } 
+.userDataTable tbody .victory {float:left; width:250px;margin:2.5px 0px 2.5px; padding:2.5px 10px; border:1px solid #6b5a12;   color:#ffe670;font-size:14px;background:#000;   } 
 .userDataTable tbody .victory .team { float:left;  } 
 .userDataTable tbody .victory .distribution{float:right;    } 
-.userDataTable tbody .draw { color:#ffe670; margin:10px;float:left;width:80px; padding:10px 20px;     font-size:14px;background:#000; text-align:center;   } 
-.userDataTable tbody .lose {   float:left; width:230px;margin:10px 0px 10px; padding:10px 20px;  color:#ffe670;font-size:14px;background:#000;} 
+.userDataTable tbody .draw { color:#ffe670; margin:10px;float:left;width:100px;margin:2.5px 0px 2.5px; padding:2.5px 10px;     font-size:14px;background:#000; text-align:center;   } 
+.userDataTable tbody .lose {   float:left; width:250px;margin:2.5px 0px 2.5px; padding:2.5px 10px;   border:1px solid #6b5a12; color:#ffe670;font-size:14px;background:#000;} 
 .userDataTable tbody .lose .team { float:right;  } 
 .userDataTable tbody .lose .distribution{float:left;    } 
 .userDataTable tbody .state {   color:#fff;  padding:10px 20px;width:120px;margin:10px 0px 10px;   float:left;  font-size:14px;text-align:center;  } 
